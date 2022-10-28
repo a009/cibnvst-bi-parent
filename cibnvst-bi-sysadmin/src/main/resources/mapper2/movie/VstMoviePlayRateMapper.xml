@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 播放成功率 -->
+<mapper namespace="com.vst.defend.dao2.movie.VstMoviePlayRateDao">
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_mpr_date '日期', vst_mpr_pkg '包名', vst_mpr_special_type '专区类型',
+				vst_mpr_cid '影片分类', vst_mpr_click '点击量', vst_mpr_play '播放量',
+				vst_mpr_rate '播放成功率', vst_mpr_vv_dod '播放成功天环比', vst_mpr_vv_wow '播放成功周环比',
+				vst_mpr_uv '独立用户', vst_mpr_uv_dod '独立用户天环比', vst_mpr_uv_wow '独立用户周环比',
+				vst_mpr_avg '人均播放量', vst_mpr_playtime '播放时长(H)', vst_mpr_playtime_avg '人均播放时长(m)'
+			</otherwise>
+		</choose>
+		FROM vst_movie_play_rate
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_mpr_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_mpr_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_mpr_pkg = #{pkgName}
+			</if>
+			<if test="vst_mpr_special_type != null and vst_mpr_special_type != ''">
+				AND vst_mpr_special_type = #{vst_mpr_special_type}
+			</if>
+			<if test="vst_mpr_cid != null and vst_mpr_cid != ''">
+				AND vst_mpr_cid = #{vst_mpr_cid}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_mpr_date DESC, vst_mpr_play DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按分类统计 -->
+	<select id="queryReportByCid" parameterType="map" resultType="java.util.HashMap">
+		SELECT
+			vst_mpr_date, vst_mpr_cid,
+			sum(vst_mpr_rate) vst_mpr_rate
+		FROM vst_movie_play_rate
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_mpr_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_mpr_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_mpr_pkg = #{pkgName}
+			</if>
+			<if test="vst_mpr_special_type != null and vst_mpr_special_type != ''">
+				AND vst_mpr_special_type = #{vst_mpr_special_type}
+			</if>
+			<if test="vst_mpr_cid != null and vst_mpr_cid != ''">
+				AND vst_mpr_cid = #{vst_mpr_cid}
+			</if>
+		</where>
+		GROUP BY vst_mpr_date, vst_mpr_cid
+		ORDER BY vst_mpr_date ASC, vst_mpr_cid ASC
+	</select>
+	
+</mapper>

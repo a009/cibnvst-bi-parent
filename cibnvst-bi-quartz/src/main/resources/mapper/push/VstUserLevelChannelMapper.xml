@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vst.quartz.dao.push.VstUserLevelChannelMapper">
+	<resultMap id="BaseResultMap" type="com.vst.common.pojo.VstUserLevelChannel">
+		<id property="vst_ulc_id" column="vst_ulc_id" jdbcType="VARCHAR"/>
+		<result property="vst_ulc_date" column="vst_ulc_date" jdbcType="INTEGER"/>
+		<result property="vst_ulc_pkg" column="vst_ulc_pkg" jdbcType="VARCHAR"/>
+		<result property="vst_ulc_channel" column="vst_ulc_channel" jdbcType="VARCHAR"/>
+		<result property="vst_ulc_add_amount" column="vst_ulc_add_amount" jdbcType="BIGINT"/>
+		<result property="vst_ulc_season_amount" column="vst_ulc_season_amount" jdbcType="BIGINT"/>
+		<result property="vst_ulc_season_dod" column="vst_ulc_season_dod" jdbcType="VARCHAR"/>
+		<result property="vst_ulc_season_wow" column="vst_ulc_season_wow" jdbcType="VARCHAR"/>
+		<result property="vst_ulc_season_radio" column="vst_ulc_season_radio" jdbcType="VARCHAR"/>
+		<result property="vst_ulc_addtime" column="vst_ulc_addtime" jdbcType="BIGINT"/>
+		<result property="vst_ulc_creator" column="vst_ulc_creator" jdbcType="VARCHAR"/>
+		<result property="vst_ulc_uptime" column="vst_ulc_uptime" jdbcType="BIGINT"/>
+		<result property="vst_ulc_updator" column="vst_ulc_updator" jdbcType="VARCHAR"/>
+		<result property="vst_ulc_summary" column="vst_ulc_summary" jdbcType="VARCHAR"/>
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		vst_ulc_id,vst_ulc_date,vst_ulc_pkg,vst_ulc_channel,vst_ulc_add_amount,vst_ulc_season_amount,vst_ulc_season_dod
+		,vst_ulc_season_wow,vst_ulc_season_radio,vst_ulc_addtime,vst_ulc_creator,vst_ulc_uptime,vst_ulc_updator,
+		vst_ulc_summary
+	</sql>
+
+	<!--查询今天的数据-->
+	<select id="queryVstUserLevelChannel" resultMap="BaseResultMap">
+	   SELECT * FROM  vst_user_level_channel WHERE vst_ulc_date = date_format(now(),'%Y%m%d')
+	</select>
+
+	<!--根据传入的时间查询-->
+	<select id="queryVstUserDateChannel" resultMap="BaseResultMap" parameterType="java.util.Map">
+        <if test="date == 0">
+			SELECT * FROM vst_user_level_channel WHERE vst_ulc_date >= #{maxOuter}
+		</if>
+		<if test="date > 0">
+			SELECT * FROM vst_user_level_channel WHERE vst_ulc_date >= #{maxOuter} and <![CDATA[vst_ulc_date<=#{maxUser}]]>
+		</if>
+	</select>
+
+	<!--查询所有的数据-->
+	<select id="queryLevelAll" resultMap="BaseResultMap">
+		SELECT * FROM vst_user_level_channel
+	</select>
+
+	<!--查询最大的统计日期-->
+	<select id="queryMaxLevel" resultType="java.lang.Integer">
+		SELECT MAX(vst_ulc_date) FROM vst_user_level_channel
+	</select>
+
+
+
+</mapper>

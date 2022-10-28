@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 影片区块播放 -->
+<mapper namespace="com.vst.defend.dao2.movie.VstMovieBlockDao">
+	
+	<!-- 开启本mapper的namespace下的二级缓存 -->
+	<cache flushInterval="600000" readOnly="true" />
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap" useCache="false">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_mb_date '日期', vst_mb_pkg '包名', vst_mb_type '类型',
+				vst_mb_block '区块ID', vst_mb_index '位置编号',
+				vst_mb_vv '播放量', vst_mb_vv_dod '播放量天环比', vst_mb_vv_wow '播放量周环比',
+				vst_mb_uv '独立用户', vst_mb_uv_dod '独立用户天环比', vst_mb_uv_wow '独立用户周环比',
+				vst_mb_avg '人均播放量', vst_mb_playtime '播放时长(H)', vst_mb_playtime_avg '人均播放时长(m)'
+			</otherwise>
+		</choose>
+		FROM vst_movie_block
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_mb_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_mb_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_mb_pkg = #{pkgName}
+			</if>
+			<if test="vst_mb_type != null and vst_mb_type != ''">
+				AND vst_mb_type = #{vst_mb_type}
+			</if>
+			<if test="vst_mb_block != null and vst_mb_block != ''">
+				AND vst_mb_block like '%${vst_mb_block}%'
+			</if>
+			<if test="vst_mb_block_eq != null and vst_mb_block_eq != ''">
+				AND vst_mb_block = #{vst_mb_block_eq}
+			</if>
+			<if test="vst_mb_block_ne != null and vst_mb_block_ne != ''">
+				AND vst_mb_block != #{vst_mb_block_ne}
+			</if>
+			<if test="vst_mb_index != null and vst_mb_index != ''">
+				AND vst_mb_index = #{vst_mb_index}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_mb_date DESC, vst_mb_vv DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 统计区块播放数据(有缓存) -->
+	<select id="queryListByCount" parameterType="map" resultType="java.util.HashMap">
+		SELECT * FROM vst_movie_block
+		<where>
+			<if test="date != null and date != ''">
+				vst_mb_date = #{date}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_mb_pkg = #{pkgName}
+			</if>
+			<if test="vst_mb_type != null and vst_mb_type != ''">
+				AND vst_mb_type = #{vst_mb_type}
+			</if>
+			<if test="vst_mb_block != null and vst_mb_block != ''">
+				AND vst_mb_block = #{vst_mb_block}
+			</if>
+			<if test="vst_mb_index != null and vst_mb_index != ''">
+				AND vst_mb_index = #{vst_mb_index}
+			</if>
+		</where>
+	</select>
+	
+</mapper>

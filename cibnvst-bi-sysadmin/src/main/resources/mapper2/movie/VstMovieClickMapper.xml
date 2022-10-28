@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 影片点击 -->
+<mapper namespace="com.vst.defend.dao2.movie.VstMovieClickDao">
+	
+	<!-- 开启本mapper的namespace下的二级缓存 -->
+	<cache flushInterval="3600000" readOnly="true" />
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap" useCache="false">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_mc_date '日期', vst_mc_pkg '包名', vst_mc_special_type '专区类型',
+				vst_mc_cid '影片分类', vst_mc_uuid '影片ID', vst_mc_name '影片名称',
+				vst_mc_amount '点击量', vst_mc_amount_dod '点击量天环比', vst_mc_amount_wow '点击量周环比',
+				vst_mc_uv '独立用户', vst_mc_uv_dod '独立用户天环比', vst_mc_uv_wow '独立用户周环比',
+				vst_mc_avg '人均点击量'
+			</otherwise>
+		</choose>
+		FROM vst_movie_click
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_mc_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_mc_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_mc_pkg = #{pkgName}
+			</if>
+			<if test="vst_mc_special_type != null and vst_mc_special_type != ''">
+				AND vst_mc_special_type = #{vst_mc_special_type}
+			</if>
+			<if test="vst_mc_cid != null and vst_mc_cid != ''">
+				AND vst_mc_cid = #{vst_mc_cid}
+			</if>
+			<if test="vst_mc_uuid != null and vst_mc_uuid != ''">
+				AND vst_mc_uuid = #{vst_mc_uuid}
+			</if>
+			<if test="vst_mc_name != null and vst_mc_name != ''">
+				AND vst_mc_name like '%${vst_mc_name}%'
+			</if>
+			<if test="vst_mc_name_eq != null and vst_mc_name_eq != ''">
+				AND vst_mc_name = #{vst_mc_name_eq}
+			</if>
+			<if test="vst_mc_name_ne != null and vst_mc_name_ne != ''">
+				AND vst_mc_name != #{vst_mc_name_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_mc_date DESC, vst_mc_amount DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 导出总量 -->
+	<select id="queryExportSum" parameterType="map" resultType="java.util.LinkedHashMap" useCache="false">
+		SELECT
+			vst_mc_uuid '影片ID', vst_mc_name '影片名称', sum(vst_mc_amount) '总点击量'
+		FROM vst_movie_click
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_mc_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_mc_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_mc_pkg = #{pkgName}
+			</if>
+			<if test="vst_mc_special_type != null and vst_mc_special_type != ''">
+				AND vst_mc_special_type = #{vst_mc_special_type}
+			</if>
+			<if test="vst_mc_cid != null and vst_mc_cid != ''">
+				AND vst_mc_cid = #{vst_mc_cid}
+			</if>
+			<if test="vst_mc_uuid != null and vst_mc_uuid != ''">
+				AND vst_mc_uuid = #{vst_mc_uuid}
+			</if>
+			<if test="vst_mc_name != null and vst_mc_name != ''">
+				AND vst_mc_name like '%${vst_mc_name}%'
+			</if>
+			<if test="vst_mc_name_eq != null and vst_mc_name_eq != ''">
+				AND vst_mc_name = #{vst_mc_name_eq}
+			</if>
+			<if test="vst_mc_name_ne != null and vst_mc_name_ne != ''">
+				AND vst_mc_name != #{vst_mc_name_ne}
+			</if>
+		</where>
+		GROUP BY vst_mc_uuid, vst_mc_name
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				sum(vst_mc_amount) DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 查询影片点击汇总排行 -->
+	<select id="queryTopList" parameterType="map" resultType="java.util.HashMap">
+		SELECT
+			max(vst_mc_special_type) vst_mc_special_type,
+			max(vst_mc_cid) vst_mc_cid,
+			vst_mc_uuid,
+			max(vst_mc_name) vst_mc_name,
+			sum(vst_mc_amount) vst_mc_amount
+		FROM vst_movie_click
+		<where>
+			<if test="date != null and date != ''">
+				vst_mc_date = #{date}
+			</if>
+			<if test="startDay != null and startDay != ''">
+				AND vst_mc_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_mc_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_mc_pkg = #{pkgName}
+			</if>
+			<if test="vst_mc_special_type != null and vst_mc_special_type != ''">
+				AND vst_mc_special_type = #{vst_mc_special_type}
+			</if>
+			<if test="vst_mc_cid != null and vst_mc_cid != ''">
+				AND vst_mc_cid = #{vst_mc_cid}
+			</if>
+			<if test="vst_mc_uuid != null and vst_mc_uuid != ''">
+				AND vst_mc_uuid = #{vst_mc_uuid}
+			</if>
+			<if test="vst_mc_name != null and vst_mc_name != ''">
+				AND vst_mc_name like '%${vst_mc_name}%'
+			</if>
+			<if test="vst_mc_name_eq != null and vst_mc_name_eq != ''">
+				AND vst_mc_name = #{vst_mc_name_eq}
+			</if>
+			<if test="vst_mc_name_ne != null and vst_mc_name_ne != ''">
+				AND vst_mc_name != #{vst_mc_name_ne}
+			</if>
+		</where>
+		GROUP BY vst_mc_uuid
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_mc_amount DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+	<!-- 查询影片点击汇总记录数 -->
+	<select id="queryTopCount" parameterType="map" resultType="int">
+		SELECT count(1) FROM (
+			SELECT vst_mc_uuid FROM vst_movie_click
+			<where>
+				<if test="date != null and date != ''">
+					vst_mc_date = #{date}
+				</if>
+				<if test="startDay != null and startDay != ''">
+					AND vst_mc_date >= #{startDay}
+				</if>
+				<if test="endDay != null and endDay != ''">
+					AND vst_mc_date &lt;= #{endDay}
+				</if>
+				<if test="pkgName != null and pkgName != ''">
+					AND vst_mc_pkg = #{pkgName}
+				</if>
+				<if test="vst_mc_special_type != null and vst_mc_special_type != ''">
+					AND vst_mc_special_type = #{vst_mc_special_type}
+				</if>
+				<if test="vst_mc_cid != null and vst_mc_cid != ''">
+					AND vst_mc_cid = #{vst_mc_cid}
+				</if>
+				<if test="vst_mc_uuid != null and vst_mc_uuid != ''">
+					AND vst_mc_uuid = #{vst_mc_uuid}
+				</if>
+				<if test="vst_mc_name != null and vst_mc_name != ''">
+					AND vst_mc_name like '%${vst_mc_name}%'
+				</if>
+				<if test="vst_mc_name_eq != null and vst_mc_name_eq != ''">
+					AND vst_mc_name = #{vst_mc_name_eq}
+				</if>
+				<if test="vst_mc_name_ne != null and vst_mc_name_ne != ''">
+					AND vst_mc_name != #{vst_mc_name_ne}
+				</if>
+			</where>
+			GROUP BY vst_mc_uuid
+		) a
+	</select>
+	
+	<!-- 导出影片点击汇总数据 -->
+	<select id="queryTopExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+			max(vst_mc_special_type) '专区类型',
+			max(vst_mc_cid) '影片分类',
+			max(vst_mc_pkg) '包名',
+			vst_mc_uuid '影片ID',
+			max(vst_mc_name) '影片名称',
+			sum(vst_mc_amount) '总点击量'
+		FROM vst_movie_click
+		<where>
+			<if test="date != null and date != ''">
+				vst_mc_date = #{date}
+			</if>
+			<if test="startDay != null and startDay != ''">
+				AND vst_mc_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_mc_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_mc_pkg = #{pkgName}
+			</if>
+			<if test="vst_mc_special_type != null and vst_mc_special_type != ''">
+				AND vst_mc_special_type = #{vst_mc_special_type}
+			</if>
+			<if test="vst_mc_cid != null and vst_mc_cid != ''">
+				AND vst_mc_cid = #{vst_mc_cid}
+			</if>
+			<if test="vst_mc_uuid != null and vst_mc_uuid != ''">
+				AND vst_mc_uuid = #{vst_mc_uuid}
+			</if>
+			<if test="vst_mc_name != null and vst_mc_name != ''">
+				AND vst_mc_name like '%${vst_mc_name}%'
+			</if>
+			<if test="vst_mc_name_eq != null and vst_mc_name_eq != ''">
+				AND vst_mc_name = #{vst_mc_name_eq}
+			</if>
+			<if test="vst_mc_name_ne != null and vst_mc_name_ne != ''">
+				AND vst_mc_name != #{vst_mc_name_ne}
+			</if>
+		</where>
+		GROUP BY vst_mc_uuid
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				sum(vst_mc_amount) DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+</mapper>

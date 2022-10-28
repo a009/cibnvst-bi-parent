@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 播放时长分布 -->
+<mapper namespace="com.vst.defend.dao2.user.VstUserPlayDao">
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_up_date '日期', vst_up_pkg '包名', vst_up_type '类型',
+				vst_up_vv '播放量', vst_up_vv_dod '播放量天环比', vst_up_vv_wow '播放量周环比',
+				vst_up_uv '播放人数', vst_up_uv_dod '人数天环比', vst_up_uv_wow '人数周环比',
+				vst_up_avg '人均播放量', vst_up_playtime '播放时长(H)', vst_up_playtime_avg '人均播放时长(m)'
+			</otherwise>
+		</choose>
+		FROM vst_user_play
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_up_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_up_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_up_pkg = #{pkgName}
+			</if>
+			<if test="vst_up_type != null and vst_up_type != ''">
+				AND vst_up_type = #{vst_up_type}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_up_date DESC, vst_up_type DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按类型统计 -->
+	<select id="queryReportByType" parameterType="map" resultType="map">
+		SELECT
+			vst_up_date, vst_up_type,
+			sum(vst_up_uv) vst_up_uv
+		FROM vst_user_play
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_up_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_up_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_up_pkg = #{pkgName}
+			</if>
+			<if test="vst_up_type != null and vst_up_type != ''">
+				AND vst_up_type = #{vst_up_type}
+			</if>
+		</where>
+		GROUP BY vst_up_date, vst_up_type
+		ORDER BY vst_up_date ASC, vst_up_type ASC
+	</select>
+	
+</mapper>

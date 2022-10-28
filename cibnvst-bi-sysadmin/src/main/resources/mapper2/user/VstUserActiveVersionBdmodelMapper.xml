@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 活跃用户(版本、设备)统计 -->
+<mapper namespace="com.vst.defend.dao2.user.VstUserActiveVersionBdmodelDao">
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_uavb_date '日期', vst_uavb_pkg '包名',
+				vst_uavb_version '版本', vst_uavb_bdmodel '设备名称',
+				vst_uavb_amount '用户数量', vst_uavb_rate '用户占比',
+				vst_uavb_dod '天环比', vst_uavb_wow '周环比', vst_uavb_mom '月环比', vst_uavb_week '周活跃'
+			</otherwise>
+		</choose>
+		FROM vst_user_active_version_bdmodel
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_uavb_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_uavb_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_uavb_pkg = #{pkgName}
+			</if>
+			<if test="vst_uavb_version != null and vst_uavb_version != ''">
+				AND vst_uavb_version like '%${vst_uavb_version}%'
+			</if>
+			<if test="vst_uavb_version_eq != null and vst_uavb_version_eq != ''">
+				AND vst_uavb_version = #{vst_uavb_version_eq}
+			</if>
+			<if test="vst_uavb_version_ne != null and vst_uavb_version_ne != ''">
+				AND vst_uavb_version != #{vst_uavb_version_ne}
+			</if>
+			<if test="vst_uavb_bdmodel != null and vst_uavb_bdmodel != ''">
+				AND vst_uavb_bdmodel like '%${vst_uavb_bdmodel}%'
+			</if>
+			<if test="vst_uavb_bdmodel_eq != null and vst_uavb_bdmodel_eq != ''">
+				AND vst_uavb_bdmodel = #{vst_uavb_bdmodel_eq}
+			</if>
+			<if test="vst_uavb_bdmodel_ne != null and vst_uavb_bdmodel_ne != ''">
+				AND vst_uavb_bdmodel != #{vst_uavb_bdmodel_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_uavb_date DESC, vst_uavb_amount DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按设备统计 -->
+	<select id="queryReportByBdmodel" parameterType="map" resultType="map">
+		SELECT vst_uavb_date, vst_uavb_bdmodel, sum(vst_uavb_amount) vst_uavb_amount
+		FROM vst_user_active_version_bdmodel
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_uavb_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_uavb_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_uavb_pkg = #{pkgName}
+			</if>
+			<if test="vst_uavb_version != null and vst_uavb_version != ''">
+				AND vst_uavb_version like '%${vst_uavb_version}%'
+			</if>
+			<if test="vst_uavb_version_eq != null and vst_uavb_version_eq != ''">
+				AND vst_uavb_version = #{vst_uavb_version_eq}
+			</if>
+			<if test="vst_uavb_version_ne != null and vst_uavb_version_ne != ''">
+				AND vst_uavb_version != #{vst_uavb_version_ne}
+			</if>
+			<if test="vst_uavb_bdmodel != null and vst_uavb_bdmodel != ''">
+				AND vst_uavb_bdmodel like '%${vst_uavb_bdmodel}%'
+			</if>
+			<if test="vst_uavb_bdmodel_eq != null and vst_uavb_bdmodel_eq != ''">
+				AND vst_uavb_bdmodel = #{vst_uavb_bdmodel_eq}
+			</if>
+			<if test="vst_uavb_bdmodel_ne != null and vst_uavb_bdmodel_ne != ''">
+				AND vst_uavb_bdmodel != #{vst_uavb_bdmodel_ne}
+			</if>
+		</where>
+		GROUP BY vst_uavb_date, vst_uavb_bdmodel
+		ORDER BY vst_uavb_date ASC, vst_uavb_amount DESC
+	</select>
+	
+</mapper>

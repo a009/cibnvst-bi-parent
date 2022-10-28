@@ -1,0 +1,421 @@
+.list-input{
+    outline: none;
+}
+.clearfix:after {
+    content:"";
+    display: block;
+    clear: both;
+}
+.searchBar p{
+    line-height:24px;
+    margin-bottom: 5px;
+    text-align:center;
+}
+
+.queryBtn,.rankBtn{
+    width: 120px;
+    height: 24px;
+    line-height: 24px;
+    background: #00a7d0;
+    color: #fff;
+    border: none;
+    font-size: 16px;
+    outline: none;
+    border-radius: 3px;
+    margin:10px;
+}
+.resetBtn,.vip_rankBtn{
+    width: 120px;
+    height: 24px;
+    line-height: 24px;
+    background: #666;
+    color: #fff;
+    border: none;
+    font-size: 16px;
+    outline: none;
+    border-radius: 3px;
+    margin:10px;
+}
+.queryBtn_mousedown{
+    background: #ccc;
+}
+.queryBtn:disabled{
+    background: #ccc;
+    pointer-events: none;
+}
+.contlist{
+	margin-bottom: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+.contlist li{
+    display:inline-block;
+}
+.box-body{
+    /* min-height: 150px; */
+}
+.action{
+    height: 18px;
+    line-height: 18px;
+    /*float: left;*/
+    padding: 0 5px;
+}
+.action>img{
+	display:inline-block;
+    width: 16px;
+    height:16px;
+    vertical-align: middle;
+}
+.action>a{
+	display:inline-block;
+    color: #000;
+    padding-left: 3px;
+    line-height: 18px;
+    vertical-align: middle;
+}
+.action>a:hover{
+    color: #00a7d0;
+}
+
+/****table****/
+#tableExample1{
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+#tableExample1 .table{
+	position:relative;
+	margin-bottom: 0px; 
+	border-top: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+}
+#tableExample1 .table .table-thead{
+	position:absolute;
+	top:0;
+	left:0;
+	font-weight: bold;
+    font-size: 12px;
+}
+#tableExample1 .table .table-tbody{
+	margin-top:32px;
+	overflow-x: hidden;
+    overflow-y: auto;
+    font-size: 12px;
+}
+
+/**yuanwei添加 tablelist**/
+.maxHeight{
+	max-height:400px;
+}
+.tablelist-up-button {
+    width: 16px;
+    height: 16px;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: content-box;
+}
+.tablelist-up-button img {
+    width: 100%;
+    height: 100%;
+}
+
+/**yuanwei添加 tablelist end**/
+
+/*#tableExample1 .table .table-tbody ul li input{
+	width:100%;
+	height:100%;
+}*/
+#tableExample1 .table .table-tbody ul li[class^="myClick"] input{
+	width:100%;
+	height:100%;
+}
+#tableExample1 .table .table-thead ul,
+#tableExample1 .table .table-tbody ul{
+	height:32px;
+	overflow:hidden;
+	margin-bottom:0;
+}
+#tableExample1 .table .table-thead ul li,
+#tableExample1 .table .table-tbody ul li{
+	float:left;
+	height:32px;
+	line-height:32px;
+	border-right:1px solid #ccc;
+	box-sizing:border-box;
+}
+#tableExample1 ul li a{
+	height:30px;
+	padding-top:1px;
+}
+.table{
+    border-right: 1px solid #e4eaec;
+}
+.table>thead>tr>th {
+    vertical-align: bottom;
+    padding: 10px;
+    text-align: center;
+    white-space: nowrap;
+    background: #e4eaec;
+    color: #58666e;
+    border-bottom: 1px solid #e4eaec;
+    border-left: 1px solid #e4eaec;
+    border-right: 1px solid #e4eaec;
+}
+.table>thead>tr>th:hover{
+    background: #d6dfe2;
+    border-color: #d6dfe2;
+}
+.table>tbody>tr:hover{
+    background: #f2f5f6;
+}
+.table>tbody>tr>td{
+    padding: 10px;
+    font-weight: 400;
+    font-size: 12px;
+    empty-cells: show;
+    border-top: 0;
+    border-right: 0;
+    border-bottom: 1px solid #e4eaec;
+    border-left: 1px solid #e4eaec;
+}
+.table-bordered{
+    border-collapse:inherit;
+}
+.button {
+    border: solid 1px #0ae;
+    background: transparent;
+    border-radius: 4px;
+    font-size: 14px;
+    padding: 6px 15px;
+    margin: 0;
+    display: inline-block;
+    line-height: 20px;
+    padding: 10px 15px;
+}
+@media (max-width: 767px) {
+    .list-input,
+    #startDate,
+    #endDate,
+    #startDate2,
+    #endDate2,
+    #startDate3,
+    #endDate3{
+        width: 200px;
+        height:30px;
+        line-height: 30px;
+    	font-size: 14px;
+    	border: solid 1px #999;
+    	border-radius: 3px;
+    	outline: none;
+    }
+    /***分页***/
+    .pageleft{
+        /*margin: 10px 0;*/
+        text-align: center;
+    }
+    .pageright{
+        text-align: center;
+    }
+}
+.sertitle{
+        width: 150px;
+        float: left;
+        text-align: right;
+        height: 30px;
+		line-height: 30px;
+}
+#vst_suit_age_start{
+    width:93px;
+	height:30px;
+	padding:5px;
+	line-height: 30px;
+	font-size: 14px;
+	border: solid 1px #999;
+	border-radius: 3px;
+	outline: none;
+	box-sizing:border-box;
+}
+#vst_suit_age_end{
+	width:93px;
+	height:30px;
+	padding:5px;
+	line-height: 30px;
+	font-size: 14px;
+	border: solid 1px #999;
+	border-radius: 3px;
+	outline: none;
+	box-sizing:border-box;
+}
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+    .sertitle{
+        width: 180px;
+        float: left;
+        text-align: right;
+        height: 30px;
+		line-height: 30px;
+    }
+    .list-input,
+    #startDate,
+    #endDate,
+    #startDate2,
+    #endDate2,
+    #startDate3,
+    #endDate3{
+        width: 200px;
+        height:30px;
+        line-height: 30px;
+    	font-size: 14px;
+    	border: solid 1px #999;
+    	border-radius: 3px;
+    	outline: none;
+    }
+    /***分页***/
+    .pageleft{
+        /*margin: 10px 0;*/
+        text-align: center;
+    }
+    .pageright{
+        text-align: center;
+    }
+    .pageright a ,
+    .pageleft a{
+        margin: 0 3px;
+    }
+    .pageright span, .pageright a {
+        border-radius: 3px;
+        border: 1px solid #dfdfdf;
+        display: inline-block;
+        padding: 5px 12px;
+    }
+
+}
+
+@media (min-width: 1024px) {
+    .sertitle{
+        width: 150px;
+        float: left;
+        text-align: right;
+        height: 30px;
+		line-height: 30px;
+    }
+    /**分页**/
+    .pageleft{
+        /*margin-top: 10px;*/
+        float: left;
+    }
+    .pageright{
+        float: right;
+    }
+    .pageright a ,
+    .pageleft a{
+        margin: 0 3px;
+    }
+    .pageright span, .pageright a {
+        border-radius: 3px;
+        border: 1px solid #dfdfdf;
+        display: inline-block;
+        padding: 5px 12px;
+    }
+}
+
+/*抓取弹窗-开始*/
+ul,li{
+    list-style: none;
+}
+@media (min-width: 768px) {
+    .modal-dialog {
+        width: 800px;
+    }
+    .modalGrap{
+        height:400px;
+        position: absolute;
+        top:0;
+        left: 0;
+        right:0;
+        bottom: 0;
+        margin: auto;
+        overflow-y: auto;
+    }
+    .modalGrap-cont{
+        height:auto;
+    }
+    .clearfix:after {
+        content:"";
+        display: block;
+        clear: both;
+    }
+    .modalGrap-cont ul li span{
+        width: 100px;
+        float: left;
+        text-align: right;
+        margin-right: 5px;
+    }
+    .dialoginput{
+        width:150px;
+        float: left;
+        line-height:30px;
+        padding-left: 10px;
+        outline: none;
+    }
+    .tips{
+        float: left;
+        margin-left: 20px;
+        color: #666;
+    }
+    .modal-footer{
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+    }
+
+}
+
+@media (max-width: 767px) {
+    .modalGrap{
+        height:400px;
+        position: absolute;
+        top:10%;
+        left: 0;
+        right:0;
+        bottom: 0;
+        margin: 20px;
+        overflow-y: auto;
+    }
+    .modalGrap-cont ul li span{
+        width: 80px;
+        float: left;
+        text-align: right;
+        margin-right: 20px;
+    }
+    .dialoginput{
+        width:150px;
+        line-height:30px;
+        padding-left: 10px;
+        outline: none;
+    }
+}
+
+.modalGrap-cont ul li{
+    line-height:30px;
+    margin-bottom: 30px;
+}
+/*抓取弹窗-结束*/
+
+ul.nav>li>a:hover,
+ul.nav>li>a:active,
+ul.nav>li>a:focus {
+    height: auto;
+}
+table.table-bordered{
+    border:none;
+}
+#example1>tbody>tr>td {
+    padding: 8px;
+    font-weight: 400;
+    font-size: 14px;
+    empty-cells: show;
+    border-top: 0;
+    border-right: 0;
+    border-bottom: 1px solid #e4eaec;
+    border-left: 1px solid #e4eaec;
+}

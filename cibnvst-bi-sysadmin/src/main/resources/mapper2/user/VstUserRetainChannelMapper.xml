@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 留存用户(渠道) -->
+<mapper namespace="com.vst.defend.dao2.user.VstUserRetainChannelDao">
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_urc_date '日期', vst_urc_pkg '包名', vst_urc_channel '渠道',
+				vst_urc_amount '次日留存用户数', vst_urc_dod '天环比', vst_urc_wow '周环比', vst_urc_rate '留存率',
+				vst_urc_week_amount '周留存用户数', vst_urc_week_dod '周留存天环比', vst_urc_week_wow '周留存周环比', vst_urc_week_rate '周留存率',
+				vst_urc_month_amount '月留存用户数', vst_urc_month_dod '月留存天环比', vst_urc_month_wow '月留存周环比', vst_urc_month_rate '月留存率',
+				vst_urc_season_amount '季留存用户数', vst_urc_season_dod '季留存天环比', vst_urc_season_wow '季留存周环比', vst_urc_season_rate '季留存率'
+			</otherwise>
+		</choose>
+		FROM vst_user_retain_channel
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_urc_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_urc_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_urc_pkg = #{pkgName}
+			</if>
+			<if test="vst_urc_channel != null and vst_urc_channel != ''">
+				AND vst_urc_channel like '%${vst_urc_channel}%'
+			</if>
+			<if test="vst_urc_channel_eq != null and vst_urc_channel_eq != ''">
+				AND BINARY vst_urc_channel = #{vst_urc_channel_eq}
+			</if>
+			<if test="vst_urc_channel_ne != null and vst_urc_channel_ne != ''">
+				AND vst_urc_channel != #{vst_urc_channel_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_urc_date DESC, vst_urc_amount DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+</mapper>

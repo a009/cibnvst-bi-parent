@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 新增渠道用户(对外) -->
+<mapper namespace="com.vst.defend.dao3.outer.OuterUserAddChannelDao">
+	
+	<select id="queryForList" parameterType="map" resultType="java.util.HashMap">
+		SELECT * FROM outer_vst_user_add_channel
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_uac_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_uac_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_uac_pkg = #{pkgName}
+			</if>
+			<if test="vst_uac_channel != null and vst_uac_channel != ''">
+				AND vst_uac_channel like '%${vst_uac_channel}%'
+			</if>
+			<if test="vst_uac_channel_eq != null and vst_uac_channel_eq != ''">
+				AND vst_uac_channel = #{vst_uac_channel_eq}
+			</if>
+			<if test="vst_uac_channel_ne != null and vst_uac_channel_ne != ''">
+				AND vst_uac_channel != #{vst_uac_channel_ne}
+			</if>
+			<if test="vst_uac_state != null and vst_uac_state != ''">
+				AND vst_uac_state = #{vst_uac_state}
+			</if>
+			<if test="vst_uac_synctime_start != null and vst_uac_synctime_start != ''">
+				AND vst_uac_synctime >= #{vst_uac_synctime_start}
+			</if>
+			<if test="vst_uac_synctime_end != null and vst_uac_synctime_end != ''">
+				AND vst_uac_synctime &lt;= #{vst_uac_synctime_end}
+			</if>
+			<if test="list_channels != null and list_channels != ''">
+				AND vst_uac_channel IN
+				<foreach collection="list_channels" item="channel" open="(" separator="," close=")">
+					#{channel}
+				</foreach>
+			</if>
+			<if test="now != null and now != ''">
+				AND (
+					vst_uac_state = 2
+					<!-- OR (#{now} - vst_uac_synctime) > (3600000*6) -->
+				)
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_uac_date DESC, ROUND(vst_uac_amount * vst_uac_modulus) DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+	<select id="queryCount" parameterType="map" resultType="int">
+		SELECT count(1) FROM outer_vst_user_add_channel
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_uac_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_uac_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_uac_pkg = #{pkgName}
+			</if>
+			<if test="vst_uac_channel != null and vst_uac_channel != ''">
+				AND vst_uac_channel like '%${vst_uac_channel}%'
+			</if>
+			<if test="vst_uac_channel_eq != null and vst_uac_channel_eq != ''">
+				AND vst_uac_channel = #{vst_uac_channel_eq}
+			</if>
+			<if test="vst_uac_channel_ne != null and vst_uac_channel_ne != ''">
+				AND vst_uac_channel != #{vst_uac_channel_ne}
+			</if>
+			<if test="vst_uac_state != null and vst_uac_state != ''">
+				AND vst_uac_state = #{vst_uac_state}
+			</if>
+			<if test="vst_uac_synctime_start != null and vst_uac_synctime_start != ''">
+				AND vst_uac_synctime >= #{vst_uac_synctime_start}
+			</if>
+			<if test="vst_uac_synctime_end != null and vst_uac_synctime_end != ''">
+				AND vst_uac_synctime &lt;= #{vst_uac_synctime_end}
+			</if>
+			<if test="list_channels != null and list_channels != ''">
+				AND vst_uac_channel IN
+				<foreach collection="list_channels" item="channel" open="(" separator="," close=")">
+					#{channel}
+				</foreach>
+			</if>
+			<if test="now != null and now != ''">
+				AND (
+					vst_uac_state = 2
+					<!-- OR (#{now} - vst_uac_synctime) > (3600000*6) -->
+				)
+			</if>
+		</where>
+	</select>
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+			vst_uac_date '日期', vst_uac_pkg '包名', vst_uac_channel '渠道',
+			vst_uac_amount '新增用户数', vst_uac_modulus '调整系数'
+		FROM outer_vst_user_add_channel
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_uac_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_uac_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_uac_pkg = #{pkgName}
+			</if>
+			<if test="vst_uac_channel != null and vst_uac_channel != ''">
+				AND vst_uac_channel like '%${vst_uac_channel}%'
+			</if>
+			<if test="vst_uac_channel_eq != null and vst_uac_channel_eq != ''">
+				AND vst_uac_channel = #{vst_uac_channel_eq}
+			</if>
+			<if test="vst_uac_channel_ne != null and vst_uac_channel_ne != ''">
+				AND vst_uac_channel != #{vst_uac_channel_ne}
+			</if>
+			<if test="vst_uac_state != null and vst_uac_state != ''">
+				AND vst_uac_state = #{vst_uac_state}
+			</if>
+			<if test="vst_uac_synctime_start != null and vst_uac_synctime_start != ''">
+				AND vst_uac_synctime >= #{vst_uac_synctime_start}
+			</if>
+			<if test="vst_uac_synctime_end != null and vst_uac_synctime_end != ''">
+				AND vst_uac_synctime &lt;= #{vst_uac_synctime_end}
+			</if>
+			<if test="list_channels != null and list_channels != ''">
+				AND vst_uac_channel IN
+				<foreach collection="list_channels" item="channel" open="(" separator="," close=")">
+					#{channel}
+				</foreach>
+			</if>
+			<if test="now != null and now != ''">
+				AND (
+					vst_uac_state = 2
+					<!-- OR (#{now} - vst_uac_synctime) > (3600000*6) -->
+				)
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_uac_date DESC, ROUND(vst_uac_amount * vst_uac_modulus) DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 根据日期统计 -->
+	<select id="queryReportByDate" parameterType="map" resultType="java.util.HashMap">
+		SELECT
+			vst_uac_date as date,
+			ROUND(sum(vst_uac_amount * vst_uac_modulus)) as vst_uac_amount,
+			MAX(vst_uac_amount) as old_uac_amount
+		FROM outer_vst_user_add_channel
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_uac_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_uac_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_uac_pkg = #{pkgName}
+			</if>
+			<if test="vst_uac_channel != null and vst_uac_channel != ''">
+				AND vst_uac_channel like '%${vst_uac_channel}%'
+			</if>
+			<if test="vst_uac_channel_eq != null and vst_uac_channel_eq != ''">
+				AND vst_uac_channel = #{vst_uac_channel_eq}
+			</if>
+			<if test="vst_uac_channel_ne != null and vst_uac_channel_ne != ''">
+				AND vst_uac_channel != #{vst_uac_channel_ne}
+			</if>
+			<if test="vst_uac_state != null and vst_uac_state != ''">
+				AND vst_uac_state = #{vst_uac_state}
+			</if>
+			<if test="vst_uac_synctime_start != null and vst_uac_synctime_start != ''">
+				AND vst_uac_synctime >= #{vst_uac_synctime_start}
+			</if>
+			<if test="vst_uac_synctime_end != null and vst_uac_synctime_end != ''">
+				AND vst_uac_synctime &lt;= #{vst_uac_synctime_end}
+			</if>
+			<if test="list_channels != null and list_channels != ''">
+				AND vst_uac_channel IN
+				<foreach collection="list_channels" item="channel" open="(" separator="," close=")">
+					#{channel}
+				</foreach>
+			</if>
+			<if test="now != null and now != ''">
+				AND (
+					vst_uac_state = 2
+					<!-- OR (#{now} - vst_uac_synctime) > (3600000*6) -->
+				)
+			</if>
+		</where>
+		GROUP BY vst_uac_date
+		ORDER BY vst_uac_date ASC
+	</select>
+	
+	<!-- 根据维度统计 -->
+	<select id="queryReportByDim" parameterType="map" resultType="java.util.HashMap">
+		SELECT
+			vst_uac_channel as value,
+			ROUND(sum(vst_uac_amount * vst_uac_modulus)) as vst_uac_amount
+		FROM outer_vst_user_add_channel
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_uac_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_uac_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_uac_pkg = #{pkgName}
+			</if>
+			<if test="vst_uac_channel != null and vst_uac_channel != ''">
+				AND vst_uac_channel like '%${vst_uac_channel}%'
+			</if>
+			<if test="vst_uac_channel_eq != null and vst_uac_channel_eq != ''">
+				AND vst_uac_channel = #{vst_uac_channel_eq}
+			</if>
+			<if test="vst_uac_channel_ne != null and vst_uac_channel_ne != ''">
+				AND vst_uac_channel != #{vst_uac_channel_ne}
+			</if>
+			<if test="vst_uac_state != null and vst_uac_state != ''">
+				AND vst_uac_state = #{vst_uac_state}
+			</if>
+			<if test="vst_uac_synctime_start != null and vst_uac_synctime_start != ''">
+				AND vst_uac_synctime >= #{vst_uac_synctime_start}
+			</if>
+			<if test="vst_uac_synctime_end != null and vst_uac_synctime_end != ''">
+				AND vst_uac_synctime &lt;= #{vst_uac_synctime_end}
+			</if>
+			<if test="list_channels != null and list_channels != ''">
+				AND vst_uac_channel IN
+				<foreach collection="list_channels" item="channel" open="(" separator="," close=")">
+					#{channel}
+				</foreach>
+			</if>
+			<if test="now != null and now != ''">
+				AND (
+					vst_uac_state = 2
+					<!-- OR (#{now} - vst_uac_synctime) > (3600000*6) -->
+				)
+			</if>
+		</where>
+		GROUP BY vst_uac_channel
+		ORDER BY vst_uac_amount DESC
+	</select>
+	
+</mapper>

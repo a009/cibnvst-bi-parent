@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 友盟-事件消息统计 -->
+<mapper namespace="com.vst.defend.dao3.umeng.VstUmengEventMessageDao">
+	
+	<select id="queryForList" parameterType="map" resultType="java.util.HashMap">
+		SELECT * FROM vst_umeng_event_message
+		<where>
+			<if test="vst_uem_id != null and vst_uem_id != ''">
+				vst_uem_id = #{vst_uem_id}
+			</if>
+			<if test="startDay != null and startDay != ''">
+				AND vst_uem_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_uem_date &lt;= #{endDay}
+			</if>
+			<if test="vst_uem_event_name != null and vst_uem_event_name != ''">
+				AND vst_uem_event_name = #{vst_uem_event_name}
+			</if>
+			<if test="vst_uem_param_type != null and vst_uem_param_type != ''">
+				AND vst_uem_param_type = #{vst_uem_param_type}
+			</if>
+			<if test="vst_uem_param_value != null and vst_uem_param_value != ''">
+				AND vst_uem_param_value like '%${vst_uem_param_value}%'
+			</if>
+			<if test="vst_uem_param_value_eq != null and vst_uem_param_value_eq != ''">
+				AND vst_uem_param_value = #{vst_uem_param_value_eq}
+			</if>
+			<if test="vst_uem_param_value_ne != null and vst_uem_param_value_ne != ''">
+				AND vst_uem_param_value != #{vst_uem_param_value_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_uem_date DESC, vst_uem_message_num DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+	<select id="queryCount" parameterType="map" resultType="int">
+		SELECT count(1) FROM vst_umeng_event_message
+		<where>
+			<if test="vst_uem_id != null and vst_uem_id != ''">
+				vst_uem_id = #{vst_uem_id}
+			</if>
+			<if test="startDay != null and startDay != ''">
+				AND vst_uem_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_uem_date &lt;= #{endDay}
+			</if>
+			<if test="vst_uem_event_name != null and vst_uem_event_name != ''">
+				AND vst_uem_event_name = #{vst_uem_event_name}
+			</if>
+			<if test="vst_uem_param_type != null and vst_uem_param_type != ''">
+				AND vst_uem_param_type = #{vst_uem_param_type}
+			</if>
+			<if test="vst_uem_param_value != null and vst_uem_param_value != ''">
+				AND vst_uem_param_value like '%${vst_uem_param_value}%'
+			</if>
+			<if test="vst_uem_param_value_eq != null and vst_uem_param_value_eq != ''">
+				AND vst_uem_param_value = #{vst_uem_param_value_eq}
+			</if>
+			<if test="vst_uem_param_value_ne != null and vst_uem_param_value_ne != ''">
+				AND vst_uem_param_value != #{vst_uem_param_value_ne}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryForListAsBean" parameterType="map" resultType="VstUmengEventMessage">
+		SELECT * FROM vst_umeng_event_message
+		<where>
+			<if test="vst_uem_id != null and vst_uem_id != ''">
+				vst_uem_id = #{vst_uem_id}
+			</if>
+			<if test="startDay != null and startDay != ''">
+				AND vst_uem_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_uem_date &lt;= #{endDay}
+			</if>
+			<if test="vst_uem_event_name != null and vst_uem_event_name != ''">
+				AND vst_uem_event_name = #{vst_uem_event_name}
+			</if>
+			<if test="vst_uem_param_type != null and vst_uem_param_type != ''">
+				AND vst_uem_param_type = #{vst_uem_param_type}
+			</if>
+			<if test="vst_uem_param_value != null and vst_uem_param_value != ''">
+				AND vst_uem_param_value like '%${vst_uem_param_value}%'
+			</if>
+			<if test="vst_uem_param_value_eq != null and vst_uem_param_value_eq != ''">
+				AND vst_uem_param_value = #{vst_uem_param_value_eq}
+			</if>
+			<if test="vst_uem_param_value_ne != null and vst_uem_param_value_ne != ''">
+				AND vst_uem_param_value != #{vst_uem_param_value_ne}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryById" parameterType="String" resultType="map">
+		SELECT * FROM vst_umeng_event_message
+		WHERE vst_uem_id = #{vst_uem_id}
+	</select>
+	
+	<insert id="insert" parameterType="VstUmengEventMessage">
+		INSERT INTO vst_umeng_event_message
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="vst_uem_id != null">
+				vst_uem_id,
+		  	</if>
+			<if test="vst_uem_date != null">
+				vst_uem_date,
+		  	</if>
+			<if test="vst_uem_event_name != null">
+				vst_uem_event_name,
+		  	</if>
+		  	<if test="vst_uem_param_type != null">
+				vst_uem_param_type,
+		  	</if>
+		  	<if test="vst_uem_param_value != null">
+				vst_uem_param_value,
+		  	</if>
+		  	<if test="vst_uem_message_num != null">
+				vst_uem_message_num,
+		  	</if>
+		  	<if test="vst_uem_radio != null">
+				vst_uem_radio,
+		  	</if>
+		  	<if test="vst_uem_addtime != null">
+				vst_uem_addtime,
+		  	</if>
+		  	<if test="vst_uem_creator != null">
+				vst_uem_creator,
+		  	</if>
+		  	<if test="vst_uem_summary != null">
+				vst_uem_summary,
+		  	</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="vst_uem_id != null">
+				#{vst_uem_id},
+		  	</if>
+			<if test="vst_uem_date != null">
+				#{vst_uem_date},
+		  	</if>
+		  	<if test="vst_uem_event_name != null">
+				#{vst_uem_event_name},
+		  	</if>
+		  	<if test="vst_uem_param_type != null">
+				#{vst_uem_param_type},
+		  	</if>
+		  	<if test="vst_uem_param_value != null">
+				#{vst_uem_param_value},
+		  	</if>
+		  	<if test="vst_uem_message_num != null">
+				#{vst_uem_message_num},
+		  	</if>
+		  	<if test="vst_uem_radio != null">
+				#{vst_uem_radio},
+		  	</if>
+		  	<if test="vst_uem_addtime != null">
+				#{vst_uem_addtime},
+		  	</if>
+		  	<if test="vst_uem_creator != null">
+				#{vst_uem_creator},
+		  	</if>
+		  	<if test="vst_uem_summary != null">
+				#{vst_uem_summary},
+		  	</if>
+		</trim>
+	</insert>
+	
+	<update id="update" parameterType="VstUmengEventMessage">
+		UPDATE vst_umeng_event_message
+		<set>
+			<if test="vst_uem_date != null">
+				vst_uem_date = #{vst_uem_date},
+		  	</if>
+		  	<if test="vst_uem_event_name != null">
+				vst_uem_event_name = #{vst_uem_event_name},
+		  	</if>
+		  	<if test="vst_uem_param_type != null">
+				vst_uem_param_type = #{vst_uem_param_type},
+		  	</if>
+		  	<if test="vst_uem_param_value != null">
+				vst_uem_param_value = #{vst_uem_param_value},
+		  	</if>
+		  	<if test="vst_uem_message_num != null">
+				vst_uem_message_num = #{vst_uem_message_num},
+		  	</if>
+		  	<if test="vst_uem_radio != null">
+				vst_uem_radio = #{vst_uem_radio},
+		  	</if>
+		  	<if test="vst_uem_uptime != null">
+				vst_uem_uptime = #{vst_uem_uptime},
+		  	</if>
+		  	<if test="vst_uem_updator != null">
+				vst_uem_updator = #{vst_uem_updator},
+		  	</if>
+		  	<if test="vst_uem_summary != null">
+				vst_uem_summary = #{vst_uem_summary},
+		  	</if>
+		</set>
+		WHERE vst_uem_id = #{vst_uem_id}
+	</update>
+	
+	<delete id="delete" parameterType="map">
+		DELETE FROM vst_umeng_event_message
+		WHERE vst_uem_id IN
+		<foreach collection="list_ids" item="id" open="(" separator="," close=")">
+			#{id}
+	     </foreach>
+	</delete>
+	
+	<!-- 批量添加 -->
+	<insert id="batchInsert" parameterType="java.util.List">
+		INSERT INTO vst_umeng_event_message
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			vst_uem_id,
+			vst_uem_date,
+			vst_uem_event_name,
+			vst_uem_param_type,
+			vst_uem_param_value,
+			vst_uem_message_num,
+			vst_uem_radio,
+			vst_uem_addtime,
+			vst_uem_creator,
+			vst_uem_summary,
+		</trim>
+		VALUES
+		<foreach collection="list" item="i" index="index" separator=",">
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				#{i.vst_uem_id},
+				#{i.vst_uem_date},
+				#{i.vst_uem_event_name},
+				#{i.vst_uem_param_type},
+				#{i.vst_uem_param_value},
+				#{i.vst_uem_message_num},
+				#{i.vst_uem_radio},
+				#{i.vst_uem_addtime},
+				#{i.vst_uem_creator},
+				#{i.vst_uem_summary},
+			</trim>
+		</foreach>
+	</insert>
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_uem_date '日期', vst_uem_event_name '事件名称', vst_uem_param_type '参数类型',
+				vst_uem_param_value '参数值', vst_uem_radio '占比', vst_uem_message_num '消息数量'
+			</otherwise>
+		</choose>
+		FROM vst_umeng_event_message
+		<where>
+			<if test="vst_uem_id != null and vst_uem_id != ''">
+				vst_uem_id = #{vst_uem_id}
+			</if>
+			<if test="startDay != null and startDay != ''">
+				AND vst_uem_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_uem_date &lt;= #{endDay}
+			</if>
+			<if test="vst_uem_event_name != null and vst_uem_event_name != ''">
+				AND vst_uem_event_name = #{vst_uem_event_name}
+			</if>
+			<if test="vst_uem_param_type != null and vst_uem_param_type != ''">
+				AND vst_uem_param_type = #{vst_uem_param_type}
+			</if>
+			<if test="vst_uem_param_value != null and vst_uem_param_value != ''">
+				AND vst_uem_param_value like '%${vst_uem_param_value}%'
+			</if>
+			<if test="vst_uem_param_value_eq != null and vst_uem_param_value_eq != ''">
+				AND vst_uem_param_value = #{vst_uem_param_value_eq}
+			</if>
+			<if test="vst_uem_param_value_ne != null and vst_uem_param_value_ne != ''">
+				AND vst_uem_param_value != #{vst_uem_param_value_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_uem_date DESC, vst_uem_message_num DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 查询汇总数据 -->
+	<select id="queryListSum" parameterType="map" resultType="java.util.HashMap">
+		SELECT vst_uem_param_value, sum(vst_uem_message_num) as vst_uem_message_num
+		FROM vst_umeng_event_message
+		<where>
+			<if test="vst_uem_id != null and vst_uem_id != ''">
+				vst_uem_id = #{vst_uem_id}
+			</if>
+			<if test="startDay != null and startDay != ''">
+				AND vst_uem_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_uem_date &lt;= #{endDay}
+			</if>
+			<if test="vst_uem_event_name != null and vst_uem_event_name != ''">
+				AND vst_uem_event_name = #{vst_uem_event_name}
+			</if>
+			<if test="vst_uem_param_type != null and vst_uem_param_type != ''">
+				AND vst_uem_param_type = #{vst_uem_param_type}
+			</if>
+			<if test="vst_uem_param_value != null and vst_uem_param_value != ''">
+				AND vst_uem_param_value like '%${vst_uem_param_value}%'
+			</if>
+			<if test="vst_uem_param_value_eq != null and vst_uem_param_value_eq != ''">
+				AND vst_uem_param_value = #{vst_uem_param_value_eq}
+			</if>
+			<if test="vst_uem_param_value_ne != null and vst_uem_param_value_ne != ''">
+				AND vst_uem_param_value != #{vst_uem_param_value_ne}
+			</if>
+		</where>
+		GROUP BY vst_uem_param_value
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_uem_message_num DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+	<!-- 查询汇总记录数 -->
+	<select id="queryCountSum" parameterType="map" resultType="int">
+		SELECT count(1) FROM (
+			SELECT vst_uem_param_value FROM vst_umeng_event_message
+			<where>
+				<if test="vst_uem_id != null and vst_uem_id != ''">
+					vst_uem_id = #{vst_uem_id}
+				</if>
+				<if test="startDay != null and startDay != ''">
+					AND vst_uem_date >= #{startDay}
+				</if>
+				<if test="endDay != null and endDay != ''">
+					AND vst_uem_date &lt;= #{endDay}
+				</if>
+				<if test="vst_uem_event_name != null and vst_uem_event_name != ''">
+					AND vst_uem_event_name = #{vst_uem_event_name}
+				</if>
+				<if test="vst_uem_param_type != null and vst_uem_param_type != ''">
+					AND vst_uem_param_type = #{vst_uem_param_type}
+				</if>
+				<if test="vst_uem_param_value != null and vst_uem_param_value != ''">
+					AND vst_uem_param_value like '%${vst_uem_param_value}%'
+				</if>
+				<if test="vst_uem_param_value_eq != null and vst_uem_param_value_eq != ''">
+					AND vst_uem_param_value = #{vst_uem_param_value_eq}
+				</if>
+				<if test="vst_uem_param_value_ne != null and vst_uem_param_value_ne != ''">
+					AND vst_uem_param_value != #{vst_uem_param_value_ne}
+				</if>
+			</where>
+			GROUP BY vst_uem_param_value
+		) a
+	</select>
+	
+	<!-- 导出汇总数据 -->
+	<select id="queryExportSum" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+			vst_uem_param_value '参数值', sum(vst_uem_message_num) '消息数量'
+		FROM vst_umeng_event_message
+		<where>
+			<if test="vst_uem_id != null and vst_uem_id != ''">
+				vst_uem_id = #{vst_uem_id}
+			</if>
+			<if test="startDay != null and startDay != ''">
+				AND vst_uem_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_uem_date &lt;= #{endDay}
+			</if>
+			<if test="vst_uem_event_name != null and vst_uem_event_name != ''">
+				AND vst_uem_event_name = #{vst_uem_event_name}
+			</if>
+			<if test="vst_uem_param_type != null and vst_uem_param_type != ''">
+				AND vst_uem_param_type = #{vst_uem_param_type}
+			</if>
+			<if test="vst_uem_param_value != null and vst_uem_param_value != ''">
+				AND vst_uem_param_value like '%${vst_uem_param_value}%'
+			</if>
+			<if test="vst_uem_param_value_eq != null and vst_uem_param_value_eq != ''">
+				AND vst_uem_param_value = #{vst_uem_param_value_eq}
+			</if>
+			<if test="vst_uem_param_value_ne != null and vst_uem_param_value_ne != ''">
+				AND vst_uem_param_value != #{vst_uem_param_value_ne}
+			</if>
+		</where>
+		GROUP BY vst_uem_param_value
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				消息数量 DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+</mapper>

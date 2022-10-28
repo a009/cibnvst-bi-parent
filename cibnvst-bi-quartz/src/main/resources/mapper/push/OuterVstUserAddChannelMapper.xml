@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vst.quartz.dao.push.OuterVstUserAddChannelMapper">
+	<resultMap id="BaseResultMap" type="com.vst.common.pojo.OuterVstUserAddChannel">
+		<id property="vst_uac_id" column="vst_uac_id" jdbcType="VARCHAR"/>
+		<result property="vst_uac_date" column="vst_uac_date" jdbcType="INTEGER"/>
+		<result property="vst_uac_pkg" column="vst_uac_pkg" jdbcType="VARCHAR"/>
+		<result property="vst_uac_channel" column="vst_uac_channel" jdbcType="VARCHAR"/>
+		<result property="vst_uac_amount" column="vst_uac_amount" jdbcType="BIGINT"/>
+		<result property="vst_uac_dod" column="vst_uac_dod" jdbcType="VARCHAR"/>
+		<result property="vst_uac_wow" column="vst_uac_wow" jdbcType="VARCHAR"/>
+		<result property="vst_uac_mom" column="vst_uac_mom" jdbcType="VARCHAR"/>
+		<result property="vst_uac_modulus" column="vst_uac_modulus" jdbcType="VARCHAR"/>
+		<result property="vst_uac_state" column="vst_uac_state" jdbcType="INTEGER"/>
+		<result property="vst_uac_synctime" column="vst_uac_synctime" jdbcType="BIGINT"/>
+		<result property="vst_uac_addtime" column="vst_uac_addtime" jdbcType="BIGINT"/>
+		<result property="vst_uac_creator" column="vst_uac_creator" jdbcType="VARCHAR"/>
+		<result property="vst_uac_uptime" column="vst_uac_uptime" jdbcType="BIGINT"/>
+		<result property="vst_uac_updator" column="vst_uac_updator" jdbcType="VARCHAR"/>
+		<result property="vst_uac_summary" column="vst_uac_summary" jdbcType="VARCHAR"/>
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		vst_uac_id,vst_uac_date,vst_uac_pkg,vst_uac_channel,vst_uac_amount,vst_uac_dod,vst_uac_wow,vst_uac_mom
+		,vst_uac_modulus,vst_uac_state,vst_uac_synctime,vst_uac_addtime,vst_uac_creator,vst_uac_uptime,vst_uac_updator
+		,vst_uac_summary
+	</sql>
+
+	<!--保存数据-->
+	<insert id="batchVstUserAddChannel" parameterType="java.util.List">
+		replace INTO outer_vst_user_add_channel(
+		 <include refid="Base_Column_List" />
+		)
+		VALUES
+		<foreach collection="list" item="item" index="index"
+		separator=",">
+			(#{item.vst_uac_id,jdbcType=VARCHAR},#{item.vst_uac_date,jdbcType=INTEGER},#{item.vst_uac_pkg,jdbcType=VARCHAR},
+			#{item.vst_uac_channel,jdbcType=VARCHAR},#{item.vst_uac_amount,jdbcType=BIGINT},#{item.vst_uac_dod,jdbcType=VARCHAR},
+			#{item.vst_uac_wow,jdbcType=VARCHAR},#{item.vst_uac_mom,jdbcType=VARCHAR},#{item.vst_uac_modulus,jdbcType=VARCHAR},
+			#{item.vst_uac_state,jdbcType=INTEGER},#{item.vst_uac_synctime,jdbcType=BIGINT},#{item.vst_uac_addtime,jdbcType=BIGINT},
+			#{item.vst_uac_creator,jdbcType=VARCHAR},#{item.vst_uac_uptime,jdbcType=BIGINT},#{item.vst_uac_updator,jdbcType=VARCHAR},
+			#{item.vst_uac_summary,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</insert>
+
+	<!--删除今天数据-->
+	<delete id="deleteVstUserAddChannel">
+		DELETE FROM outer_vst_user_add_channel WHERE vst_uac_date = date_format(now(),'%Y%m%d')
+	</delete>
+
+	<!--根据传入的统计日期删除数据-->
+	<delete id="deleteVstUserDateAddChannel" parameterType="java.util.Map">
+        <if test="date == 0">
+			DELETE FROM outer_vst_user_add_channel WHERE vst_uac_date >= #{maxOuter}
+		</if>
+		<if test="date > 0">
+			DELETE FROM outer_vst_user_add_channel WHERE vst_uac_date >= #{maxOuter} and <![CDATA[vst_uac_date<=#{maxUser}]]>
+		</if>
+	</delete>
+
+	<!--查询全部的数据-->
+	<select id="queryOuterAddChannel" resultMap="BaseResultMap">
+	    SELECT * FROM outer_vst_user_add_channel limit 0,10
+	</select>
+
+
+	<!--查询最大的统计日期-->
+	<select id="queryMaxAdd" resultType="java.lang.Integer">
+		SELECT MAX(vst_uac_date) FROM outer_vst_user_add_channel
+	</select>
+
+	<!--查询超过六小时未通过审核的数据-->
+	<select id="queryVstUserStateList" resultMap="BaseResultMap">
+		SELECT vst_uac_id,vst_uac_uptime,vst_uac_updator FROM outer_vst_user_add_channel WHERE (unix_timestamp(now()) - (vst_uac_synctime/1000)) > (60*60*6)
+		AND vst_uac_state=1
+	</select>
+
+	<!--修改为审核并且时间同步时间超过六个小时的数据，将为审核修改成一审核-->
+	<update id="updateStateAdd" parameterType="java.util.List">
+
+		<foreach separator=";" index="index" item="item" collection="list">
+			UPDATE outer_vst_user_add_channel
+			SET vst_uac_state = 2,vst_uac_updator = 'sync_audit',vst_uac_uptime = #{item.vst_uac_uptime,jdbcType=BIGINT}
+			WHERE vst_uac_id = #{item.vst_uac_id,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+
+
+</mapper>

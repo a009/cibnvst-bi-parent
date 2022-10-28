@@ -1,0 +1,115 @@
+
+.panel-hd {
+    position: relative;
+    height: 34px;
+    border-bottom: 1px solid #dde0e7;
+    background: #ebf6fc;
+}
+.hd-left {
+    float: left;
+    display: inline;
+    margin: 7px 0 0 20px;
+    line-height: 22px;
+    color: #1a2940;
+}
+.hd-left .tit {
+    float: left;
+    margin: 0;
+    font-size: 14px;
+    font-weight: normal;
+}
+.panel-bd {
+    width: 100%;
+}
+.data-byarea .byarea-cate {
+    float: right;
+    padding-top: 10px;
+}
+.data-byarea .byarea-cate li {
+    float: left;
+    height: 25px;
+    padding: 0 10px;
+    line-height: 25px;
+    border: 1px solid #dde0e7;
+    cursor: pointer;
+    background: #f6f6f6;
+}
+.data-byarea .byarea-cate li.selected {
+    background: #33bbd0;
+    border-color: #33bbd0;
+    color: #fff;
+    cursor: pointer;
+}
+.data-byarea .byarea-con {
+    padding: 0 10px;
+    clear: both;
+}
+.result-chart {
+    height: 500px;
+    padding: 20px 10px 10px;
+    margin-bottom: 10px;
+}
+.table-data {
+    width: 100%;
+    box-sizing: content-box;
+    background: #fff;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+.table-data thead td,
+.table-data thead th {
+    border-bottom: 1px solid #dde0e7;
+    font-size: 14px;
+    color: #1a2940;
+    background: #f6fafe;
+    font-weight: normal;
+}
+.table-data td {
+    height: 36px;
+    padding: 0 15px;
+}
+.text-right {
+    text-align: right;
+}
+.table-data tr.even-row,
+.table-data tbody.even-row {
+    background-color: #fff;
+}
+.tdfir span{
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    vertical-align: middle;
+}
+.tdfir .ctrl-bar {
+    margin-right: 8px;
+    cursor: pointer;
+    background-image: url("../img/tab-open.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 16px;
+}
+.data-unfold .ctrl-bar{
+    background-image: url("../img/tab-close.png");
+}
+.data-unfold .sub-table {
+    display: table-row;
+    border: solid #dde0e7;
+    border-width: 1px 0;
+}
+.sub-table {
+    display: none;
+}
+.sub-table>.tdfir {
+    padding: 0 16px;
+}
+.table-data .table-data {
+    margin: 10px 0;
+    border: 1px solid #e9e9e9;
+}
+.sub-table:hover{
+    background-color: #e3f2ff;
+}

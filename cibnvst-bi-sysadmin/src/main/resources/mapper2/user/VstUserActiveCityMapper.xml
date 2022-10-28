@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 活跃用户(城市)统计 -->
+<mapper namespace="com.vst.defend.dao2.user.VstUserActiveCityDao">
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_uaci_date '日期', vst_uaci_pkg '包名', vst_uaci_city '城市',
+				vst_uaci_amount '日活跃用户', vst_uaci_dod '日活跃天环比', vst_uaci_wow '日活跃周环比', vst_uaci_mom '日活跃月环比',
+				vst_uaci_week '周活跃用户', vst_uaci_week_dod '周活跃天环比', vst_uaci_week_wow '周活跃周环比', vst_uaci_week_mom '周活跃月环比',
+				vst_uaci_month '月活跃用户', vst_uaci_month_dod '月活跃天环比', vst_uaci_month_wow '月活跃周环比', vst_uaci_month_mom '月活跃月环比'
+			</otherwise>
+		</choose>
+		FROM vst_user_active_city
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_uaci_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_uaci_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_uaci_pkg = #{pkgName}
+			</if>
+			<if test="vst_uaci_city != null and vst_uaci_city != ''">
+				AND vst_uaci_city like '%${vst_uaci_city}%'
+			</if>
+			<if test="vst_uaci_city_eq != null and vst_uaci_city_eq != ''">
+				AND vst_uaci_city = #{vst_uaci_city_eq}
+			</if>
+			<if test="vst_uaci_city_ne != null and vst_uaci_city_ne != ''">
+				AND vst_uaci_city != #{vst_uaci_city_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_uaci_date DESC, vst_uaci_amount DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按维度统计 -->
+	<select id="queryReportByDim" parameterType="map" resultType="map">
+		SELECT vst_uaci_city, sum(vst_uaci_amount) vst_uaci_amount
+		FROM vst_user_active_city
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_uaci_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_uaci_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_uaci_pkg = #{pkgName}
+			</if>
+			<if test="vst_uaci_city != null and vst_uaci_city != ''">
+				AND vst_uaci_city like '%${vst_uaci_city}%'
+			</if>
+			<if test="vst_uaci_city_eq != null and vst_uaci_city_eq != ''">
+				AND vst_uaci_city = #{vst_uaci_city_eq}
+			</if>
+			<if test="vst_uaci_city_ne != null and vst_uaci_city_ne != ''">
+				AND vst_uaci_city != #{vst_uaci_city_ne}
+			</if>
+		</where>
+		GROUP BY vst_uaci_city
+		ORDER BY vst_uaci_amount DESC
+	</select>
+	
+</mapper>

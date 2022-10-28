@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vst.quartz.dao.quartz.QuartzMapper">
+
+	<sql id="vst_quartz_config_list">
+		vst_qc_id,vst_qc_type,vst_qc_job_type,vst_qc_job_cron,vst_qc_deal_after,vst_qc_deal_before,vst_qc_table,vst_qc_name
+		,vst_qc_trigger_name,vst_qc_condition,vst_qc_backup,vst_qc_backup_type,vst_qc_backup_condition,vst_qc_entity_name
+		,vst_qc_source_name,vst_qc_target_source_name,vst_qc_tarbet_table_name,vst_qc_file_format,vst_qc_file_address
+		,vst_qc_is_compression,vst_qc_compression_format,vst_qc_compression_address,vst_qc_state,vst_qc_addtime
+		,vst_qc_creator,vst_qc_uptime,vst_qc_updator,vst_qc_summary
+	</sql>
+
+	<!--查询表数据-->
+	<select id="queryTable" resultType="java.util.Map" parameterType="java.lang.String">
+		${value}
+	</select>
+
+
+	<!--同步数据-->
+	<insert id="batchTable" parameterType="java.lang.String">
+		${value }
+	</insert>
+
+
+	<!--查询全部的配置-->
+	<select id="queryQuartzConfig" resultType="java.util.HashMap" parameterType="java.util.Map">
+
+		SELECT * FROM vst_quartz_config WHERE 1=1
+		<if test="jobName != null">
+		  AND vst_qc_name like "%"#{jobName}"%"
+		</if>
+	</select>
+
+	<!--根据任务名查询配置-->
+	<select id="queryByName" resultType="com.vst.common.pojo.VstQuartzConfig" parameterType="java.lang.String">
+		SELECT * FROM vst_quartz_config WHERE vst_qc_name=#{VALUE}
+	</select>
+	
+	<select id="queryByIdQuartz" resultType="com.vst.common.pojo.VstQuartzConfig" parameterType="java.lang.String">
+		SELECT * FROM vst_quartz_config WHERE vst_qc_id=#{VALUE}
+	</select>
+
+	<!--根据配置的任务名永久删除配置-->
+	<delete id="deleteQuartzConfig" parameterType="java.lang.String">
+		DELETE FROM vst_quartz_config WHERE vst_qc_id=#{VALUE}
+	</delete>
+
+	<!--保存配置-->
+	<insert id="batchQuartzConfig" parameterType="com.vst.common.pojo.VstQuartzConfig">
+		INSERT INTO vst_quartz_config(<include refid="vst_quartz_config_list"/>)
+		VALUES (
+		#{vst_qc_id,jdbcType=VARCHAR},
+		#{vst_qc_type,jdbcType=INTEGER},
+		#{vst_qc_job_type,jdbcType=INTEGER},
+		#{vst_qc_job_cron,jdbcType=VARCHAR},
+		#{vst_qc_deal_after,jdbcType=INTEGER},
+		#{vst_qc_deal_before,jdbcType=INTEGER},
+		#{vst_qc_table,jdbcType=VARCHAR},
+		#{vst_qc_name,jdbcType=VARCHAR},
+		#{vst_qc_trigger_name,jdbcType=VARCHAR},
+		#{vst_qc_condition,jdbcType=VARCHAR},
+		#{vst_qc_backup,jdbcType=INTEGER},
+		#{vst_qc_backup_type,jdbcType=VARCHAR},
+		#{vst_qc_backup_condition,jdbcType=VARCHAR},
+		#{vst_qc_entity_name,jdbcType=VARCHAR},
+		#{vst_qc_source_name,jdbcType=VARCHAR },
+		#{vst_qc_target_source_name,jdbcType=VARCHAR },
+		#{vst_qc_tarbet_table_name,jdbcType=VARCHAR },
+		#{vst_qc_file_format,jdbcType=INTEGER },
+		#{vst_qc_file_address,jdbcType=VARCHAR},
+		#{vst_qc_is_compression,jdbcType=INTEGER },
+		#{vst_qc_compression_format,jdbcType=INTEGER },
+		#{vst_qc_compression_address,jdbcType=VARCHAR},
+		#{vst_qc_state,jdbcType=INTEGER},
+		#{vst_qc_addtime,jdbcType=BIGINT},
+		#{vst_qc_creator,jdbcType=VARCHAR},
+		#{vst_qc_uptime,jdbcType=BIGINT},
+		#{vst_qc_updator,jdbcType=VARCHAR},
+		#{vst_qc_summary,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<!--编辑配置文件-->
+	<update id="updateQuartzConfig" parameterType="com.vst.common.pojo.VstQuartzConfig">
+		UPDATE vst_quartz_config
+		<trim prefix="set" suffixOverrides=",">
+			<if test="vst_qc_type != null">
+				vst_qc_type=#{vst_qc_type},
+			</if>
+
+			<if test="vst_qc_job_type != null">
+				vst_qc_job_type=#{vst_qc_job_type},
+			</if>
+
+			<if test="vst_qc_job_cron != null">
+				vst_qc_job_cron=#{vst_qc_job_cron},
+			</if>
+
+			<if test="vst_qc_deal_after != null">
+				vst_qc_deal_after=#{vst_qc_deal_after},
+			</if>
+
+			<if test="vst_qc_deal_before != null">
+				vst_qc_deal_before=#{vst_qc_deal_before},
+			</if>
+
+			<if test="vst_qc_table != null">
+				vst_qc_table=#{vst_qc_table},
+			</if>
+
+			<if test="vst_qc_name != null">
+				vst_qc_name=#{vst_qc_name},
+			</if>
+
+			<if test="vst_qc_state != null">
+				vst_qc_state=#{vst_qc_state},
+			</if>
+
+			<if test="vst_qc_condition">
+				vst_qc_condition=#{vst_qc_condition},
+			</if>
+
+			<if test="vst_qc_uptime != null">
+				vst_qc_uptime=#{vst_qc_uptime},
+			</if>
+
+			<if test="vst_qc_updator != null">
+				vst_qc_updator=#{vst_qc_updator},
+			</if>
+
+			<if test="vst_qc_backup_type != null">
+				vst_qc_backup_type=#{vst_qc_backup_type},
+			</if>
+
+			<if test="vst_qc_backup != null">
+				vst_qc_backup=#{vst_qc_backup},
+			</if>
+
+			<if test="vst_qc_backup_condition != null">
+				vst_qc_backup_condition=#{vst_qc_backup_condition},
+			</if>
+			<if test="vst_qc_entity_name != null">
+				vst_qc_entity_name=#{vst_qc_entity_name},
+			</if>
+			<if test="vst_qc_source_name != null">
+				vst_qc_source_name=#{vst_qc_source_name},
+			</if>
+			<if test="vst_qc_target_source_name != null">
+				vst_qc_target_source_name=#{vst_qc_target_source_name},
+			</if>
+			<if test="vst_qc_tarbet_table_name != null">
+				vst_qc_tarbet_table_name=#{vst_qc_tarbet_table_name},
+			</if>
+			<if test="vst_qc_file_format != null">
+				vst_qc_file_format=#{vst_qc_file_format},
+			</if>
+			<if test="vst_qc_file_address != null">
+				vst_qc_file_address=#{vst_qc_file_address},
+			</if>
+			<if test="vst_qc_is_compression != null">
+				vst_qc_is_compression=#{vst_qc_is_compression},
+			</if>
+			<if test="vst_qc_compression_format != null">
+				vst_qc_compression_format=#{vst_qc_compression_format},
+			</if>
+			<if test="vst_qc_compression_address != null">
+				vst_qc_compression_address=#{vst_qc_compression_address},
+			</if>
+			<if test="vst_qc_summary != null">
+				vst_qc_summary=#{vst_qc_summary},
+			</if>
+		</trim>
+		WHERE vst_qc_id=#{vst_qc_id}
+	</update>
+
+
+
+
+
+
+
+</mapper>

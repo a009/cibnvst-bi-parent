@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 系统权限 -->
+<mapper namespace="com.vst.defend.dao.sys.VstSysPermissionDao">
+	
+	<select id="queryForList" parameterType="map" resultType="java.util.HashMap">
+		SELECT a.*, b.vst_module_name, b.vst_module_state, c.vst_button_name, c.vst_button_state, d.vst_role_name, d.vst_role_state 
+		FROM vst_sys_permission a
+		LEFT JOIN vst_sys_module b ON a.vst_module_id = b.vst_module_id
+		LEFT JOIN vst_sys_button c ON a.vst_button_id = c.vst_button_id
+		LEFT JOIN vst_sys_role d ON a.vst_role_id = d.vst_role_id
+		<where>
+			<if test="vst_role_id != null and vst_role_id != ''">
+				a.vst_role_id = #{vst_role_id}
+			</if>
+			<if test="vst_module_id != null and vst_module_id != ''">
+				AND a.vst_module_id = #{vst_module_id}
+			</if>
+			<if test="vst_button_id != null and vst_button_id != ''">
+				AND a.vst_button_id = #{vst_button_id}
+			</if>
+			<if test="vst_module_state != null and vst_module_state != ''">
+				AND b.vst_module_state = #{vst_module_state}
+			</if>
+			<if test="vst_module_name != null and vst_module_name != ''">
+				AND b.vst_module_name like '%${vst_module_name}%'
+			</if>
+			<if test="vst_button_state != null and vst_button_state != ''">
+				AND c.vst_button_state = #{vst_button_state}
+			</if>
+			<if test="vst_button_name != null and vst_button_name != ''">
+				AND c.vst_button_name like '%${vst_button_name}%'
+			</if>
+			<if test="vst_role_state != null and vst_role_state != ''">
+				AND d.vst_role_state = #{vst_role_state}
+			</if>
+			<if test="vst_role_name != null and vst_role_name != ''">
+				AND d.vst_role_name like '%${vst_role_name}%'
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				d.vst_pk_id ASC, b.vst_module_index ASC, c.vst_button_index ASC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+	<select id="queryCount" parameterType="map" resultType="int">
+		SELECT count(1) FROM vst_sys_permission a
+		LEFT JOIN vst_sys_module b ON a.vst_module_id = b.vst_module_id
+		LEFT JOIN vst_sys_button c ON a.vst_button_id = c.vst_button_id
+		LEFT JOIN vst_sys_role d ON a.vst_role_id = d.vst_role_id
+		<where>
+			<if test="vst_role_id != null and vst_role_id != ''">
+				a.vst_role_id = #{vst_role_id}
+			</if>
+			<if test="vst_module_id != null and vst_module_id != ''">
+				AND a.vst_module_id = #{vst_module_id}
+			</if>
+			<if test="vst_button_id != null and vst_button_id != ''">
+				AND a.vst_button_id = #{vst_button_id}
+			</if>
+			<if test="vst_module_state != null and vst_module_state != ''">
+				AND b.vst_module_state = #{vst_module_state}
+			</if>
+			<if test="vst_module_name != null and vst_module_name != ''">
+				AND b.vst_module_name like '%${vst_module_name}%'
+			</if>
+			<if test="vst_button_state != null and vst_button_state != ''">
+				AND c.vst_button_state = #{vst_button_state}
+			</if>
+			<if test="vst_button_name != null and vst_button_name != ''">
+				AND c.vst_button_name like '%${vst_button_name}%'
+			</if>
+			<if test="vst_role_state != null and vst_role_state != ''">
+				AND d.vst_role_state = #{vst_role_state}
+			</if>
+			<if test="vst_role_name != null and vst_role_name != ''">
+				AND d.vst_role_name like '%${vst_role_name}%'
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryForListAsBean" parameterType="map" resultType="VstSysPermission">
+		SELECT * FROM vst_sys_permission
+		<where>
+			<if test="vst_role_id != null and vst_role_id != ''">
+				vst_role_id = #{vst_role_id}
+			</if>
+			<if test="vst_module_id != null and vst_module_id != ''">
+				AND vst_module_id = #{vst_module_id}
+			</if>
+			<if test="vst_button_id != null and vst_button_id != ''">
+				AND vst_button_id = #{vst_button_id}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="insert" parameterType="VstSysPermission">
+		INSERT INTO vst_sys_permission
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="vst_role_id != null">
+				vst_role_id,
+		  	</if>
+			<if test="vst_module_id != null">
+				vst_module_id,
+		  	</if>
+			<if test="vst_button_id != null">
+				vst_button_id,
+		  	</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="vst_role_id != null">
+				#{vst_role_id},
+		  	</if>
+			<if test="vst_module_id != null">
+				#{vst_module_id},
+		  	</if>
+		  	<if test="vst_button_id != null">
+				#{vst_button_id},
+		  	</if>
+		</trim>
+	</insert>
+	
+	<delete id="delete" parameterType="map">
+		DELETE FROM vst_sys_permission
+		<where>
+			<if test="vst_role_id != null and vst_role_id != ''">
+				AND vst_role_id = #{vst_role_id}
+			</if>
+			<if test="vst_module_id != null">
+				AND vst_module_id = #{vst_module_id}
+			</if>
+			<if test="vst_button_id != null">
+				AND vst_button_id = #{vst_button_id}
+			</if>
+			<if test="list_roleIds != null and list_roleIds != ''">
+				AND vst_role_id IN
+				<foreach collection="list_roleIds" item="roleId" open="(" separator="," close=")">
+					#{roleId}
+			    </foreach>
+			</if>
+			<if test="list_moduleIds != null and list_moduleIds != ''">
+				AND vst_module_id IN
+				<foreach collection="list_moduleIds" item="moduleId" open="(" separator="," close=")">
+					#{moduleId}
+				</foreach>
+			</if>
+			<if test="list_buttonIds != null and list_buttonIds != ''">
+				AND vst_button_id IN
+				<foreach collection="list_buttonIds" item="buttonId" open="(" separator="," close=")">
+					#{buttonId}
+				</foreach>
+			</if>
+		</where>
+	</delete>
+	
+	<!-- 批量添加 -->
+	<insert id="batchInsert" parameterType="java.util.List">
+		INSERT INTO vst_sys_permission
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			vst_role_id,
+			vst_module_id,
+			vst_button_id
+		</trim>
+		VALUES
+		<foreach collection="list" item="bean" index="index" separator=",">
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+	            #{bean.vst_role_id},
+	            #{bean.vst_module_id},
+	            #{bean.vst_button_id}
+	        </trim>
+        </foreach>
+	</insert>
+	
+	<!-- 查询权限 -->
+	<select id="queryPermissions" parameterType="map" resultType="java.util.HashMap">
+		SELECT b.vst_module_parent, a.vst_module_id, a.vst_button_id 
+		FROM vst_sys_permission a 
+		LEFT JOIN vst_sys_module b ON a.vst_module_id = b.vst_module_id
+		<where>
+			<if test="vst_role_id != null and vst_role_id != ''">
+				a.vst_role_id = #{vst_role_id}
+			</if>
+			<if test="vst_module_id != null and vst_module_id != ''">
+				AND a.vst_module_id = #{vst_module_id}
+			</if>
+			<if test="vst_button_id != null and vst_button_id != ''">
+				AND a.vst_button_id = #{vst_button_id}
+			</if>
+			<if test="vst_module_state != null and vst_module_state != ''">
+				AND b.vst_module_state = #{vst_module_state}
+			</if>
+		</where>
+	</select>
+	
+</mapper>

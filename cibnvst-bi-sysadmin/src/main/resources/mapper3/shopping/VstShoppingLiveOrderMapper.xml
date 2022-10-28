@@ -1,0 +1,1358 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 全球购直播订单 -->
+<mapper namespace="com.vst.defend.dao3.shopping.VstShoppingLiveOrderDao">
+	
+	<select id="queryForList" parameterType="map" resultType="java.util.HashMap">
+		SELECT * FROM vst_shopping_live_order
+		<where>
+			<if test="startDate != null and startDate != ''">
+				vst_shopping_live_order_date >= #{startDate}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND vst_shopping_live_order_date &lt; #{endDate}
+			</if>
+			<if test="startTime != null and startTime != ''">
+				AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') >= #{startTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') &lt;= #{endTime}
+			</if>
+			<if test="vst_shopping_live_order_channel != null and vst_shopping_live_order_channel != ''">
+				AND vst_shopping_live_order_channel = #{vst_shopping_live_order_channel}
+			</if>
+			<if test="vst_shopping_live_order_number != null and vst_shopping_live_order_number != ''">
+				AND vst_shopping_live_order_number = #{vst_shopping_live_order_number}
+			</if>
+			<if test="vst_shopping_live_order_goods_number != null and vst_shopping_live_order_goods_number != ''">
+				AND vst_shopping_live_order_goods_number = #{vst_shopping_live_order_goods_number}
+			</if>
+			<if test="vst_shopping_live_order_goods_category != null and vst_shopping_live_order_goods_category != ''">
+				AND vst_shopping_live_order_goods_category like '%${vst_shopping_live_order_goods_category}%'
+			</if>
+			<if test="vst_shopping_live_order_goods_name != null and vst_shopping_live_order_goods_name != ''">
+				AND vst_shopping_live_order_goods_name like '%${vst_shopping_live_order_goods_name}%'
+			</if>
+			<if test="vst_shopping_live_order_province != null and vst_shopping_live_order_province != ''">
+				AND vst_shopping_live_order_province like '%${vst_shopping_live_order_province}%'
+			</if>
+			<if test="vst_shopping_live_order_address != null and vst_shopping_live_order_address != ''">
+				AND vst_shopping_live_order_address like '%${vst_shopping_live_order_address}%'
+			</if>
+			<if test="vst_shopping_live_order_recipient != null and vst_shopping_live_order_recipient != ''">
+				AND vst_shopping_live_order_recipient like '%${vst_shopping_live_order_recipient}%'
+			</if>
+			<if test="vst_shopping_live_order_phone != null and vst_shopping_live_order_phone != ''">
+				AND vst_shopping_live_order_phone like '%${vst_shopping_live_order_phone}%'
+			</if>
+			<if test="vst_shopping_live_order_source != null and vst_shopping_live_order_source != ''">
+				AND vst_shopping_live_order_source like '%${vst_shopping_live_order_source}%'
+			</if>
+			<if test="vst_shopping_live_order_balance_status != null and vst_shopping_live_order_balance_status != ''">
+				AND vst_shopping_live_order_balance_status = #{vst_shopping_live_order_balance_status}
+			</if>
+			<if test="vst_shopping_live_order_logistics_status != null and vst_shopping_live_order_logistics_status != ''">
+				AND vst_shopping_live_order_logistics_status = #{vst_shopping_live_order_logistics_status}
+			</if>
+			<if test="vst_shopping_live_order_operator != null and vst_shopping_live_order_operator != ''">
+				AND vst_shopping_live_order_operator like '%${vst_shopping_live_order_operator}%'
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_shopping_live_order_date DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+	<select id="queryCount" parameterType="map" resultType="int">
+		SELECT count(1) FROM vst_shopping_live_order
+		<where>
+			<if test="startDate != null and startDate != ''">
+				vst_shopping_live_order_date >= #{startDate}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND vst_shopping_live_order_date &lt; #{endDate}
+			</if>
+			<if test="startTime != null and startTime != ''">
+				AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') >= #{startTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') &lt;= #{endTime}
+			</if>
+			<if test="vst_shopping_live_order_channel != null and vst_shopping_live_order_channel != ''">
+				AND vst_shopping_live_order_channel = #{vst_shopping_live_order_channel}
+			</if>
+			<if test="vst_shopping_live_order_number != null and vst_shopping_live_order_number != ''">
+				AND vst_shopping_live_order_number = #{vst_shopping_live_order_number}
+			</if>
+			<if test="vst_shopping_live_order_goods_number != null and vst_shopping_live_order_goods_number != ''">
+				AND vst_shopping_live_order_goods_number = #{vst_shopping_live_order_goods_number}
+			</if>
+			<if test="vst_shopping_live_order_goods_category != null and vst_shopping_live_order_goods_category != ''">
+				AND vst_shopping_live_order_goods_category like '%${vst_shopping_live_order_goods_category}%'
+			</if>
+			<if test="vst_shopping_live_order_goods_name != null and vst_shopping_live_order_goods_name != ''">
+				AND vst_shopping_live_order_goods_name like '%${vst_shopping_live_order_goods_name}%'
+			</if>
+			<if test="vst_shopping_live_order_province != null and vst_shopping_live_order_province != ''">
+				AND vst_shopping_live_order_province like '%${vst_shopping_live_order_province}%'
+			</if>
+			<if test="vst_shopping_live_order_address != null and vst_shopping_live_order_address != ''">
+				AND vst_shopping_live_order_address like '%${vst_shopping_live_order_address}%'
+			</if>
+			<if test="vst_shopping_live_order_recipient != null and vst_shopping_live_order_recipient != ''">
+				AND vst_shopping_live_order_recipient like '%${vst_shopping_live_order_recipient}%'
+			</if>
+			<if test="vst_shopping_live_order_phone != null and vst_shopping_live_order_phone != ''">
+				AND vst_shopping_live_order_phone like '%${vst_shopping_live_order_phone}%'
+			</if>
+			<if test="vst_shopping_live_order_source != null and vst_shopping_live_order_source != ''">
+				AND vst_shopping_live_order_source like '%${vst_shopping_live_order_source}%'
+			</if>
+			<if test="vst_shopping_live_order_balance_status != null and vst_shopping_live_order_balance_status != ''">
+				AND vst_shopping_live_order_balance_status = #{vst_shopping_live_order_balance_status}
+			</if>
+			<if test="vst_shopping_live_order_logistics_status != null and vst_shopping_live_order_logistics_status != ''">
+				AND vst_shopping_live_order_logistics_status = #{vst_shopping_live_order_logistics_status}
+			</if>
+			<if test="vst_shopping_live_order_operator != null and vst_shopping_live_order_operator != ''">
+				AND vst_shopping_live_order_operator like '%${vst_shopping_live_order_operator}%'
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryForListAsBean" parameterType="map" resultType="VstShoppingLiveOrder">
+		SELECT * FROM vst_shopping_live_order
+		<where>
+			<if test="startDate != null and startDate != ''">
+				vst_shopping_live_order_date >= #{startDate}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND vst_shopping_live_order_date &lt; #{endDate}
+			</if>
+			<if test="startTime != null and startTime != ''">
+				AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') >= #{startTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') &lt;= #{endTime}
+			</if>
+			<if test="vst_shopping_live_order_channel != null and vst_shopping_live_order_channel != ''">
+				AND vst_shopping_live_order_channel = #{vst_shopping_live_order_channel}
+			</if>
+			<if test="vst_shopping_live_order_number != null and vst_shopping_live_order_number != ''">
+				AND vst_shopping_live_order_number = #{vst_shopping_live_order_number}
+			</if>
+			<if test="vst_shopping_live_order_goods_number != null and vst_shopping_live_order_goods_number != ''">
+				AND vst_shopping_live_order_goods_number = #{vst_shopping_live_order_goods_number}
+			</if>
+			<if test="vst_shopping_live_order_goods_category != null and vst_shopping_live_order_goods_category != ''">
+				AND vst_shopping_live_order_goods_category like '%${vst_shopping_live_order_goods_category}%'
+			</if>
+			<if test="vst_shopping_live_order_goods_name != null and vst_shopping_live_order_goods_name != ''">
+				AND vst_shopping_live_order_goods_name like '%${vst_shopping_live_order_goods_name}%'
+			</if>
+			<if test="vst_shopping_live_order_province != null and vst_shopping_live_order_province != ''">
+				AND vst_shopping_live_order_province like '%${vst_shopping_live_order_province}%'
+			</if>
+			<if test="vst_shopping_live_order_address != null and vst_shopping_live_order_address != ''">
+				AND vst_shopping_live_order_address like '%${vst_shopping_live_order_address}%'
+			</if>
+			<if test="vst_shopping_live_order_recipient != null and vst_shopping_live_order_recipient != ''">
+				AND vst_shopping_live_order_recipient like '%${vst_shopping_live_order_recipient}%'
+			</if>
+			<if test="vst_shopping_live_order_phone != null and vst_shopping_live_order_phone != ''">
+				AND vst_shopping_live_order_phone like '%${vst_shopping_live_order_phone}%'
+			</if>
+			<if test="vst_shopping_live_order_source != null and vst_shopping_live_order_source != ''">
+				AND vst_shopping_live_order_source like '%${vst_shopping_live_order_source}%'
+			</if>
+			<if test="vst_shopping_live_order_balance_status != null and vst_shopping_live_order_balance_status != ''">
+				AND vst_shopping_live_order_balance_status = #{vst_shopping_live_order_balance_status}
+			</if>
+			<if test="vst_shopping_live_order_logistics_status != null and vst_shopping_live_order_logistics_status != ''">
+				AND vst_shopping_live_order_logistics_status = #{vst_shopping_live_order_logistics_status}
+			</if>
+			<if test="vst_shopping_live_order_operator != null and vst_shopping_live_order_operator != ''">
+				AND vst_shopping_live_order_operator like '%${vst_shopping_live_order_operator}%'
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryById" parameterType="String" resultType="map">
+		SELECT * FROM vst_shopping_live_order
+		WHERE vst_pk_id = #{vst_pk_id}
+	</select>
+	
+	<insert id="insert" parameterType="VstShoppingLiveOrder">
+		INSERT INTO vst_shopping_live_order
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="vst_shopping_live_order_date != null">
+				vst_shopping_live_order_date,
+		  	</if>
+			<if test="vst_shopping_live_order_channel != null">
+				vst_shopping_live_order_channel,
+		  	</if>
+		  	<if test="vst_shopping_live_order_number != null">
+				vst_shopping_live_order_number,
+		  	</if>
+		  	<if test="vst_shopping_live_order_goods_number != null">
+				vst_shopping_live_order_goods_number,
+		  	</if>
+		  	<if test="vst_shopping_live_order_goods_category != null">
+				vst_shopping_live_order_goods_category,
+		  	</if>
+		  	<if test="vst_shopping_live_order_goods_name != null">
+				vst_shopping_live_order_goods_name,
+		  	</if>
+		  	<if test="vst_shopping_live_order_goods_price != null">
+				vst_shopping_live_order_goods_price,
+		  	</if>
+		  	<if test="vst_shopping_live_order_qty != null">
+				vst_shopping_live_order_qty,
+		  	</if>
+		  	<if test="vst_shopping_live_order_sale_price != null">
+				vst_shopping_live_order_sale_price,
+		  	</if>
+		  	<if test="vst_shopping_live_order_province != null">
+				vst_shopping_live_order_province,
+		  	</if>
+		  	<if test="vst_shopping_live_order_address != null">
+				vst_shopping_live_order_address,
+		  	</if>
+		  	<if test="vst_shopping_live_order_recipient != null">
+				vst_shopping_live_order_recipient,
+		  	</if>
+		  	<if test="vst_shopping_live_order_phone != null">
+				vst_shopping_live_order_phone,
+		  	</if>
+		  	<if test="vst_shopping_live_order_source != null">
+				vst_shopping_live_order_source,
+		  	</if>
+		  	<if test="vst_shopping_live_order_balance_status != null">
+				vst_shopping_live_order_balance_status,
+		  	</if>
+		  	<if test="vst_shopping_live_order_logistics_status != null">
+				vst_shopping_live_order_logistics_status,
+		  	</if>
+		  	<if test="vst_shopping_live_order_create_time != null">
+				vst_shopping_live_order_create_time,
+		  	</if>
+		  	<if test="vst_shopping_live_order_balance_time != null">
+				vst_shopping_live_order_balance_time,
+		  	</if>
+		  	<if test="vst_shopping_live_order_addtime != null">
+				vst_shopping_live_order_addtime,
+		  	</if>
+		  	<if test="vst_shopping_live_order_uptime != null">
+				vst_shopping_live_order_uptime,
+		  	</if>
+		  	<if test="vst_shopping_live_order_operator != null">
+				vst_shopping_live_order_operator,
+		  	</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="vst_shopping_live_order_date != null">
+				#{vst_shopping_live_order_date},
+		  	</if>
+		  	<if test="vst_shopping_live_order_channel != null">
+				#{vst_shopping_live_order_channel},
+		  	</if>
+		  	<if test="vst_shopping_live_order_number != null">
+				#{vst_shopping_live_order_number},
+		  	</if>
+		  	<if test="vst_shopping_live_order_goods_number != null">
+				#{vst_shopping_live_order_goods_number},
+		  	</if>
+		  	<if test="vst_shopping_live_order_goods_category != null">
+				#{vst_shopping_live_order_goods_category},
+		  	</if>
+		  	<if test="vst_shopping_live_order_goods_name != null">
+				#{vst_shopping_live_order_goods_name},
+		  	</if>
+		  	<if test="vst_shopping_live_order_goods_price != null">
+				#{vst_shopping_live_order_goods_price},
+		  	</if>
+		  	<if test="vst_shopping_live_order_qty != null">
+				#{vst_shopping_live_order_qty},
+		  	</if>
+		  	<if test="vst_shopping_live_order_sale_price != null">
+				#{vst_shopping_live_order_sale_price},
+		  	</if>
+		  	<if test="vst_shopping_live_order_province != null">
+				#{vst_shopping_live_order_province},
+		  	</if>
+		  	<if test="vst_shopping_live_order_address != null">
+				#{vst_shopping_live_order_address},
+		  	</if>
+		  	<if test="vst_shopping_live_order_recipient != null">
+				#{vst_shopping_live_order_recipient},
+		  	</if>
+		  	<if test="vst_shopping_live_order_phone != null">
+				#{vst_shopping_live_order_phone},
+		  	</if>
+		  	<if test="vst_shopping_live_order_source != null">
+				#{vst_shopping_live_order_source},
+		  	</if>
+		  	<if test="vst_shopping_live_order_balance_status != null">
+				#{vst_shopping_live_order_balance_status},
+		  	</if>
+		  	<if test="vst_shopping_live_order_logistics_status != null">
+				#{vst_shopping_live_order_logistics_status},
+		  	</if>
+		  	<if test="vst_shopping_live_order_create_time != null">
+				#{vst_shopping_live_order_create_time},
+		  	</if>
+		  	<if test="vst_shopping_live_order_balance_time != null">
+				#{vst_shopping_live_order_balance_time},
+		  	</if>
+		  	<if test="vst_shopping_live_order_addtime != null">
+				#{vst_shopping_live_order_addtime},
+		  	</if>
+		  	<if test="vst_shopping_live_order_uptime != null">
+				#{vst_shopping_live_order_uptime},
+		  	</if>
+		  	<if test="vst_shopping_live_order_operator != null">
+				#{vst_shopping_live_order_operator},
+		  	</if>
+		</trim>
+	</insert>
+	
+	<update id="update" parameterType="VstShoppingLiveOrder">
+		UPDATE vst_shopping_live_order
+		<set>
+			<if test="vst_shopping_live_order_date != null">
+				vst_shopping_live_order_date = #{vst_shopping_live_order_date},
+		  	</if>
+		  	<if test="vst_shopping_live_order_channel != null">
+				vst_shopping_live_order_channel = #{vst_shopping_live_order_channel},
+		  	</if>
+		  	<if test="vst_shopping_live_order_number != null">
+				vst_shopping_live_order_number = #{vst_shopping_live_order_number},
+		  	</if>
+		  	<if test="vst_shopping_live_order_goods_number != null">
+				vst_shopping_live_order_goods_number = #{vst_shopping_live_order_goods_number},
+		  	</if>
+		  	<if test="vst_shopping_live_order_goods_category != null">
+				vst_shopping_live_order_goods_category = #{vst_shopping_live_order_goods_category},
+		  	</if>
+		  	<if test="vst_shopping_live_order_goods_name != null">
+				vst_shopping_live_order_goods_name = #{vst_shopping_live_order_goods_name},
+		  	</if>
+		  	<if test="vst_shopping_live_order_goods_price != null">
+				vst_shopping_live_order_goods_price = #{vst_shopping_live_order_goods_price},
+		  	</if>
+		  	<if test="vst_shopping_live_order_qty != null">
+				vst_shopping_live_order_qty = #{vst_shopping_live_order_qty},
+		  	</if>
+		  	<if test="vst_shopping_live_order_sale_price != null">
+				vst_shopping_live_order_sale_price = #{vst_shopping_live_order_sale_price},
+		  	</if>
+		  	<if test="vst_shopping_live_order_province != null">
+				vst_shopping_live_order_province = #{vst_shopping_live_order_province},
+		  	</if>
+		  	<if test="vst_shopping_live_order_address != null">
+				vst_shopping_live_order_address = #{vst_shopping_live_order_address},
+		  	</if>
+		  	<if test="vst_shopping_live_order_recipient != null">
+				vst_shopping_live_order_recipient = #{vst_shopping_live_order_recipient},
+		  	</if>
+		  	<if test="vst_shopping_live_order_phone != null">
+				vst_shopping_live_order_phone = #{vst_shopping_live_order_phone},
+		  	</if>
+		  	<if test="vst_shopping_live_order_source != null">
+				vst_shopping_live_order_source = #{vst_shopping_live_order_source},
+		  	</if>
+		  	<if test="vst_shopping_live_order_balance_status != null">
+				vst_shopping_live_order_balance_status = #{vst_shopping_live_order_balance_status},
+		  	</if>
+		  	<if test="vst_shopping_live_order_logistics_status != null">
+				vst_shopping_live_order_logistics_status = #{vst_shopping_live_order_logistics_status},
+		  	</if>
+		  	<if test="vst_shopping_live_order_create_time != null">
+				vst_shopping_live_order_create_time = #{vst_shopping_live_order_create_time},
+		  	</if>
+		  	<if test="vst_shopping_live_order_balance_time != null">
+				vst_shopping_live_order_balance_time = #{vst_shopping_live_order_balance_time},
+		  	</if>
+		  	<if test="vst_shopping_live_order_uptime != null">
+				vst_shopping_live_order_uptime = #{vst_shopping_live_order_uptime},
+		  	</if>
+		  	<if test="vst_shopping_live_order_operator != null">
+				vst_shopping_live_order_operator = #{vst_shopping_live_order_operator},
+		  	</if>
+		</set>
+		WHERE vst_pk_id = #{vst_pk_id}
+	</update>
+	
+	<delete id="delete" parameterType="map">
+		DELETE FROM vst_shopping_live_order
+		WHERE vst_pk_id IN
+		<foreach collection="list_ids" item="id" open="(" separator="," close=")">
+			#{id}
+	     </foreach>
+	</delete>
+	
+	<!-- 批量添加 -->
+	<insert id="batchInsert" parameterType="java.util.List">
+		INSERT INTO vst_shopping_live_order
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			vst_shopping_live_order_date,
+			vst_shopping_live_order_channel,
+			vst_shopping_live_order_number,
+			vst_shopping_live_order_goods_number,
+			vst_shopping_live_order_goods_category,
+			vst_shopping_live_order_goods_name,
+			vst_shopping_live_order_goods_price,
+			vst_shopping_live_order_qty,
+			vst_shopping_live_order_sale_price,
+			vst_shopping_live_order_province,
+			vst_shopping_live_order_address,
+			vst_shopping_live_order_recipient,
+			vst_shopping_live_order_phone,
+			vst_shopping_live_order_source,
+			vst_shopping_live_order_balance_status,
+			vst_shopping_live_order_logistics_status,
+			vst_shopping_live_order_create_time,
+			vst_shopping_live_order_balance_time,
+			vst_shopping_live_order_addtime,
+			vst_shopping_live_order_uptime,
+			vst_shopping_live_order_operator,
+		</trim>
+		VALUES
+		<foreach collection="list" item="i" index="index" separator=",">
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				#{i.vst_shopping_live_order_date},
+				#{i.vst_shopping_live_order_channel},
+				#{i.vst_shopping_live_order_number},
+				#{i.vst_shopping_live_order_goods_number},
+				#{i.vst_shopping_live_order_goods_category},
+				#{i.vst_shopping_live_order_goods_name},
+				#{i.vst_shopping_live_order_goods_price},
+				#{i.vst_shopping_live_order_qty},
+				#{i.vst_shopping_live_order_sale_price},
+				#{i.vst_shopping_live_order_province},
+				#{i.vst_shopping_live_order_address},
+				#{i.vst_shopping_live_order_recipient},
+				#{i.vst_shopping_live_order_phone},
+				#{i.vst_shopping_live_order_source},
+				#{i.vst_shopping_live_order_balance_status},
+				#{i.vst_shopping_live_order_logistics_status},
+				#{i.vst_shopping_live_order_create_time},
+				#{i.vst_shopping_live_order_balance_time},
+				#{i.vst_shopping_live_order_addtime},
+				#{i.vst_shopping_live_order_uptime},
+				#{i.vst_shopping_live_order_operator},
+			</trim>
+		</foreach>
+	</insert>
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_shopping_live_order_date '日期', vst_shopping_live_order_channel '渠道', vst_shopping_live_order_number '订单号',
+				vst_shopping_live_order_goods_number '商品编号', vst_shopping_live_order_goods_category '商品分类', vst_shopping_live_order_goods_name '商品名称',
+				vst_shopping_live_order_goods_price '商品价格', vst_shopping_live_order_qty '购买数量', vst_shopping_live_order_sale_price '销售金额',
+				vst_shopping_live_order_province '省份', vst_shopping_live_order_address '收件地址', vst_shopping_live_order_recipient '收件人',
+				vst_shopping_live_order_phone '联系电话', vst_shopping_live_order_source '商品来源', vst_shopping_live_order_balance_status '对账状态',
+				vst_shopping_live_order_logistics_status '物流状态', vst_shopping_live_order_create_time '创建时间', vst_shopping_live_order_balance_time '对账时间'
+			</otherwise>
+		</choose>
+		FROM vst_shopping_live_order
+		<where>
+			<if test="startDate != null and startDate != ''">
+				vst_shopping_live_order_date >= #{startDate}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND vst_shopping_live_order_date &lt; #{endDate}
+			</if>
+			<if test="startTime != null and startTime != ''">
+				AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') >= #{startTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') &lt;= #{endTime}
+			</if>
+			<if test="vst_shopping_live_order_channel != null and vst_shopping_live_order_channel != ''">
+				AND vst_shopping_live_order_channel = #{vst_shopping_live_order_channel}
+			</if>
+			<if test="vst_shopping_live_order_number != null and vst_shopping_live_order_number != ''">
+				AND vst_shopping_live_order_number = #{vst_shopping_live_order_number}
+			</if>
+			<if test="vst_shopping_live_order_goods_number != null and vst_shopping_live_order_goods_number != ''">
+				AND vst_shopping_live_order_goods_number = #{vst_shopping_live_order_goods_number}
+			</if>
+			<if test="vst_shopping_live_order_goods_category != null and vst_shopping_live_order_goods_category != ''">
+				AND vst_shopping_live_order_goods_category like '%${vst_shopping_live_order_goods_category}%'
+			</if>
+			<if test="vst_shopping_live_order_goods_name != null and vst_shopping_live_order_goods_name != ''">
+				AND vst_shopping_live_order_goods_name like '%${vst_shopping_live_order_goods_name}%'
+			</if>
+			<if test="vst_shopping_live_order_province != null and vst_shopping_live_order_province != ''">
+				AND vst_shopping_live_order_province like '%${vst_shopping_live_order_province}%'
+			</if>
+			<if test="vst_shopping_live_order_address != null and vst_shopping_live_order_address != ''">
+				AND vst_shopping_live_order_address like '%${vst_shopping_live_order_address}%'
+			</if>
+			<if test="vst_shopping_live_order_recipient != null and vst_shopping_live_order_recipient != ''">
+				AND vst_shopping_live_order_recipient like '%${vst_shopping_live_order_recipient}%'
+			</if>
+			<if test="vst_shopping_live_order_phone != null and vst_shopping_live_order_phone != ''">
+				AND vst_shopping_live_order_phone like '%${vst_shopping_live_order_phone}%'
+			</if>
+			<if test="vst_shopping_live_order_source != null and vst_shopping_live_order_source != ''">
+				AND vst_shopping_live_order_source like '%${vst_shopping_live_order_source}%'
+			</if>
+			<if test="vst_shopping_live_order_balance_status != null and vst_shopping_live_order_balance_status != ''">
+				AND vst_shopping_live_order_balance_status = #{vst_shopping_live_order_balance_status}
+			</if>
+			<if test="vst_shopping_live_order_logistics_status != null and vst_shopping_live_order_logistics_status != ''">
+				AND vst_shopping_live_order_logistics_status = #{vst_shopping_live_order_logistics_status}
+			</if>
+			<if test="vst_shopping_live_order_operator != null and vst_shopping_live_order_operator != ''">
+				AND vst_shopping_live_order_operator like '%${vst_shopping_live_order_operator}%'
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_shopping_live_order_date DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 根据日期统计 -->
+	<select id="queryReportByDate" parameterType="map" resultType="java.util.HashMap">
+		SELECT
+			vst_shopping_live_order_date as date,
+			vst_shopping_live_order_channel as channel,
+			vst_shopping_live_order_goods_price as goodPrice,
+			vst_shopping_live_order_qty as qty,
+			vst_shopping_live_order_sale_price as salePrice
+		FROM vst_shopping_live_order
+		<where>
+			<if test="startDate != null and startDate != ''">
+				vst_shopping_live_order_date >= #{startDate}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND vst_shopping_live_order_date &lt; #{endDate}
+			</if>
+			<if test="startTime != null and startTime != ''">
+				AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') >= #{startTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') &lt;= #{endTime}
+			</if>
+			<if test="vst_shopping_live_order_channel != null and vst_shopping_live_order_channel != ''">
+				AND vst_shopping_live_order_channel = #{vst_shopping_live_order_channel}
+			</if>
+			<if test="vst_shopping_live_order_number != null and vst_shopping_live_order_number != ''">
+				AND vst_shopping_live_order_number = #{vst_shopping_live_order_number}
+			</if>
+			<if test="vst_shopping_live_order_goods_number != null and vst_shopping_live_order_goods_number != ''">
+				AND vst_shopping_live_order_goods_number = #{vst_shopping_live_order_goods_number}
+			</if>
+			<if test="vst_shopping_live_order_goods_category != null and vst_shopping_live_order_goods_category != ''">
+				AND vst_shopping_live_order_goods_category like '%${vst_shopping_live_order_goods_category}%'
+			</if>
+			<if test="vst_shopping_live_order_goods_name != null and vst_shopping_live_order_goods_name != ''">
+				AND vst_shopping_live_order_goods_name like '%${vst_shopping_live_order_goods_name}%'
+			</if>
+			<if test="vst_shopping_live_order_province != null and vst_shopping_live_order_province != ''">
+				AND vst_shopping_live_order_province like '%${vst_shopping_live_order_province}%'
+			</if>
+			<if test="vst_shopping_live_order_address != null and vst_shopping_live_order_address != ''">
+				AND vst_shopping_live_order_address like '%${vst_shopping_live_order_address}%'
+			</if>
+			<if test="vst_shopping_live_order_recipient != null and vst_shopping_live_order_recipient != ''">
+				AND vst_shopping_live_order_recipient like '%${vst_shopping_live_order_recipient}%'
+			</if>
+			<if test="vst_shopping_live_order_phone != null and vst_shopping_live_order_phone != ''">
+				AND vst_shopping_live_order_phone like '%${vst_shopping_live_order_phone}%'
+			</if>
+			<if test="vst_shopping_live_order_source != null and vst_shopping_live_order_source != ''">
+				AND vst_shopping_live_order_source like '%${vst_shopping_live_order_source}%'
+			</if>
+			<if test="vst_shopping_live_order_balance_status != null and vst_shopping_live_order_balance_status != ''">
+				AND vst_shopping_live_order_balance_status = #{vst_shopping_live_order_balance_status}
+			</if>
+			<if test="vst_shopping_live_order_logistics_status != null and vst_shopping_live_order_logistics_status != ''">
+				AND vst_shopping_live_order_logistics_status = #{vst_shopping_live_order_logistics_status}
+			</if>
+			<if test="vst_shopping_live_order_operator != null and vst_shopping_live_order_operator != ''">
+				AND vst_shopping_live_order_operator like '%${vst_shopping_live_order_operator}%'
+			</if>
+		</where>
+		ORDER BY vst_shopping_live_order_date ASC
+	</select>
+	
+	<!-- 查询分页数据(根据商品ID、名称) -->
+	<select id="queryListByGood" parameterType="map" resultType="java.util.HashMap">
+		SELECT
+			vst_shopping_live_order_goods_number as goodId,
+			vst_shopping_live_order_goods_name as goodName,
+			count(1) as num,
+			sum(vst_shopping_live_order_qty) as qty,
+			sum(vst_shopping_live_order_sale_price) as salePrice
+		FROM vst_shopping_live_order
+		<where>
+			<if test="startDate != null and startDate != ''">
+				vst_shopping_live_order_date >= #{startDate}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND vst_shopping_live_order_date &lt; #{endDate}
+			</if>
+			<if test="startTime != null and startTime != ''">
+				AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') >= #{startTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') &lt;= #{endTime}
+			</if>
+			<if test="vst_shopping_live_order_channel != null and vst_shopping_live_order_channel != ''">
+				AND vst_shopping_live_order_channel = #{vst_shopping_live_order_channel}
+			</if>
+			<if test="vst_shopping_live_order_number != null and vst_shopping_live_order_number != ''">
+				AND vst_shopping_live_order_number = #{vst_shopping_live_order_number}
+			</if>
+			<if test="vst_shopping_live_order_goods_number != null and vst_shopping_live_order_goods_number != ''">
+				AND vst_shopping_live_order_goods_number = #{vst_shopping_live_order_goods_number}
+			</if>
+			<if test="vst_shopping_live_order_goods_category != null and vst_shopping_live_order_goods_category != ''">
+				AND vst_shopping_live_order_goods_category like '%${vst_shopping_live_order_goods_category}%'
+			</if>
+			<if test="vst_shopping_live_order_goods_name != null and vst_shopping_live_order_goods_name != ''">
+				AND vst_shopping_live_order_goods_name like '%${vst_shopping_live_order_goods_name}%'
+			</if>
+			<if test="vst_shopping_live_order_province != null and vst_shopping_live_order_province != ''">
+				AND vst_shopping_live_order_province like '%${vst_shopping_live_order_province}%'
+			</if>
+			<if test="vst_shopping_live_order_address != null and vst_shopping_live_order_address != ''">
+				AND vst_shopping_live_order_address like '%${vst_shopping_live_order_address}%'
+			</if>
+			<if test="vst_shopping_live_order_recipient != null and vst_shopping_live_order_recipient != ''">
+				AND vst_shopping_live_order_recipient like '%${vst_shopping_live_order_recipient}%'
+			</if>
+			<if test="vst_shopping_live_order_phone != null and vst_shopping_live_order_phone != ''">
+				AND vst_shopping_live_order_phone like '%${vst_shopping_live_order_phone}%'
+			</if>
+			<if test="vst_shopping_live_order_source != null and vst_shopping_live_order_source != ''">
+				AND vst_shopping_live_order_source like '%${vst_shopping_live_order_source}%'
+			</if>
+			<if test="vst_shopping_live_order_balance_status != null and vst_shopping_live_order_balance_status != ''">
+				AND vst_shopping_live_order_balance_status = #{vst_shopping_live_order_balance_status}
+			</if>
+			<if test="vst_shopping_live_order_logistics_status != null and vst_shopping_live_order_logistics_status != ''">
+				AND vst_shopping_live_order_logistics_status = #{vst_shopping_live_order_logistics_status}
+			</if>
+			<if test="vst_shopping_live_order_operator != null and vst_shopping_live_order_operator != ''">
+				AND vst_shopping_live_order_operator like '%${vst_shopping_live_order_operator}%'
+			</if>
+		</where>
+		GROUP BY vst_shopping_live_order_goods_number, vst_shopping_live_order_goods_name
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				num DESC, qty DESC, salePrice DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+	<!-- 查询记录数(根据商品ID、名称) -->
+	<select id="queryCountByGood" parameterType="map" resultType="int">
+		SELECT count(1) FROM (
+			SELECT
+				vst_shopping_live_order_goods_number as goodId,
+				vst_shopping_live_order_goods_name as goodName
+			FROM vst_shopping_live_order
+			<where>
+				<if test="startDate != null and startDate != ''">
+					vst_shopping_live_order_date >= #{startDate}
+				</if>
+				<if test="endDate != null and endDate != ''">
+					AND vst_shopping_live_order_date &lt; #{endDate}
+				</if>
+				<if test="startTime != null and startTime != ''">
+					AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') >= #{startTime}
+				</if>
+				<if test="endTime != null and endTime != ''">
+					AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') &lt;= #{endTime}
+				</if>
+				<if test="vst_shopping_live_order_channel != null and vst_shopping_live_order_channel != ''">
+					AND vst_shopping_live_order_channel = #{vst_shopping_live_order_channel}
+				</if>
+				<if test="vst_shopping_live_order_number != null and vst_shopping_live_order_number != ''">
+					AND vst_shopping_live_order_number = #{vst_shopping_live_order_number}
+				</if>
+				<if test="vst_shopping_live_order_goods_number != null and vst_shopping_live_order_goods_number != ''">
+					AND vst_shopping_live_order_goods_number = #{vst_shopping_live_order_goods_number}
+				</if>
+				<if test="vst_shopping_live_order_goods_category != null and vst_shopping_live_order_goods_category != ''">
+					AND vst_shopping_live_order_goods_category like '%${vst_shopping_live_order_goods_category}%'
+				</if>
+				<if test="vst_shopping_live_order_goods_name != null and vst_shopping_live_order_goods_name != ''">
+					AND vst_shopping_live_order_goods_name like '%${vst_shopping_live_order_goods_name}%'
+				</if>
+				<if test="vst_shopping_live_order_province != null and vst_shopping_live_order_province != ''">
+					AND vst_shopping_live_order_province like '%${vst_shopping_live_order_province}%'
+				</if>
+				<if test="vst_shopping_live_order_address != null and vst_shopping_live_order_address != ''">
+					AND vst_shopping_live_order_address like '%${vst_shopping_live_order_address}%'
+				</if>
+				<if test="vst_shopping_live_order_recipient != null and vst_shopping_live_order_recipient != ''">
+					AND vst_shopping_live_order_recipient like '%${vst_shopping_live_order_recipient}%'
+				</if>
+				<if test="vst_shopping_live_order_phone != null and vst_shopping_live_order_phone != ''">
+					AND vst_shopping_live_order_phone like '%${vst_shopping_live_order_phone}%'
+				</if>
+				<if test="vst_shopping_live_order_source != null and vst_shopping_live_order_source != ''">
+					AND vst_shopping_live_order_source like '%${vst_shopping_live_order_source}%'
+				</if>
+				<if test="vst_shopping_live_order_balance_status != null and vst_shopping_live_order_balance_status != ''">
+					AND vst_shopping_live_order_balance_status = #{vst_shopping_live_order_balance_status}
+				</if>
+				<if test="vst_shopping_live_order_logistics_status != null and vst_shopping_live_order_logistics_status != ''">
+					AND vst_shopping_live_order_logistics_status = #{vst_shopping_live_order_logistics_status}
+				</if>
+				<if test="vst_shopping_live_order_operator != null and vst_shopping_live_order_operator != ''">
+					AND vst_shopping_live_order_operator like '%${vst_shopping_live_order_operator}%'
+				</if>
+			</where>
+			GROUP BY goodId, goodName
+		) a
+	</select>
+	
+	<!-- 导出数据(根据商品ID、名称) -->
+	<select id="queryExportByGood" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+			vst_shopping_live_order_goods_number '商品编号',
+			vst_shopping_live_order_goods_name '商品名称',
+			count(1) '订单数量',
+			sum(vst_shopping_live_order_qty) '购买数量',
+			sum(vst_shopping_live_order_sale_price) '销售总金额'
+		FROM vst_shopping_live_order
+		<where>
+			<if test="startDate != null and startDate != ''">
+				vst_shopping_live_order_date >= #{startDate}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND vst_shopping_live_order_date &lt; #{endDate}
+			</if>
+			<if test="startTime != null and startTime != ''">
+				AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') >= #{startTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') &lt;= #{endTime}
+			</if>
+			<if test="vst_shopping_live_order_channel != null and vst_shopping_live_order_channel != ''">
+				AND vst_shopping_live_order_channel = #{vst_shopping_live_order_channel}
+			</if>
+			<if test="vst_shopping_live_order_number != null and vst_shopping_live_order_number != ''">
+				AND vst_shopping_live_order_number = #{vst_shopping_live_order_number}
+			</if>
+			<if test="vst_shopping_live_order_goods_number != null and vst_shopping_live_order_goods_number != ''">
+				AND vst_shopping_live_order_goods_number = #{vst_shopping_live_order_goods_number}
+			</if>
+			<if test="vst_shopping_live_order_goods_category != null and vst_shopping_live_order_goods_category != ''">
+				AND vst_shopping_live_order_goods_category like '%${vst_shopping_live_order_goods_category}%'
+			</if>
+			<if test="vst_shopping_live_order_goods_name != null and vst_shopping_live_order_goods_name != ''">
+				AND vst_shopping_live_order_goods_name like '%${vst_shopping_live_order_goods_name}%'
+			</if>
+			<if test="vst_shopping_live_order_province != null and vst_shopping_live_order_province != ''">
+				AND vst_shopping_live_order_province like '%${vst_shopping_live_order_province}%'
+			</if>
+			<if test="vst_shopping_live_order_address != null and vst_shopping_live_order_address != ''">
+				AND vst_shopping_live_order_address like '%${vst_shopping_live_order_address}%'
+			</if>
+			<if test="vst_shopping_live_order_recipient != null and vst_shopping_live_order_recipient != ''">
+				AND vst_shopping_live_order_recipient like '%${vst_shopping_live_order_recipient}%'
+			</if>
+			<if test="vst_shopping_live_order_phone != null and vst_shopping_live_order_phone != ''">
+				AND vst_shopping_live_order_phone like '%${vst_shopping_live_order_phone}%'
+			</if>
+			<if test="vst_shopping_live_order_source != null and vst_shopping_live_order_source != ''">
+				AND vst_shopping_live_order_source like '%${vst_shopping_live_order_source}%'
+			</if>
+			<if test="vst_shopping_live_order_balance_status != null and vst_shopping_live_order_balance_status != ''">
+				AND vst_shopping_live_order_balance_status = #{vst_shopping_live_order_balance_status}
+			</if>
+			<if test="vst_shopping_live_order_logistics_status != null and vst_shopping_live_order_logistics_status != ''">
+				AND vst_shopping_live_order_logistics_status = #{vst_shopping_live_order_logistics_status}
+			</if>
+			<if test="vst_shopping_live_order_operator != null and vst_shopping_live_order_operator != ''">
+				AND vst_shopping_live_order_operator like '%${vst_shopping_live_order_operator}%'
+			</if>
+		</where>
+		GROUP BY vst_shopping_live_order_goods_number, vst_shopping_live_order_goods_name
+		ORDER BY 订单数量 DESC, 购买数量 DESC, 销售总金额 DESC
+	</select>
+	
+	<!-- 根据商品分类统计 -->
+	<select id="queryReportByCategory" parameterType="map" resultType="java.util.HashMap">
+		SELECT
+			vst_shopping_live_order_goods_category as category,
+			count(1) as num,
+			sum(vst_shopping_live_order_qty) as qty,
+			sum(vst_shopping_live_order_sale_price) as salePrice
+		FROM vst_shopping_live_order
+		<where>
+			<if test="startDate != null and startDate != ''">
+				vst_shopping_live_order_date >= #{startDate}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND vst_shopping_live_order_date &lt; #{endDate}
+			</if>
+			<if test="startTime != null and startTime != ''">
+				AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') >= #{startTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') &lt;= #{endTime}
+			</if>
+			<if test="vst_shopping_live_order_channel != null and vst_shopping_live_order_channel != ''">
+				AND vst_shopping_live_order_channel = #{vst_shopping_live_order_channel}
+			</if>
+			<if test="vst_shopping_live_order_number != null and vst_shopping_live_order_number != ''">
+				AND vst_shopping_live_order_number = #{vst_shopping_live_order_number}
+			</if>
+			<if test="vst_shopping_live_order_goods_number != null and vst_shopping_live_order_goods_number != ''">
+				AND vst_shopping_live_order_goods_number = #{vst_shopping_live_order_goods_number}
+			</if>
+			<if test="vst_shopping_live_order_goods_category != null and vst_shopping_live_order_goods_category != ''">
+				AND vst_shopping_live_order_goods_category like '%${vst_shopping_live_order_goods_category}%'
+			</if>
+			<if test="vst_shopping_live_order_goods_name != null and vst_shopping_live_order_goods_name != ''">
+				AND vst_shopping_live_order_goods_name like '%${vst_shopping_live_order_goods_name}%'
+			</if>
+			<if test="vst_shopping_live_order_province != null and vst_shopping_live_order_province != ''">
+				AND vst_shopping_live_order_province like '%${vst_shopping_live_order_province}%'
+			</if>
+			<if test="vst_shopping_live_order_address != null and vst_shopping_live_order_address != ''">
+				AND vst_shopping_live_order_address like '%${vst_shopping_live_order_address}%'
+			</if>
+			<if test="vst_shopping_live_order_recipient != null and vst_shopping_live_order_recipient != ''">
+				AND vst_shopping_live_order_recipient like '%${vst_shopping_live_order_recipient}%'
+			</if>
+			<if test="vst_shopping_live_order_phone != null and vst_shopping_live_order_phone != ''">
+				AND vst_shopping_live_order_phone like '%${vst_shopping_live_order_phone}%'
+			</if>
+			<if test="vst_shopping_live_order_source != null and vst_shopping_live_order_source != ''">
+				AND vst_shopping_live_order_source like '%${vst_shopping_live_order_source}%'
+			</if>
+			<if test="vst_shopping_live_order_balance_status != null and vst_shopping_live_order_balance_status != ''">
+				AND vst_shopping_live_order_balance_status = #{vst_shopping_live_order_balance_status}
+			</if>
+			<if test="vst_shopping_live_order_logistics_status != null and vst_shopping_live_order_logistics_status != ''">
+				AND vst_shopping_live_order_logistics_status = #{vst_shopping_live_order_logistics_status}
+			</if>
+			<if test="vst_shopping_live_order_operator != null and vst_shopping_live_order_operator != ''">
+				AND vst_shopping_live_order_operator like '%${vst_shopping_live_order_operator}%'
+			</if>
+		</where>
+		GROUP BY category
+		ORDER BY num DESC, qty DESC, salePrice DESC
+	</select>
+	
+	<!-- 根据商品来源统计 -->
+	<select id="queryReportBySource" parameterType="map" resultType="java.util.HashMap">
+		SELECT
+			vst_shopping_live_order_source as source,
+			count(1) as num,
+			sum(vst_shopping_live_order_qty) as qty,
+			sum(vst_shopping_live_order_sale_price) as salePrice
+		FROM vst_shopping_live_order
+		<where>
+			<if test="startDate != null and startDate != ''">
+				vst_shopping_live_order_date >= #{startDate}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND vst_shopping_live_order_date &lt; #{endDate}
+			</if>
+			<if test="startTime != null and startTime != ''">
+				AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') >= #{startTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') &lt;= #{endTime}
+			</if>
+			<if test="vst_shopping_live_order_channel != null and vst_shopping_live_order_channel != ''">
+				AND vst_shopping_live_order_channel = #{vst_shopping_live_order_channel}
+			</if>
+			<if test="vst_shopping_live_order_number != null and vst_shopping_live_order_number != ''">
+				AND vst_shopping_live_order_number = #{vst_shopping_live_order_number}
+			</if>
+			<if test="vst_shopping_live_order_goods_number != null and vst_shopping_live_order_goods_number != ''">
+				AND vst_shopping_live_order_goods_number = #{vst_shopping_live_order_goods_number}
+			</if>
+			<if test="vst_shopping_live_order_goods_category != null and vst_shopping_live_order_goods_category != ''">
+				AND vst_shopping_live_order_goods_category like '%${vst_shopping_live_order_goods_category}%'
+			</if>
+			<if test="vst_shopping_live_order_goods_name != null and vst_shopping_live_order_goods_name != ''">
+				AND vst_shopping_live_order_goods_name like '%${vst_shopping_live_order_goods_name}%'
+			</if>
+			<if test="vst_shopping_live_order_province != null and vst_shopping_live_order_province != ''">
+				AND vst_shopping_live_order_province like '%${vst_shopping_live_order_province}%'
+			</if>
+			<if test="vst_shopping_live_order_address != null and vst_shopping_live_order_address != ''">
+				AND vst_shopping_live_order_address like '%${vst_shopping_live_order_address}%'
+			</if>
+			<if test="vst_shopping_live_order_recipient != null and vst_shopping_live_order_recipient != ''">
+				AND vst_shopping_live_order_recipient like '%${vst_shopping_live_order_recipient}%'
+			</if>
+			<if test="vst_shopping_live_order_phone != null and vst_shopping_live_order_phone != ''">
+				AND vst_shopping_live_order_phone like '%${vst_shopping_live_order_phone}%'
+			</if>
+			<if test="vst_shopping_live_order_source != null and vst_shopping_live_order_source != ''">
+				AND vst_shopping_live_order_source like '%${vst_shopping_live_order_source}%'
+			</if>
+			<if test="vst_shopping_live_order_balance_status != null and vst_shopping_live_order_balance_status != ''">
+				AND vst_shopping_live_order_balance_status = #{vst_shopping_live_order_balance_status}
+			</if>
+			<if test="vst_shopping_live_order_logistics_status != null and vst_shopping_live_order_logistics_status != ''">
+				AND vst_shopping_live_order_logistics_status = #{vst_shopping_live_order_logistics_status}
+			</if>
+			<if test="vst_shopping_live_order_operator != null and vst_shopping_live_order_operator != ''">
+				AND vst_shopping_live_order_operator like '%${vst_shopping_live_order_operator}%'
+			</if>
+		</where>
+		GROUP BY source
+		ORDER BY num DESC, qty DESC, salePrice DESC
+	</select>
+	
+	<!-- 查询分页数据(根据省份) -->
+	<select id="queryListByProvince" parameterType="map" resultType="java.util.HashMap">
+		SELECT
+			vst_shopping_live_order_province as province,
+			count(1) as num,
+			sum(vst_shopping_live_order_qty) as qty,
+			sum(vst_shopping_live_order_sale_price) as salePrice
+		FROM vst_shopping_live_order
+		<where>
+			<if test="startDate != null and startDate != ''">
+				vst_shopping_live_order_date >= #{startDate}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND vst_shopping_live_order_date &lt; #{endDate}
+			</if>
+			<if test="startTime != null and startTime != ''">
+				AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') >= #{startTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') &lt;= #{endTime}
+			</if>
+			<if test="vst_shopping_live_order_channel != null and vst_shopping_live_order_channel != ''">
+				AND vst_shopping_live_order_channel = #{vst_shopping_live_order_channel}
+			</if>
+			<if test="vst_shopping_live_order_number != null and vst_shopping_live_order_number != ''">
+				AND vst_shopping_live_order_number = #{vst_shopping_live_order_number}
+			</if>
+			<if test="vst_shopping_live_order_goods_number != null and vst_shopping_live_order_goods_number != ''">
+				AND vst_shopping_live_order_goods_number = #{vst_shopping_live_order_goods_number}
+			</if>
+			<if test="vst_shopping_live_order_goods_category != null and vst_shopping_live_order_goods_category != ''">
+				AND vst_shopping_live_order_goods_category like '%${vst_shopping_live_order_goods_category}%'
+			</if>
+			<if test="vst_shopping_live_order_goods_name != null and vst_shopping_live_order_goods_name != ''">
+				AND vst_shopping_live_order_goods_name like '%${vst_shopping_live_order_goods_name}%'
+			</if>
+			<if test="vst_shopping_live_order_province != null and vst_shopping_live_order_province != ''">
+				AND vst_shopping_live_order_province like '%${vst_shopping_live_order_province}%'
+			</if>
+			<if test="vst_shopping_live_order_address != null and vst_shopping_live_order_address != ''">
+				AND vst_shopping_live_order_address like '%${vst_shopping_live_order_address}%'
+			</if>
+			<if test="vst_shopping_live_order_recipient != null and vst_shopping_live_order_recipient != ''">
+				AND vst_shopping_live_order_recipient like '%${vst_shopping_live_order_recipient}%'
+			</if>
+			<if test="vst_shopping_live_order_phone != null and vst_shopping_live_order_phone != ''">
+				AND vst_shopping_live_order_phone like '%${vst_shopping_live_order_phone}%'
+			</if>
+			<if test="vst_shopping_live_order_source != null and vst_shopping_live_order_source != ''">
+				AND vst_shopping_live_order_source like '%${vst_shopping_live_order_source}%'
+			</if>
+			<if test="vst_shopping_live_order_balance_status != null and vst_shopping_live_order_balance_status != ''">
+				AND vst_shopping_live_order_balance_status = #{vst_shopping_live_order_balance_status}
+			</if>
+			<if test="vst_shopping_live_order_logistics_status != null and vst_shopping_live_order_logistics_status != ''">
+				AND vst_shopping_live_order_logistics_status = #{vst_shopping_live_order_logistics_status}
+			</if>
+			<if test="vst_shopping_live_order_operator != null and vst_shopping_live_order_operator != ''">
+				AND vst_shopping_live_order_operator like '%${vst_shopping_live_order_operator}%'
+			</if>
+		</where>
+		GROUP BY province
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				num DESC, qty DESC, salePrice DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+	<!-- 查询记录数(根据省份) -->
+	<select id="queryCountByProvince" parameterType="map" resultType="int">
+		SELECT count(1) FROM (
+			SELECT vst_shopping_live_order_province as province
+			FROM vst_shopping_live_order
+			<where>
+				<if test="startDate != null and startDate != ''">
+					vst_shopping_live_order_date >= #{startDate}
+				</if>
+				<if test="endDate != null and endDate != ''">
+					AND vst_shopping_live_order_date &lt; #{endDate}
+				</if>
+				<if test="startTime != null and startTime != ''">
+					AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') >= #{startTime}
+				</if>
+				<if test="endTime != null and endTime != ''">
+					AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') &lt;= #{endTime}
+				</if>
+				<if test="vst_shopping_live_order_channel != null and vst_shopping_live_order_channel != ''">
+					AND vst_shopping_live_order_channel = #{vst_shopping_live_order_channel}
+				</if>
+				<if test="vst_shopping_live_order_number != null and vst_shopping_live_order_number != ''">
+					AND vst_shopping_live_order_number = #{vst_shopping_live_order_number}
+				</if>
+				<if test="vst_shopping_live_order_goods_number != null and vst_shopping_live_order_goods_number != ''">
+					AND vst_shopping_live_order_goods_number = #{vst_shopping_live_order_goods_number}
+				</if>
+				<if test="vst_shopping_live_order_goods_category != null and vst_shopping_live_order_goods_category != ''">
+					AND vst_shopping_live_order_goods_category like '%${vst_shopping_live_order_goods_category}%'
+				</if>
+				<if test="vst_shopping_live_order_goods_name != null and vst_shopping_live_order_goods_name != ''">
+					AND vst_shopping_live_order_goods_name like '%${vst_shopping_live_order_goods_name}%'
+				</if>
+				<if test="vst_shopping_live_order_province != null and vst_shopping_live_order_province != ''">
+					AND vst_shopping_live_order_province like '%${vst_shopping_live_order_province}%'
+				</if>
+				<if test="vst_shopping_live_order_address != null and vst_shopping_live_order_address != ''">
+					AND vst_shopping_live_order_address like '%${vst_shopping_live_order_address}%'
+				</if>
+				<if test="vst_shopping_live_order_recipient != null and vst_shopping_live_order_recipient != ''">
+					AND vst_shopping_live_order_recipient like '%${vst_shopping_live_order_recipient}%'
+				</if>
+				<if test="vst_shopping_live_order_phone != null and vst_shopping_live_order_phone != ''">
+					AND vst_shopping_live_order_phone like '%${vst_shopping_live_order_phone}%'
+				</if>
+				<if test="vst_shopping_live_order_source != null and vst_shopping_live_order_source != ''">
+					AND vst_shopping_live_order_source like '%${vst_shopping_live_order_source}%'
+				</if>
+				<if test="vst_shopping_live_order_balance_status != null and vst_shopping_live_order_balance_status != ''">
+					AND vst_shopping_live_order_balance_status = #{vst_shopping_live_order_balance_status}
+				</if>
+				<if test="vst_shopping_live_order_logistics_status != null and vst_shopping_live_order_logistics_status != ''">
+					AND vst_shopping_live_order_logistics_status = #{vst_shopping_live_order_logistics_status}
+				</if>
+				<if test="vst_shopping_live_order_operator != null and vst_shopping_live_order_operator != ''">
+					AND vst_shopping_live_order_operator like '%${vst_shopping_live_order_operator}%'
+				</if>
+			</where>
+			GROUP BY province
+		) a
+	</select>
+	
+	<!-- 导出数据(根据省份) -->
+	<select id="queryExportByProvince" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+			vst_shopping_live_order_province '省份',
+			count(1) '订单数量',
+			sum(vst_shopping_live_order_qty) '购买数量',
+			sum(vst_shopping_live_order_sale_price) '销售总金额'
+		FROM vst_shopping_live_order
+		<where>
+			<if test="startDate != null and startDate != ''">
+				vst_shopping_live_order_date >= #{startDate}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND vst_shopping_live_order_date &lt; #{endDate}
+			</if>
+			<if test="startTime != null and startTime != ''">
+				AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') >= #{startTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') &lt;= #{endTime}
+			</if>
+			<if test="vst_shopping_live_order_channel != null and vst_shopping_live_order_channel != ''">
+				AND vst_shopping_live_order_channel = #{vst_shopping_live_order_channel}
+			</if>
+			<if test="vst_shopping_live_order_number != null and vst_shopping_live_order_number != ''">
+				AND vst_shopping_live_order_number = #{vst_shopping_live_order_number}
+			</if>
+			<if test="vst_shopping_live_order_goods_number != null and vst_shopping_live_order_goods_number != ''">
+				AND vst_shopping_live_order_goods_number = #{vst_shopping_live_order_goods_number}
+			</if>
+			<if test="vst_shopping_live_order_goods_category != null and vst_shopping_live_order_goods_category != ''">
+				AND vst_shopping_live_order_goods_category like '%${vst_shopping_live_order_goods_category}%'
+			</if>
+			<if test="vst_shopping_live_order_goods_name != null and vst_shopping_live_order_goods_name != ''">
+				AND vst_shopping_live_order_goods_name like '%${vst_shopping_live_order_goods_name}%'
+			</if>
+			<if test="vst_shopping_live_order_province != null and vst_shopping_live_order_province != ''">
+				AND vst_shopping_live_order_province like '%${vst_shopping_live_order_province}%'
+			</if>
+			<if test="vst_shopping_live_order_address != null and vst_shopping_live_order_address != ''">
+				AND vst_shopping_live_order_address like '%${vst_shopping_live_order_address}%'
+			</if>
+			<if test="vst_shopping_live_order_recipient != null and vst_shopping_live_order_recipient != ''">
+				AND vst_shopping_live_order_recipient like '%${vst_shopping_live_order_recipient}%'
+			</if>
+			<if test="vst_shopping_live_order_phone != null and vst_shopping_live_order_phone != ''">
+				AND vst_shopping_live_order_phone like '%${vst_shopping_live_order_phone}%'
+			</if>
+			<if test="vst_shopping_live_order_source != null and vst_shopping_live_order_source != ''">
+				AND vst_shopping_live_order_source like '%${vst_shopping_live_order_source}%'
+			</if>
+			<if test="vst_shopping_live_order_balance_status != null and vst_shopping_live_order_balance_status != ''">
+				AND vst_shopping_live_order_balance_status = #{vst_shopping_live_order_balance_status}
+			</if>
+			<if test="vst_shopping_live_order_logistics_status != null and vst_shopping_live_order_logistics_status != ''">
+				AND vst_shopping_live_order_logistics_status = #{vst_shopping_live_order_logistics_status}
+			</if>
+			<if test="vst_shopping_live_order_operator != null and vst_shopping_live_order_operator != ''">
+				AND vst_shopping_live_order_operator like '%${vst_shopping_live_order_operator}%'
+			</if>
+		</where>
+		GROUP BY vst_shopping_live_order_province
+		ORDER BY 订单数量 DESC, 购买数量 DESC, 销售总金额 DESC
+	</select>
+	
+	<!-- 查询分页数据(根据地址) -->
+	<select id="queryListByAddress" parameterType="map" resultType="java.util.HashMap">
+		SELECT
+			vst_shopping_live_order_address as address,
+			count(1) as num,
+			sum(vst_shopping_live_order_qty) as qty,
+			sum(vst_shopping_live_order_sale_price) as salePrice
+		FROM vst_shopping_live_order
+		<where>
+			<if test="startDate != null and startDate != ''">
+				vst_shopping_live_order_date >= #{startDate}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND vst_shopping_live_order_date &lt; #{endDate}
+			</if>
+			<if test="startTime != null and startTime != ''">
+				AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') >= #{startTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') &lt;= #{endTime}
+			</if>
+			<if test="vst_shopping_live_order_channel != null and vst_shopping_live_order_channel != ''">
+				AND vst_shopping_live_order_channel = #{vst_shopping_live_order_channel}
+			</if>
+			<if test="vst_shopping_live_order_number != null and vst_shopping_live_order_number != ''">
+				AND vst_shopping_live_order_number = #{vst_shopping_live_order_number}
+			</if>
+			<if test="vst_shopping_live_order_goods_number != null and vst_shopping_live_order_goods_number != ''">
+				AND vst_shopping_live_order_goods_number = #{vst_shopping_live_order_goods_number}
+			</if>
+			<if test="vst_shopping_live_order_goods_category != null and vst_shopping_live_order_goods_category != ''">
+				AND vst_shopping_live_order_goods_category like '%${vst_shopping_live_order_goods_category}%'
+			</if>
+			<if test="vst_shopping_live_order_goods_name != null and vst_shopping_live_order_goods_name != ''">
+				AND vst_shopping_live_order_goods_name like '%${vst_shopping_live_order_goods_name}%'
+			</if>
+			<if test="vst_shopping_live_order_province != null and vst_shopping_live_order_province != ''">
+				AND vst_shopping_live_order_province like '%${vst_shopping_live_order_province}%'
+			</if>
+			<if test="vst_shopping_live_order_address != null and vst_shopping_live_order_address != ''">
+				AND vst_shopping_live_order_address like '%${vst_shopping_live_order_address}%'
+			</if>
+			<if test="vst_shopping_live_order_recipient != null and vst_shopping_live_order_recipient != ''">
+				AND vst_shopping_live_order_recipient like '%${vst_shopping_live_order_recipient}%'
+			</if>
+			<if test="vst_shopping_live_order_phone != null and vst_shopping_live_order_phone != ''">
+				AND vst_shopping_live_order_phone like '%${vst_shopping_live_order_phone}%'
+			</if>
+			<if test="vst_shopping_live_order_source != null and vst_shopping_live_order_source != ''">
+				AND vst_shopping_live_order_source like '%${vst_shopping_live_order_source}%'
+			</if>
+			<if test="vst_shopping_live_order_balance_status != null and vst_shopping_live_order_balance_status != ''">
+				AND vst_shopping_live_order_balance_status = #{vst_shopping_live_order_balance_status}
+			</if>
+			<if test="vst_shopping_live_order_logistics_status != null and vst_shopping_live_order_logistics_status != ''">
+				AND vst_shopping_live_order_logistics_status = #{vst_shopping_live_order_logistics_status}
+			</if>
+			<if test="vst_shopping_live_order_operator != null and vst_shopping_live_order_operator != ''">
+				AND vst_shopping_live_order_operator like '%${vst_shopping_live_order_operator}%'
+			</if>
+		</where>
+		GROUP BY address
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				num DESC, qty DESC, salePrice DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+	<!-- 查询记录数(根据地址) -->
+	<select id="queryCountByAddress" parameterType="map" resultType="int">
+		SELECT count(1) FROM (
+			SELECT vst_shopping_live_order_address as address
+			FROM vst_shopping_live_order
+			<where>
+				<if test="startDate != null and startDate != ''">
+					vst_shopping_live_order_date >= #{startDate}
+				</if>
+				<if test="endDate != null and endDate != ''">
+					AND vst_shopping_live_order_date &lt; #{endDate}
+				</if>
+				<if test="startTime != null and startTime != ''">
+					AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') >= #{startTime}
+				</if>
+				<if test="endTime != null and endTime != ''">
+					AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') &lt;= #{endTime}
+				</if>
+				<if test="vst_shopping_live_order_channel != null and vst_shopping_live_order_channel != ''">
+					AND vst_shopping_live_order_channel = #{vst_shopping_live_order_channel}
+				</if>
+				<if test="vst_shopping_live_order_number != null and vst_shopping_live_order_number != ''">
+					AND vst_shopping_live_order_number = #{vst_shopping_live_order_number}
+				</if>
+				<if test="vst_shopping_live_order_goods_number != null and vst_shopping_live_order_goods_number != ''">
+					AND vst_shopping_live_order_goods_number = #{vst_shopping_live_order_goods_number}
+				</if>
+				<if test="vst_shopping_live_order_goods_category != null and vst_shopping_live_order_goods_category != ''">
+					AND vst_shopping_live_order_goods_category like '%${vst_shopping_live_order_goods_category}%'
+				</if>
+				<if test="vst_shopping_live_order_goods_name != null and vst_shopping_live_order_goods_name != ''">
+					AND vst_shopping_live_order_goods_name like '%${vst_shopping_live_order_goods_name}%'
+				</if>
+				<if test="vst_shopping_live_order_province != null and vst_shopping_live_order_province != ''">
+					AND vst_shopping_live_order_province like '%${vst_shopping_live_order_province}%'
+				</if>
+				<if test="vst_shopping_live_order_address != null and vst_shopping_live_order_address != ''">
+					AND vst_shopping_live_order_address like '%${vst_shopping_live_order_address}%'
+				</if>
+				<if test="vst_shopping_live_order_recipient != null and vst_shopping_live_order_recipient != ''">
+					AND vst_shopping_live_order_recipient like '%${vst_shopping_live_order_recipient}%'
+				</if>
+				<if test="vst_shopping_live_order_phone != null and vst_shopping_live_order_phone != ''">
+					AND vst_shopping_live_order_phone like '%${vst_shopping_live_order_phone}%'
+				</if>
+				<if test="vst_shopping_live_order_source != null and vst_shopping_live_order_source != ''">
+					AND vst_shopping_live_order_source like '%${vst_shopping_live_order_source}%'
+				</if>
+				<if test="vst_shopping_live_order_balance_status != null and vst_shopping_live_order_balance_status != ''">
+					AND vst_shopping_live_order_balance_status = #{vst_shopping_live_order_balance_status}
+				</if>
+				<if test="vst_shopping_live_order_logistics_status != null and vst_shopping_live_order_logistics_status != ''">
+					AND vst_shopping_live_order_logistics_status = #{vst_shopping_live_order_logistics_status}
+				</if>
+				<if test="vst_shopping_live_order_operator != null and vst_shopping_live_order_operator != ''">
+					AND vst_shopping_live_order_operator like '%${vst_shopping_live_order_operator}%'
+				</if>
+			</where>
+			GROUP BY address
+		) a
+	</select>
+	
+	<!-- 导出数据(根据地址) -->
+	<select id="queryExportByAddress" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+			vst_shopping_live_order_address '地址',
+			count(1) '订单数量',
+			sum(vst_shopping_live_order_qty) '购买数量',
+			sum(vst_shopping_live_order_sale_price) '销售总金额'
+		FROM vst_shopping_live_order
+		<where>
+			<if test="startDate != null and startDate != ''">
+				vst_shopping_live_order_date >= #{startDate}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND vst_shopping_live_order_date &lt; #{endDate}
+			</if>
+			<if test="startTime != null and startTime != ''">
+				AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') >= #{startTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND FROM_UNIXTIME(vst_shopping_live_order_date / 1000, '%H:%i:%S') &lt;= #{endTime}
+			</if>
+			<if test="vst_shopping_live_order_channel != null and vst_shopping_live_order_channel != ''">
+				AND vst_shopping_live_order_channel = #{vst_shopping_live_order_channel}
+			</if>
+			<if test="vst_shopping_live_order_number != null and vst_shopping_live_order_number != ''">
+				AND vst_shopping_live_order_number = #{vst_shopping_live_order_number}
+			</if>
+			<if test="vst_shopping_live_order_goods_number != null and vst_shopping_live_order_goods_number != ''">
+				AND vst_shopping_live_order_goods_number = #{vst_shopping_live_order_goods_number}
+			</if>
+			<if test="vst_shopping_live_order_goods_category != null and vst_shopping_live_order_goods_category != ''">
+				AND vst_shopping_live_order_goods_category like '%${vst_shopping_live_order_goods_category}%'
+			</if>
+			<if test="vst_shopping_live_order_goods_name != null and vst_shopping_live_order_goods_name != ''">
+				AND vst_shopping_live_order_goods_name like '%${vst_shopping_live_order_goods_name}%'
+			</if>
+			<if test="vst_shopping_live_order_province != null and vst_shopping_live_order_province != ''">
+				AND vst_shopping_live_order_province like '%${vst_shopping_live_order_province}%'
+			</if>
+			<if test="vst_shopping_live_order_address != null and vst_shopping_live_order_address != ''">
+				AND vst_shopping_live_order_address like '%${vst_shopping_live_order_address}%'
+			</if>
+			<if test="vst_shopping_live_order_recipient != null and vst_shopping_live_order_recipient != ''">
+				AND vst_shopping_live_order_recipient like '%${vst_shopping_live_order_recipient}%'
+			</if>
+			<if test="vst_shopping_live_order_phone != null and vst_shopping_live_order_phone != ''">
+				AND vst_shopping_live_order_phone like '%${vst_shopping_live_order_phone}%'
+			</if>
+			<if test="vst_shopping_live_order_source != null and vst_shopping_live_order_source != ''">
+				AND vst_shopping_live_order_source like '%${vst_shopping_live_order_source}%'
+			</if>
+			<if test="vst_shopping_live_order_balance_status != null and vst_shopping_live_order_balance_status != ''">
+				AND vst_shopping_live_order_balance_status = #{vst_shopping_live_order_balance_status}
+			</if>
+			<if test="vst_shopping_live_order_logistics_status != null and vst_shopping_live_order_logistics_status != ''">
+				AND vst_shopping_live_order_logistics_status = #{vst_shopping_live_order_logistics_status}
+			</if>
+			<if test="vst_shopping_live_order_operator != null and vst_shopping_live_order_operator != ''">
+				AND vst_shopping_live_order_operator like '%${vst_shopping_live_order_operator}%'
+			</if>
+		</where>
+		GROUP BY vst_shopping_live_order_address
+		ORDER BY 订单数量 DESC, 购买数量 DESC, 销售总金额 DESC
+	</select>
+	
+</mapper>

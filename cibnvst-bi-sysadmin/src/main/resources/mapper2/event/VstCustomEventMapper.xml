@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 自定义事件 -->
+<mapper namespace="com.vst.defend.dao2.event.VstCustomEventDao">
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_ce_date '日期', vst_ce_pkg '包名', vst_ce_event_type '事件类型',
+				vst_ce_event_name '事件名称', vst_ce_event_key '事件Key', vst_ce_event_value '事件Value',
+				vst_ce_vv '消息数', vst_ce_vv_dod '天环比', vst_ce_vv_wow '周环比',
+				vst_ce_uv '独立用户', vst_ce_uv_dod '独立用户天环比', vst_ce_uv_wow '独立用户周环比',
+				vst_ce_avg '人均消息数'
+			</otherwise>
+		</choose>
+		FROM vst_custom_event
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_ce_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_ce_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_ce_pkg = #{pkgName}
+			</if>
+			<if test="vst_ce_version != null and vst_ce_version != ''">
+				AND vst_ce_version like '%${vst_ce_version}%'
+			</if>
+			<if test="vst_ce_version_eq != null and vst_ce_version_eq != ''">
+				AND vst_ce_version = #{vst_ce_version_eq}
+			</if>
+			<if test="vst_ce_version_ne != null and vst_ce_version_ne != ''">
+				AND vst_ce_version != #{vst_ce_version_ne}
+			</if>
+			<if test="vst_ce_event_type != null and vst_ce_event_type != ''">
+				AND vst_ce_event_type like '%${vst_ce_event_type}%'
+			</if>
+			<if test="vst_ce_event_type_eq != null and vst_ce_event_type_eq != ''">
+				AND vst_ce_event_type = #{vst_ce_event_type_eq}
+			</if>
+			<if test="vst_ce_event_type_ne != null and vst_ce_event_type_ne != ''">
+				AND vst_ce_event_type != #{vst_ce_event_type_ne}
+			</if>
+			<if test="vst_ce_event_name != null and vst_ce_event_name != ''">
+				AND vst_ce_event_name like '%${vst_ce_event_name}%'
+			</if>
+			<if test="vst_ce_event_name_eq != null and vst_ce_event_name_eq != ''">
+				AND vst_ce_event_name = #{vst_ce_event_name_eq}
+			</if>
+			<if test="vst_ce_event_name_ne != null and vst_ce_event_name_ne != ''">
+				AND vst_ce_event_name != #{vst_ce_event_name_ne}
+			</if>
+			<if test="vst_ce_event_key != null and vst_ce_event_key != ''">
+				AND vst_ce_event_key like '%${vst_ce_event_key}%'
+			</if>
+			<if test="vst_ce_event_key_eq != null and vst_ce_event_key_eq != ''">
+				AND vst_ce_event_key = #{vst_ce_event_key_eq}
+			</if>
+			<if test="vst_ce_event_key_ne != null and vst_ce_event_key_ne != ''">
+				AND vst_ce_event_key != #{vst_ce_event_key_ne}
+			</if>
+			<if test="vst_ce_event_value != null and vst_ce_event_value != ''">
+				AND vst_ce_event_value like '%${vst_ce_event_value}%'
+			</if>
+			<if test="vst_ce_event_value_eq != null and vst_ce_event_value_eq != ''">
+				AND vst_ce_event_value = #{vst_ce_event_value_eq}
+			</if>
+			<if test="vst_ce_event_value_ne != null and vst_ce_event_value_ne != ''">
+				AND vst_ce_event_value != #{vst_ce_event_value_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_ce_date DESC, vst_ce_vv DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+</mapper>

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 二次活跃用户(渠道)统计 -->
+<mapper namespace="com.vst.defend.dao2.user.VstUserSecondaryActiveChannelDao">
+
+	<select id="queryForList" parameterType="map" resultType="java.util.HashMap">
+		SELECT * FROM vst_user_secondary_active_channel
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_usac_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_usac_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_usac_pkg = #{pkgName}
+			</if>
+			<if test="vst_usac_channel != null and vst_usac_channel != ''">
+				AND vst_usac_channel like '%${vst_usac_channel}%'
+			</if>
+			<if test="vst_usac_channel_eq != null and vst_usac_channel_eq != ''">
+				AND BINARY vst_usac_channel = #{vst_usac_channel_eq}
+			</if>
+			<if test="vst_usac_channel_ne != null and vst_usac_channel_ne != ''">
+				AND vst_usac_channel != #{vst_usac_channel_ne}
+			</if>
+			<if test="list_channels != null and list_channels != ''">
+				AND vst_usac_channel IN
+				<foreach collection="list_channels" item="channel" open="(" separator="," close=")">
+					#{channel}
+				</foreach>
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_usac_date DESC, vst_usac_amount DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+
+	<select id="queryCount" parameterType="map" resultType="int">
+		SELECT count(1) FROM vst_user_secondary_active_channel
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_usac_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_usac_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_usac_pkg = #{pkgName}
+			</if>
+			<if test="vst_usac_channel != null and vst_usac_channel != ''">
+				AND vst_usac_channel like '%${vst_usac_channel}%'
+			</if>
+			<if test="vst_usac_channel_eq != null and vst_usac_channel_eq != ''">
+				AND BINARY vst_usac_channel = #{vst_usac_channel_eq}
+			</if>
+			<if test="vst_usac_channel_ne != null and vst_usac_channel_ne != ''">
+				AND vst_usac_channel != #{vst_usac_channel_ne}
+			</if>
+			<if test="list_channels != null and list_channels != ''">
+				AND vst_usac_channel IN
+				<foreach collection="list_channels" item="channel" open="(" separator="," close=")">
+					#{channel}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_usac_date '日期', vst_usac_pkg '包名', vst_usac_channel '渠道',
+				vst_usac_amount '二次活跃用户数', vst_usac_dod '天环比', vst_usac_wow '周环比', vst_usac_mom '月环比'
+			</otherwise>
+		</choose>
+		FROM vst_user_secondary_active_channel
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_usac_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_usac_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_usac_pkg = #{pkgName}
+			</if>
+			<if test="vst_usac_channel != null and vst_usac_channel != ''">
+				AND vst_usac_channel like '%${vst_usac_channel}%'
+			</if>
+			<if test="vst_usac_channel_eq != null and vst_usac_channel_eq != ''">
+				AND BINARY vst_usac_channel = #{vst_usac_channel_eq}
+			</if>
+			<if test="vst_usac_channel_ne != null and vst_usac_channel_ne != ''">
+				AND vst_usac_channel != #{vst_usac_channel_ne}
+			</if>
+			<if test="list_channels != null and list_channels != ''">
+				AND vst_usac_channel IN
+				<foreach collection="list_channels" item="channel" open="(" separator="," close=")">
+					#{channel}
+				</foreach>
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_usac_date DESC, vst_usac_amount DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按渠道统计 -->
+	<select id="queryReportByChannel" parameterType="map" resultType="map">
+		SELECT vst_usac_date, vst_usac_channel, sum(vst_usac_amount) vst_usac_amount
+		FROM vst_user_secondary_active_channel
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_usac_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_usac_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_usac_pkg = #{pkgName}
+			</if>
+			<if test="vst_usac_channel != null and vst_usac_channel != ''">
+				AND vst_usac_channel like '%${vst_usac_channel}%'
+			</if>
+			<if test="vst_usac_channel_eq != null and vst_usac_channel_eq != ''">
+				AND BINARY vst_usac_channel = #{vst_usac_channel_eq}
+			</if>
+			<if test="vst_usac_channel_ne != null and vst_usac_channel_ne != ''">
+				AND vst_usac_channel != #{vst_usac_channel_ne}
+			</if>
+			<if test="list_channels != null and list_channels != ''">
+				AND vst_usac_channel IN
+				<foreach collection="list_channels" item="channel" open="(" separator="," close=")">
+					#{channel}
+				</foreach>
+			</if>
+		</where>
+		GROUP BY vst_usac_date, vst_usac_channel
+		ORDER BY vst_usac_date ASC, vst_usac_amount DESC
+	</select>
+
+	<!-- 根据日期统计 -->
+	<select id="queryReportByDate" parameterType="map" resultType="java.util.HashMap">
+		SELECT vst_usac_date as date, SUM(vst_usac_amount) as vst_usac_amount
+		FROM vst_user_secondary_active_channel
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_usac_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_usac_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_usac_pkg = #{pkgName}
+			</if>
+			<if test="vst_usac_channel != null and vst_usac_channel != ''">
+				AND vst_usac_channel like '%${vst_usac_channel}%'
+			</if>
+			<if test="vst_usac_channel_eq != null and vst_usac_channel_eq != ''">
+				AND BINARY vst_usac_channel = #{vst_usac_channel_eq}
+			</if>
+			<if test="vst_usac_channel_ne != null and vst_usac_channel_ne != ''">
+				AND vst_usac_channel != #{vst_usac_channel_ne}
+			</if>
+			<if test="list_channels != null and list_channels != ''">
+				AND vst_usac_channel IN
+				<foreach collection="list_channels" item="channel" open="(" separator="," close=")">
+					#{channel}
+				</foreach>
+			</if>
+		</where>
+		GROUP BY vst_usac_date
+		ORDER BY vst_usac_date ASC
+	</select>
+	
+</mapper>

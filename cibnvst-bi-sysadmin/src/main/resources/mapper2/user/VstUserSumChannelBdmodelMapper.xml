@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 累计用户(渠道、设备)统计 -->
+<mapper namespace="com.vst.defend.dao2.user.VstUserSumChannelBdmodelDao">
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_uscb_date '日期', vst_uscb_pkg '包名',
+				vst_uscb_channel '渠道', vst_uscb_bdmodel '设备名称',
+				vst_uscb_amount '用户数量', vst_uscb_rate '用户占比',
+				vst_uscb_dod '天环比', vst_uscb_wow '周环比', vst_uscb_mom '月环比'
+			</otherwise>
+		</choose>
+		FROM vst_user_sum_channel_bdmodel
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_uscb_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_uscb_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_uscb_pkg = #{pkgName}
+			</if>
+			<if test="vst_uscb_channel != null and vst_uscb_channel != ''">
+				AND vst_uscb_channel like '%${vst_uscb_channel}%'
+			</if>
+			<if test="vst_uscb_channel_eq != null and vst_uscb_channel_eq != ''">
+				AND BINARY vst_uscb_channel = #{vst_uscb_channel_eq}
+			</if>
+			<if test="vst_uscb_channel_ne != null and vst_uscb_channel_ne != ''">
+				AND vst_uscb_channel != #{vst_uscb_channel_ne}
+			</if>
+			<if test="vst_uscb_bdmodel != null and vst_uscb_bdmodel != ''">
+				AND vst_uscb_bdmodel like '%${vst_uscb_bdmodel}%'
+			</if>
+			<if test="vst_uscb_bdmodel_eq != null and vst_uscb_bdmodel_eq != ''">
+				AND vst_uscb_bdmodel = #{vst_uscb_bdmodel_eq}
+			</if>
+			<if test="vst_uscb_bdmodel_ne != null and vst_uscb_bdmodel_ne != ''">
+				AND vst_uscb_bdmodel != #{vst_uscb_bdmodel_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_uscb_date DESC, vst_uscb_amount DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按设备统计 -->
+	<select id="queryReportByBdmodel" parameterType="map" resultType="map">
+		SELECT vst_uscb_date, vst_uscb_bdmodel, sum(vst_uscb_amount) vst_uscb_amount
+		FROM vst_user_sum_channel_bdmodel
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_uscb_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_uscb_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_uscb_pkg = #{pkgName}
+			</if>
+			<if test="vst_uscb_channel != null and vst_uscb_channel != ''">
+				AND vst_uscb_channel like '%${vst_uscb_channel}%'
+			</if>
+			<if test="vst_uscb_channel_eq != null and vst_uscb_channel_eq != ''">
+				AND BINARY vst_uscb_channel = #{vst_uscb_channel_eq}
+			</if>
+			<if test="vst_uscb_channel_ne != null and vst_uscb_channel_ne != ''">
+				AND vst_uscb_channel != #{vst_uscb_channel_ne}
+			</if>
+			<if test="vst_uscb_bdmodel != null and vst_uscb_bdmodel != ''">
+				AND vst_uscb_bdmodel like '%${vst_uscb_bdmodel}%'
+			</if>
+			<if test="vst_uscb_bdmodel_eq != null and vst_uscb_bdmodel_eq != ''">
+				AND vst_uscb_bdmodel = #{vst_uscb_bdmodel_eq}
+			</if>
+			<if test="vst_uscb_bdmodel_ne != null and vst_uscb_bdmodel_ne != ''">
+				AND vst_uscb_bdmodel != #{vst_uscb_bdmodel_ne}
+			</if>
+		</where>
+		GROUP BY vst_uscb_date, vst_uscb_bdmodel
+		ORDER BY vst_uscb_date ASC, vst_uscb_amount DESC
+	</select>
+	
+</mapper>

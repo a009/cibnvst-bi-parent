@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 系统按钮 -->
+<mapper namespace="com.vst.defend.dao.sys.VstSysButtonDao">
+	
+	<select id="queryForList" parameterType="map" resultType="java.util.HashMap">
+		SELECT * FROM vst_sys_button
+		<where>
+			<if test="vst_button_id != null and vst_button_id != ''">
+				vst_button_id = #{vst_button_id}
+			</if>
+			<if test="vst_button_name != null and vst_button_name != ''">
+				AND vst_button_name like '%${vst_button_name}%'
+			</if>
+			<if test="vst_button_onclick != null and vst_button_onclick != ''">
+				AND vst_button_onclick like '%${vst_button_onclick}%'
+			</if>
+			<if test="vst_button_state != null and vst_button_state != ''">
+				AND vst_button_state = #{vst_button_state}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_button_index ASC, vst_button_uptime DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+	<select id="queryCount" parameterType="map" resultType="int">
+		SELECT count(1) FROM vst_sys_button
+		<where>
+			<if test="vst_button_id != null and vst_button_id != ''">
+				vst_button_id = #{vst_button_id}
+			</if>
+			<if test="vst_button_name != null and vst_button_name != ''">
+				AND vst_button_name like '%${vst_button_name}%'
+			</if>
+			<if test="vst_button_onclick != null and vst_button_onclick != ''">
+				AND vst_button_onclick like '%${vst_button_onclick}%'
+			</if>
+			<if test="vst_button_state != null and vst_button_state != ''">
+				AND vst_button_state = #{vst_button_state}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryForListAsBean" parameterType="map" resultType="VstSysButton">
+		SELECT * FROM vst_sys_button
+		<where>
+			<if test="vst_button_id != null and vst_button_id != ''">
+				vst_button_id = #{vst_button_id}
+			</if>
+			<if test="vst_button_name != null and vst_button_name != ''">
+				AND vst_button_name like '%${vst_button_name}%'
+			</if>
+			<if test="vst_button_onclick != null and vst_button_onclick != ''">
+				AND vst_button_onclick like '%${vst_button_onclick}%'
+			</if>
+			<if test="vst_button_state != null and vst_button_state != ''">
+				AND vst_button_state = #{vst_button_state}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryById" parameterType="String" resultType="map">
+		SELECT * FROM vst_sys_button
+		WHERE vst_button_id = #{vst_button_id}
+	</select>
+	
+	<insert id="insert" parameterType="VstSysButton" >
+		INSERT INTO vst_sys_button
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="vst_button_id != null">
+				vst_button_id,
+		  	</if>
+			<if test="vst_button_name != null">
+				vst_button_name,
+		  	</if>
+			<if test="vst_button_img != null">
+				vst_button_img,
+		  	</if>
+			<if test="vst_button_onclick != null">
+				vst_button_onclick,
+		  	</if>
+			<if test="vst_button_index != null">
+				vst_button_index,
+		  	</if>
+			<if test="vst_button_state != null">
+				vst_button_state,
+		  	</if>
+			<if test="vst_button_addtime != null">
+				vst_button_addtime,
+		  	</if>
+			<if test="vst_button_uptime != null">
+				vst_button_uptime,
+		  	</if>
+			<if test="vst_button_operator != null">
+				vst_button_operator,
+		  	</if>
+		  	<if test="vst_button_summary != null">
+				vst_button_summary,
+		  	</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="vst_button_id != null">
+				#{vst_button_id},
+		  	</if>
+			<if test="vst_button_name != null">
+				#{vst_button_name},
+		  	</if>
+		  	<if test="vst_button_img != null">
+				#{vst_button_img},
+		  	</if>
+		  	<if test="vst_button_onclick != null">
+				#{vst_button_onclick},
+		  	</if>
+		  	<if test="vst_button_index != null">
+				#{vst_button_index},
+		  	</if>
+		  	<if test="vst_button_state != null">
+				#{vst_button_state},
+		  	</if>
+		  	<if test="vst_button_addtime != null">
+				#{vst_button_addtime},
+		  	</if>
+		  	<if test="vst_button_uptime != null">
+				#{vst_button_uptime},
+		  	</if>
+		  	<if test="vst_button_operator != null">
+				#{vst_button_operator},
+		  	</if>
+			<if test="vst_button_summary != null">
+				#{vst_button_summary},
+		  	</if>
+		</trim>
+	</insert>
+	
+	<update id="update" parameterType="VstSysButton">
+		UPDATE vst_sys_button
+		<set>
+			<if test="vst_button_name != null">
+				vst_button_name = #{vst_button_name},
+		  	</if>
+		  	<if test="vst_button_img != null">
+				vst_button_img = #{vst_button_img},
+		  	</if>
+		  	<if test="vst_button_onclick != null">
+				vst_button_onclick = #{vst_button_onclick},
+		  	</if>
+		  	<if test="vst_button_index != null">
+				vst_button_index = #{vst_button_index},
+		  	</if>
+		  	<if test="vst_button_state != null">
+				vst_button_state = #{vst_button_state},
+		  	</if>
+		  	<if test="vst_button_uptime != null">
+				vst_button_uptime = #{vst_button_uptime},
+		  	</if>
+		  	<if test="vst_button_operator != null">
+				vst_button_operator = #{vst_button_operator},
+		  	</if>
+			<if test="vst_button_summary != null">
+				vst_button_summary = #{vst_button_summary},
+		  	</if>
+		</set>
+		WHERE vst_button_id = #{vst_button_id}
+	</update>
+	
+	<update id="modifyState" parameterType="map">
+		UPDATE vst_sys_button
+		<set>
+		  	<if test="vst_button_state != null">
+				vst_button_state = #{vst_button_state},
+		  	</if>
+		  	<if test="vst_button_uptime != null">
+				vst_button_uptime = #{vst_button_uptime},
+		  	</if>
+		  	<if test="vst_button_operator != null">
+				vst_button_operator = #{vst_button_operator},
+		  	</if>
+		</set>
+		WHERE vst_button_id IN
+		<foreach collection="list_ids" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</update>
+	
+	<delete id="delete" parameterType="map">
+		DELETE FROM vst_sys_button
+		WHERE vst_button_id IN
+		<foreach collection="list_ids" item="id" open="(" separator="," close=")">
+			#{id}
+	    </foreach>
+	</delete>
+	
+	<!-- 批量修改 -->
+	<update id="batchUpdate" parameterType="list">
+    	update vst_sys_button 
+        <trim prefix="set" suffixOverrides=",">
+			<trim prefix="vst_button_name =case" suffix="end,">
+				<foreach collection="list" item="i" index="index">
+			    	<if test="i.vst_button_name != null">
+			        	when vst_button_id=#{i.vst_button_id} then #{i.vst_button_name}
+			    	</if>
+				</foreach>
+			</trim>
+			<trim prefix="vst_button_index =case" suffix="end,">
+				<foreach collection="list" item="i" index="index">
+			    	<if test="i.vst_button_index != null">
+			        	when vst_button_id=#{i.vst_button_id} then #{i.vst_button_index}
+			    	</if>
+				</foreach>
+			</trim>
+			<trim prefix="vst_button_state =case" suffix="end,">
+				<foreach collection="list" item="i" index="index">
+			    	<if test="i.vst_button_state != null">
+			        	when vst_button_id=#{i.vst_button_id} then #{i.vst_button_state}
+			    	</if>
+				</foreach>
+			</trim>
+			<trim prefix="vst_button_uptime =case" suffix="end,">
+				<foreach collection="list" item="i" index="index">
+			    	<if test="i.vst_button_uptime != null">
+			        	when vst_button_id=#{i.vst_button_id} then #{i.vst_button_uptime}
+			    	</if>
+				</foreach>
+			</trim>
+			<trim prefix="vst_button_operator =case" suffix="end,">
+				<foreach collection="list" item="i" index="index">
+			    	<if test="i.vst_button_operator != null">
+			        	when vst_button_id=#{i.vst_button_id} then #{i.vst_button_operator}
+			    	</if>
+				</foreach>
+			</trim>
+		</trim>
+        <where>
+			<foreach collection="list" separator="or" item="i" index="index" >
+	        	vst_button_id = #{i.vst_button_id}
+			</foreach>
+		</where>
+	</update>
+	
+	<!-- 根据角色id获取相应的按钮列表 -->
+	<select id="getButtonsByRoleId" resultType="java.util.HashMap">
+		SELECT distinct b.vst_module_id, a.* 
+		FROM vst_sys_button a 
+		LEFT JOIN vst_sys_permission b ON a.vst_button_id = b.vst_button_id
+		WHERE a.vst_button_state = 1 AND b.vst_role_id IN
+		<foreach collection="list" item="roleIds" open="(" close=")" separator=",">
+            #{roleIds}
+        </foreach>
+		ORDER BY a.vst_button_index ASC;
+	</select>
+</mapper>

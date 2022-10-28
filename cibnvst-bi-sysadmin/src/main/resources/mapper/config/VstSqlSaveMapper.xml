@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- sql数据保存配置 -->
+<mapper namespace="com.vst.defend.dao.config.VstSqlSaveDao">
+	
+	<select id="queryForList" parameterType="map" resultType="java.util.HashMap">
+		SELECT * FROM vst_sql_save
+		<where>
+			<if test="vst_save_id != null and vst_save_id != ''">
+				vst_save_id = #{vst_save_id}
+			</if>
+			<if test="vst_save_table != null and vst_save_table != ''">
+				AND vst_save_table like '%${vst_save_table}%'
+			</if>
+			<if test="vst_save_name != null and vst_save_name != ''">
+				AND vst_save_name like '%${vst_save_name}%'
+			</if>
+			<if test="vst_save_data_type != null and vst_save_data_type != ''">
+				AND vst_save_data_type = #{vst_save_data_type}
+			</if>
+			<if test="vst_save_type != null and vst_save_type != ''">
+				AND vst_save_type = #{vst_save_type}
+			</if>
+			<if test="vst_save_is_format != null and vst_save_is_format != ''">
+				AND vst_save_is_format = #{vst_save_is_format}
+			</if>
+			<if test="vst_save_format_type != null and vst_save_format_type != ''">
+				AND vst_save_format_type = #{vst_save_format_type}
+			</if>
+			<if test="vst_save_format_union != null and vst_save_format_union != ''">
+				AND vst_save_format_union like '%${vst_save_format_union}%'
+			</if>
+			<if test="vst_save_state != null and vst_save_state != ''">
+				AND vst_save_state = #{vst_save_state}
+			</if>
+			<if test="vst_save_table_eq != null and vst_save_table_eq != ''">
+				AND vst_save_table = #{vst_save_table_eq}
+			</if>
+			<if test="vst_save_table_ne != null and vst_save_table_ne != ''">
+				AND vst_save_table != #{vst_save_table_ne}
+			</if>
+			<if test="vst_save_name_eq != null and vst_save_name_eq != ''">
+				AND vst_save_name = #{vst_save_name_eq}
+			</if>
+			<if test="vst_save_name_ne != null and vst_save_name_ne != ''">
+				AND vst_save_name != #{vst_save_name_ne}
+			</if>
+			<if test="vst_save_format_union_eq != null and vst_save_format_union_eq != ''">
+				AND vst_save_format_union = #{vst_save_format_union_eq}
+			</if>
+			<if test="vst_save_format_union_ne != null and vst_save_format_union_ne != ''">
+				AND vst_save_format_union != #{vst_save_format_union_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_save_index DESC, vst_save_uptime DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+	<select id="queryCount" parameterType="map" resultType="int">
+		SELECT count(1) FROM vst_sql_save
+		<where>
+			<if test="vst_save_id != null and vst_save_id != ''">
+				vst_save_id = #{vst_save_id}
+			</if>
+			<if test="vst_save_table != null and vst_save_table != ''">
+				AND vst_save_table like '%${vst_save_table}%'
+			</if>
+			<if test="vst_save_name != null and vst_save_name != ''">
+				AND vst_save_name like '%${vst_save_name}%'
+			</if>
+			<if test="vst_save_data_type != null and vst_save_data_type != ''">
+				AND vst_save_data_type = #{vst_save_data_type}
+			</if>
+			<if test="vst_save_type != null and vst_save_type != ''">
+				AND vst_save_type = #{vst_save_type}
+			</if>
+			<if test="vst_save_is_format != null and vst_save_is_format != ''">
+				AND vst_save_is_format = #{vst_save_is_format}
+			</if>
+			<if test="vst_save_format_type != null and vst_save_format_type != ''">
+				AND vst_save_format_type = #{vst_save_format_type}
+			</if>
+			<if test="vst_save_format_union != null and vst_save_format_union != ''">
+				AND vst_save_format_union like '%${vst_save_format_union}%'
+			</if>
+			<if test="vst_save_state != null and vst_save_state != ''">
+				AND vst_save_state = #{vst_save_state}
+			</if>
+			<if test="vst_save_table_eq != null and vst_save_table_eq != ''">
+				AND vst_save_table = #{vst_save_table_eq}
+			</if>
+			<if test="vst_save_table_ne != null and vst_save_table_ne != ''">
+				AND vst_save_table != #{vst_save_table_ne}
+			</if>
+			<if test="vst_save_name_eq != null and vst_save_name_eq != ''">
+				AND vst_save_name = #{vst_save_name_eq}
+			</if>
+			<if test="vst_save_name_ne != null and vst_save_name_ne != ''">
+				AND vst_save_name != #{vst_save_name_ne}
+			</if>
+			<if test="vst_save_format_union_eq != null and vst_save_format_union_eq != ''">
+				AND vst_save_format_union = #{vst_save_format_union_eq}
+			</if>
+			<if test="vst_save_format_union_ne != null and vst_save_format_union_ne != ''">
+				AND vst_save_format_union != #{vst_save_format_union_ne}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryForListAsBean" parameterType="map" resultType="VstSqlSave">
+		SELECT * FROM vst_sql_save
+		<where>
+			<if test="vst_save_id != null and vst_save_id != ''">
+				vst_save_id = #{vst_save_id}
+			</if>
+			<if test="vst_save_table != null and vst_save_table != ''">
+				AND vst_save_table like '%${vst_save_table}%'
+			</if>
+			<if test="vst_save_name != null and vst_save_name != ''">
+				AND vst_save_name like '%${vst_save_name}%'
+			</if>
+			<if test="vst_save_data_type != null and vst_save_data_type != ''">
+				AND vst_save_data_type = #{vst_save_data_type}
+			</if>
+			<if test="vst_save_type != null and vst_save_type != ''">
+				AND vst_save_type = #{vst_save_type}
+			</if>
+			<if test="vst_save_is_format != null and vst_save_is_format != ''">
+				AND vst_save_is_format = #{vst_save_is_format}
+			</if>
+			<if test="vst_save_format_type != null and vst_save_format_type != ''">
+				AND vst_save_format_type = #{vst_save_format_type}
+			</if>
+			<if test="vst_save_format_union != null and vst_save_format_union != ''">
+				AND vst_save_format_union like '%${vst_save_format_union}%'
+			</if>
+			<if test="vst_save_state != null and vst_save_state != ''">
+				AND vst_save_state = #{vst_save_state}
+			</if>
+			<if test="vst_save_table_eq != null and vst_save_table_eq != ''">
+				AND vst_save_table = #{vst_save_table_eq}
+			</if>
+			<if test="vst_save_table_ne != null and vst_save_table_ne != ''">
+				AND vst_save_table != #{vst_save_table_ne}
+			</if>
+			<if test="vst_save_name_eq != null and vst_save_name_eq != ''">
+				AND vst_save_name = #{vst_save_name_eq}
+			</if>
+			<if test="vst_save_name_ne != null and vst_save_name_ne != ''">
+				AND vst_save_name != #{vst_save_name_ne}
+			</if>
+			<if test="vst_save_format_union_eq != null and vst_save_format_union_eq != ''">
+				AND vst_save_format_union = #{vst_save_format_union_eq}
+			</if>
+			<if test="vst_save_format_union_ne != null and vst_save_format_union_ne != ''">
+				AND vst_save_format_union != #{vst_save_format_union_ne}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryById" parameterType="String" resultType="map">
+		SELECT * FROM vst_sql_save
+		WHERE vst_save_id = #{vst_save_id}
+	</select>
+	
+	<insert id="insert" parameterType="VstSqlSave" >
+		INSERT INTO vst_sql_save
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="vst_save_id != null">
+				vst_save_id,
+		  	</if>
+			<if test="vst_save_table != null">
+				vst_save_table,
+		  	</if>
+			<if test="vst_save_name != null">
+				vst_save_name,
+		  	</if>
+			<if test="vst_save_data_type != null">
+				vst_save_data_type,
+		  	</if>
+		  	<if test="vst_save_type != null">
+				vst_save_type,
+		  	</if>
+		  	<if test="vst_save_default != null">
+				vst_save_default,
+		  	</if>
+		  	<if test="vst_save_length != null">
+				vst_save_length,
+		  	</if>
+		  	<if test="vst_save_is_format != null">
+				vst_save_is_format,
+		  	</if>
+		  	<if test="vst_save_format_type != null">
+				vst_save_format_type,
+		  	</if>
+		  	<if test="vst_save_format_union != null">
+				vst_save_format_union,
+		  	</if>
+			<if test="vst_save_index != null">
+				vst_save_index,
+		  	</if>
+			<if test="vst_save_state != null">
+				vst_save_state,
+		  	</if>
+			<if test="vst_save_addtime != null">
+				vst_save_addtime,
+		  	</if>
+		  	<if test="vst_save_creator != null">
+				vst_save_creator,
+		  	</if>
+		  	<if test="vst_save_summary != null">
+				vst_save_summary,
+		  	</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="vst_save_id != null">
+				#{vst_save_id},
+		  	</if>
+			<if test="vst_save_table != null">
+				#{vst_save_table},
+		  	</if>
+			<if test="vst_save_name != null">
+				#{vst_save_name},
+		  	</if>
+		  	<if test="vst_save_data_type != null">
+				#{vst_save_data_type},
+		  	</if>
+		  	<if test="vst_save_type != null">
+				#{vst_save_type},
+		  	</if>
+		  	<if test="vst_save_default != null">
+				#{vst_save_default},
+		  	</if>
+		  	<if test="vst_save_length != null">
+				#{vst_save_length},
+		  	</if>
+		  	<if test="vst_save_is_format != null">
+				#{vst_save_is_format},
+		  	</if>
+		  	<if test="vst_save_format_type != null">
+				#{vst_save_format_type},
+		  	</if>
+		  	<if test="vst_save_format_union != null">
+				#{vst_save_format_union},
+		  	</if>
+		  	<if test="vst_save_index != null">
+				#{vst_save_index},
+		  	</if>
+		  	<if test="vst_save_state != null">
+				#{vst_save_state},
+		  	</if>
+		  	<if test="vst_save_addtime != null">
+				#{vst_save_addtime},
+		  	</if>
+		  	<if test="vst_save_creator != null">
+				#{vst_save_creator},
+		  	</if>
+			<if test="vst_save_summary != null">
+				#{vst_save_summary},
+		  	</if>
+		</trim>
+	</insert>
+	
+	<update id="update" parameterType="VstSqlSave">
+		UPDATE vst_sql_save
+		<set>
+			<if test="vst_save_table != null">
+				vst_save_table = #{vst_save_table},
+		  	</if>
+			<if test="vst_save_name != null">
+				vst_save_name = #{vst_save_name},
+		  	</if>
+		  	<if test="vst_save_data_type != null">
+				vst_save_data_type = #{vst_save_data_type},
+		  	</if>
+		  	<if test="vst_save_type != null">
+				vst_save_type = #{vst_save_type},
+		  	</if>
+		  	<if test="vst_save_default != null">
+				vst_save_default = #{vst_save_default},
+		  	</if>
+		  	<if test="vst_save_length != null">
+				vst_save_length = #{vst_save_length},
+		  	</if>
+		  	<if test="vst_save_is_format != null">
+				vst_save_is_format = #{vst_save_is_format},
+		  	</if>
+		  	<if test="vst_save_format_type != null">
+				vst_save_format_type = #{vst_save_format_type},
+		  	</if>
+		  	<if test="vst_save_format_union != null">
+				vst_save_format_union = #{vst_save_format_union},
+		  	</if>
+		  	<if test="vst_save_index != null">
+				vst_save_index = #{vst_save_index},
+		  	</if>
+		  	<if test="vst_save_state != null">
+				vst_save_state = #{vst_save_state},
+		  	</if>
+		  	<if test="vst_save_uptime != null">
+				vst_save_uptime = #{vst_save_uptime},
+		  	</if>
+		  	<if test="vst_save_updator != null">
+				vst_save_updator = #{vst_save_updator},
+		  	</if>
+			<if test="vst_save_summary != null">
+				vst_save_summary = #{vst_save_summary},
+		  	</if>
+		</set>
+		WHERE vst_save_id = #{vst_save_id}
+	</update>
+	
+	<update id="modifyState" parameterType="map">
+		UPDATE vst_sql_save
+		<set>
+		  	<if test="vst_save_state != null">
+				vst_save_state = #{vst_save_state},
+		  	</if>
+		  	<if test="vst_save_uptime != null">
+				vst_save_uptime = #{vst_save_uptime},
+		  	</if>
+		  	<if test="vst_save_updator != null">
+				vst_save_updator = #{vst_save_updator},
+		  	</if>
+		</set>
+		WHERE vst_save_id IN
+		<foreach collection="list_ids" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</update>
+	
+	<delete id="delete" parameterType="map">
+		DELETE FROM vst_sql_save
+		WHERE vst_save_id IN
+		<foreach collection="list_ids" item="id" open="(" separator="," close=")">
+			#{id}
+	    </foreach>
+	</delete>
+	
+	<!-- 批量修改 -->
+	<update id="batchUpdate" parameterType="list">
+    	update vst_sql_save 
+        <trim prefix="set" suffixOverrides=",">
+			<trim prefix="vst_save_index =case" suffix="end,">
+				<foreach collection="list" item="i" index="index">
+			    	<if test="i.vst_save_index != null">
+			        	when vst_save_id=#{i.vst_save_id} then #{i.vst_save_index}
+			    	</if>
+				</foreach>
+			</trim>
+			<trim prefix="vst_save_state =case" suffix="end,">
+				<foreach collection="list" item="i" index="index">
+			    	<if test="i.vst_save_state != null">
+			        	when vst_save_id=#{i.vst_save_id} then #{i.vst_save_state}
+			    	</if>
+				</foreach>
+			</trim>
+			<trim prefix="vst_save_uptime =case" suffix="end,">
+				<foreach collection="list" item="i" index="index">
+			    	<if test="i.vst_save_uptime != null">
+			        	when vst_save_id=#{i.vst_save_id} then #{i.vst_save_uptime}
+			    	</if>
+				</foreach>
+			</trim>
+			<trim prefix="vst_save_updator =case" suffix="end,">
+				<foreach collection="list" item="i" index="index">
+			    	<if test="i.vst_save_updator != null">
+			        	when vst_save_id=#{i.vst_save_id} then #{i.vst_save_updator}
+			    	</if>
+				</foreach>
+			</trim>
+		</trim>
+        <where>
+			<foreach collection="list" separator="or" item="i" index="index" >
+	        	vst_save_id = #{i.vst_save_id}
+			</foreach>
+		</where>
+	</update>
+	
+</mapper>

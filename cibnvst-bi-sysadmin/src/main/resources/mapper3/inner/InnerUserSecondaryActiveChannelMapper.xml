@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 二次活跃渠道用户(对内) -->
+<mapper namespace="com.vst.defend.dao3.inner.InnerUserSecondaryActiveChannelDao">
+	
+	<select id="queryForList" parameterType="map" resultType="java.util.HashMap">
+		SELECT * FROM outer_vst_user_secondary_active_channel
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_usac_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_usac_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_usac_pkg = #{pkgName}
+			</if>
+			<if test="vst_usac_channel != null and vst_usac_channel != ''">
+				AND vst_usac_channel like '%${vst_usac_channel}%'
+			</if>
+			<if test="vst_usac_channel_eq != null and vst_usac_channel_eq != ''">
+				AND vst_usac_channel = #{vst_usac_channel_eq}
+			</if>
+			<if test="vst_usac_channel_ne != null and vst_usac_channel_ne != ''">
+				AND vst_usac_channel != #{vst_usac_channel_ne}
+			</if>
+			<if test="vst_usac_state != null and vst_usac_state != ''">
+				AND vst_usac_state = #{vst_usac_state}
+			</if>
+			<if test="vst_usac_synctime_start != null and vst_usac_synctime_start != ''">
+				AND vst_usac_synctime >= #{vst_usac_synctime_start}
+			</if>
+			<if test="vst_usac_synctime_end != null and vst_usac_synctime_end != ''">
+				AND vst_usac_synctime &lt;= #{vst_usac_synctime_end}
+			</if>
+			<if test="list_channels != null and list_channels != ''">
+				AND vst_usac_channel IN
+				<foreach collection="list_channels" item="channel" open="(" separator="," close=")">
+					#{channel}
+				</foreach>
+			</if>
+			<if test="vst_usac_updator != null and vst_usac_updator != ''">
+				AND vst_usac_updator like '%${vst_usac_updator}%'
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_usac_date DESC, ROUND(vst_usac_amount * vst_usac_modulus) DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+	<select id="queryCount" parameterType="map" resultType="int">
+		SELECT count(1) FROM outer_vst_user_secondary_active_channel
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_usac_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_usac_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_usac_pkg = #{pkgName}
+			</if>
+			<if test="vst_usac_channel != null and vst_usac_channel != ''">
+				AND vst_usac_channel like '%${vst_usac_channel}%'
+			</if>
+			<if test="vst_usac_channel_eq != null and vst_usac_channel_eq != ''">
+				AND vst_usac_channel = #{vst_usac_channel_eq}
+			</if>
+			<if test="vst_usac_channel_ne != null and vst_usac_channel_ne != ''">
+				AND vst_usac_channel != #{vst_usac_channel_ne}
+			</if>
+			<if test="vst_usac_state != null and vst_usac_state != ''">
+				AND vst_usac_state = #{vst_usac_state}
+			</if>
+			<if test="vst_usac_synctime_start != null and vst_usac_synctime_start != ''">
+				AND vst_usac_synctime >= #{vst_usac_synctime_start}
+			</if>
+			<if test="vst_usac_synctime_end != null and vst_usac_synctime_end != ''">
+				AND vst_usac_synctime &lt;= #{vst_usac_synctime_end}
+			</if>
+			<if test="list_channels != null and list_channels != ''">
+				AND vst_usac_channel IN
+				<foreach collection="list_channels" item="channel" open="(" separator="," close=")">
+					#{channel}
+				</foreach>
+			</if>
+			<if test="vst_usac_updator != null and vst_usac_updator != ''">
+				AND vst_usac_updator like '%${vst_usac_updator}%'
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryForListAsBean" parameterType="map" resultType="OuterVstUserSecondaryActiveChannel">
+		SELECT * FROM outer_vst_user_secondary_active_channel
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_usac_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_usac_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_usac_pkg = #{pkgName}
+			</if>
+			<if test="vst_usac_channel != null and vst_usac_channel != ''">
+				AND vst_usac_channel like '%${vst_usac_channel}%'
+			</if>
+			<if test="vst_usac_channel_eq != null and vst_usac_channel_eq != ''">
+				AND vst_usac_channel = #{vst_usac_channel_eq}
+			</if>
+			<if test="vst_usac_channel_ne != null and vst_usac_channel_ne != ''">
+				AND vst_usac_channel != #{vst_usac_channel_ne}
+			</if>
+			<if test="vst_usac_state != null and vst_usac_state != ''">
+				AND vst_usac_state = #{vst_usac_state}
+			</if>
+			<if test="vst_usac_synctime_start != null and vst_usac_synctime_start != ''">
+				AND vst_usac_synctime >= #{vst_usac_synctime_start}
+			</if>
+			<if test="vst_usac_synctime_end != null and vst_usac_synctime_end != ''">
+				AND vst_usac_synctime &lt;= #{vst_usac_synctime_end}
+			</if>
+			<if test="list_channels != null and list_channels != ''">
+				AND vst_usac_channel IN
+				<foreach collection="list_channels" item="channel" open="(" separator="," close=")">
+					#{channel}
+				</foreach>
+			</if>
+			<if test="vst_usac_updator != null and vst_usac_updator != ''">
+				AND vst_usac_updator like '%${vst_usac_updator}%'
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryById" parameterType="String" resultType="map">
+		SELECT * FROM outer_vst_user_secondary_active_channel
+		WHERE vst_usac_id = #{vst_usac_id}
+	</select>
+	
+	<insert id="insert" parameterType="OuterVstUserSecondaryActiveChannel" >
+		INSERT INTO outer_vst_user_secondary_active_channel
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="vst_usac_id != null">
+				vst_usac_id,
+		  	</if>
+			<if test="vst_usac_date != null">
+				vst_usac_date,
+		  	</if>
+			<if test="vst_usac_pkg != null">
+				vst_usac_pkg,
+		  	</if>
+			<if test="vst_usac_channel != null">
+				vst_usac_channel,
+		  	</if>
+			<if test="vst_usac_amount != null">
+				vst_usac_amount,
+		  	</if>
+			<if test="vst_usac_dod != null">
+				vst_usac_dod,
+		  	</if>
+			<if test="vst_usac_wow != null">
+				vst_usac_wow,
+		  	</if>
+			<if test="vst_usac_mom != null">
+				vst_usac_mom,
+		  	</if>
+			<if test="vst_usac_modulus != null">
+				vst_usac_modulus,
+		  	</if>
+			<if test="vst_usac_state != null">
+				vst_usac_state,
+		  	</if>
+			<if test="vst_usac_synctime != null">
+				vst_usac_synctime,
+		  	</if>
+			<if test="vst_usac_addtime != null">
+				vst_usac_addtime,
+		  	</if>
+		  	<if test="vst_usac_creator != null">
+				vst_usac_creator,
+		  	</if>
+		  	<if test="vst_usac_summary != null">
+				vst_usac_summary,
+		  	</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="vst_usac_id != null">
+				#{vst_usac_id},
+		  	</if>
+			<if test="vst_usac_date != null">
+				#{vst_usac_date},
+		  	</if>
+			<if test="vst_usac_pkg != null">
+				#{vst_usac_pkg},
+		  	</if>
+			<if test="vst_usac_channel != null">
+				#{vst_usac_channel},
+		  	</if>
+			<if test="vst_usac_amount != null">
+				#{vst_usac_amount},
+		  	</if>
+			<if test="vst_usac_dod != null">
+				#{vst_usac_dod},
+		  	</if>
+			<if test="vst_usac_wow != null">
+				#{vst_usac_wow},
+		  	</if>
+			<if test="vst_usac_mom != null">
+				#{vst_usac_mom},
+		  	</if>
+			<if test="vst_usac_modulus != null">
+				#{vst_usac_modulus},
+		  	</if>
+		  	<if test="vst_usac_state != null">
+				#{vst_usac_state},
+		  	</if>
+		  	<if test="vst_usac_synctime != null">
+				#{vst_usac_synctime},
+		  	</if>
+		  	<if test="vst_usac_addtime != null">
+				#{vst_usac_addtime},
+		  	</if>
+		  	<if test="vst_usac_creator != null">
+				#{vst_usac_creator},
+		  	</if>
+			<if test="vst_usac_summary != null">
+				#{vst_usac_summary},
+		  	</if>
+		</trim>
+	</insert>
+	
+	<!-- 批量添加 -->
+	<insert id="batchInsert" parameterType="java.util.List">
+		INSERT INTO outer_vst_user_secondary_active_channel
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			vst_usac_id,
+			vst_usac_date,
+			vst_usac_pkg,
+			vst_usac_channel,
+			vst_usac_amount,
+			vst_usac_dod,
+			vst_usac_wow,
+			vst_usac_mom,
+			vst_usac_modulus,
+			vst_usac_state,
+			vst_usac_synctime,
+			vst_usac_addtime,
+			vst_usac_creator,
+			vst_usac_summary,
+		</trim>
+		VALUES
+		<foreach collection="list" item="i" index="index" separator=",">
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				#{i.vst_usac_id},
+				#{i.vst_usac_date},
+				#{i.vst_usac_pkg},
+				#{i.vst_usac_channel},
+				#{i.vst_usac_amount},
+				#{i.vst_usac_dod},
+				#{i.vst_usac_wow},
+				#{i.vst_usac_mom},
+				#{i.vst_usac_modulus},
+				#{i.vst_usac_state},
+				#{i.vst_usac_synctime},
+				#{i.vst_usac_addtime},
+				#{i.vst_usac_creator},
+				#{i.vst_usac_summary},
+			</trim>
+		</foreach>
+	</insert>
+	
+	<update id="update" parameterType="OuterVstUserSecondaryActiveChannel">
+		UPDATE outer_vst_user_secondary_active_channel
+		<set>
+			<if test="vst_usac_date != null">
+				vst_usac_date = #{vst_usac_date},
+		  	</if>
+			<if test="vst_usac_pkg != null">
+				vst_usac_pkg = #{vst_usac_pkg},
+		  	</if>
+			<if test="vst_usac_channel != null">
+				vst_usac_channel = #{vst_usac_channel},
+		  	</if>
+			<if test="vst_usac_amount != null">
+				vst_usac_amount = #{vst_usac_amount},
+		  	</if>
+			<if test="vst_usac_dod != null">
+				vst_usac_dod = #{vst_usac_dod},
+		  	</if>
+			<if test="vst_usac_wow != null">
+				vst_usac_wow = #{vst_usac_wow},
+		  	</if>
+			<if test="vst_usac_mom != null">
+				vst_usac_mom = #{vst_usac_mom},
+		  	</if>
+			<if test="vst_usac_modulus != null">
+				vst_usac_modulus = #{vst_usac_modulus},
+		  	</if>
+		  	<if test="vst_usac_state != null">
+				vst_usac_state = #{vst_usac_state},
+		  	</if>
+		  	<if test="vst_usac_synctime != null">
+				vst_usac_synctime = #{vst_usac_synctime},
+		  	</if>
+		  	<if test="vst_usac_uptime != null">
+				vst_usac_uptime = #{vst_usac_uptime},
+		  	</if>
+		  	<if test="vst_usac_updator != null">
+				vst_usac_updator = #{vst_usac_updator},
+		  	</if>
+			<if test="vst_usac_summary != null">
+				vst_usac_summary = #{vst_usac_summary},
+		  	</if>
+		</set>
+		WHERE vst_usac_id = #{vst_usac_id}
+	</update>
+	
+	<update id="modifyState" parameterType="map">
+		UPDATE outer_vst_user_secondary_active_channel
+		<set>
+		  	<if test="vst_usac_modulus != null">
+				vst_usac_modulus = #{vst_usac_modulus},
+		  	</if>
+		  	<if test="vst_usac_state != null">
+				vst_usac_state = #{vst_usac_state},
+		  	</if>
+		  	<if test="vst_usac_uptime != null">
+				vst_usac_uptime = #{vst_usac_uptime},
+		  	</if>
+		  	<if test="vst_usac_updator != null">
+				vst_usac_updator = #{vst_usac_updator},
+		  	</if>
+		</set>
+		WHERE vst_usac_id IN
+		<foreach collection="list_ids" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</update>
+	
+	<delete id="delete" parameterType="map">
+		DELETE FROM outer_vst_user_secondary_active_channel
+	    <where>
+	    	<if test="list_ids != null and list_ids != ''">
+	    		vst_usac_id IN
+	    		<foreach collection="list_ids" item="id" open="(" separator="," close=")">
+					#{id}
+			    </foreach>
+	    	</if>
+	    	<if test="startDay != '' and endDay != ''">
+	    		AND vst_usac_date >= #{startDay}
+	    		AND vst_usac_date &lt;= #{endDay}
+	    	</if>
+	    	<if test="pkgName != null and pkgName != ''">
+				AND vst_usac_pkg = #{pkgName}
+			</if>
+	    	<if test="vst_usac_channel != null and vst_usac_channel != ''">
+				AND vst_usac_channel like '%${vst_usac_channel}%'
+			</if>
+			<if test="vst_usac_channel_eq != null and vst_usac_channel_eq != ''">
+				AND vst_usac_channel = #{vst_usac_channel_eq}
+			</if>
+			<if test="vst_usac_channel_ne != null and vst_usac_channel_ne != ''">
+				AND vst_usac_channel != #{vst_usac_channel_ne}
+			</if>
+			<if test="vst_usac_state != null and vst_usac_state != ''">
+				AND vst_usac_state = #{vst_usac_state}
+			</if>
+	    </where>
+	</delete>
+	
+	<!-- 审核数据 -->
+	<update id="auditData" parameterType="map">
+		UPDATE outer_vst_user_secondary_active_channel
+		<set>
+		  	vst_usac_state = 2,
+		  	<if test="vst_usac_uptime != null">
+				vst_usac_uptime = #{vst_usac_uptime},
+		  	</if>
+		  	<if test="vst_usac_updator != null">
+				vst_usac_updator = #{vst_usac_updator},
+		  	</if>
+		</set>
+	    <where>
+	    	<if test="list_ids != null and list_ids != ''">
+	    		vst_usac_id IN
+	    		<foreach collection="list_ids" item="id" open="(" separator="," close=")">
+					#{id}
+			    </foreach>
+	    	</if>
+	    	<if test="startDay != '' and endDay != ''">
+	    		AND vst_usac_date >= #{startDay}
+	    		AND vst_usac_date &lt;= #{endDay}
+	    	</if>
+	    	<if test="pkgName != null and pkgName != ''">
+				AND vst_usac_pkg = #{pkgName}
+			</if>
+	    	<if test="vst_usac_channel != null and vst_usac_channel != ''">
+				AND vst_usac_channel like '%${vst_usac_channel}%'
+			</if>
+			<if test="vst_usac_channel_eq != null and vst_usac_channel_eq != ''">
+				AND vst_usac_channel = #{vst_usac_channel_eq}
+			</if>
+			<if test="vst_usac_channel_ne != null and vst_usac_channel_ne != ''">
+				AND vst_usac_channel != #{vst_usac_channel_ne}
+			</if>
+			<if test="vst_usac_state != null and vst_usac_state != ''">
+				AND vst_usac_state = #{vst_usac_state}
+			</if>
+	    </where>
+	</update>
+	
+	<!-- 根据日期统计 -->
+	<select id="queryReportByDate" parameterType="map" resultType="java.util.HashMap">
+		SELECT vst_usac_date as date, ROUND(sum(vst_usac_amount * vst_usac_modulus)) as vst_usac_amount
+		FROM outer_vst_user_secondary_active_channel
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_usac_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_usac_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_usac_pkg = #{pkgName}
+			</if>
+			<if test="vst_usac_channel != null and vst_usac_channel != ''">
+				AND vst_usac_channel like '%${vst_usac_channel}%'
+			</if>
+			<if test="vst_usac_channel_eq != null and vst_usac_channel_eq != ''">
+				AND vst_usac_channel = #{vst_usac_channel_eq}
+			</if>
+			<if test="vst_usac_channel_ne != null and vst_usac_channel_ne != ''">
+				AND vst_usac_channel != #{vst_usac_channel_ne}
+			</if>
+			<if test="vst_usac_state != null and vst_usac_state != ''">
+				AND vst_usac_state = #{vst_usac_state}
+			</if>
+			<if test="vst_usac_synctime_start != null and vst_usac_synctime_start != ''">
+				AND vst_usac_synctime >= #{vst_usac_synctime_start}
+			</if>
+			<if test="vst_usac_synctime_end != null and vst_usac_synctime_end != ''">
+				AND vst_usac_synctime &lt;= #{vst_usac_synctime_end}
+			</if>
+			<if test="list_channels != null and list_channels != ''">
+				AND vst_usac_channel IN
+				<foreach collection="list_channels" item="channel" open="(" separator="," close=")">
+					#{channel}
+				</foreach>
+			</if>
+			<if test="vst_usac_updator != null and vst_usac_updator != ''">
+				AND vst_usac_updator like '%${vst_usac_updator}%'
+			</if>
+		</where>
+		GROUP BY vst_usac_date
+		ORDER BY vst_usac_date ASC
+	</select>
+
+	<!-- 根据渠道统计 -->
+	<select id="queryReportByDim" parameterType="map" resultType="java.util.HashMap">
+		SELECT vst_usac_channel as value, ROUND(sum(vst_usac_amount * vst_usac_modulus)) as vst_usac_amount
+		FROM outer_vst_user_secondary_active_channel
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_usac_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_usac_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_usac_pkg = #{pkgName}
+			</if>
+			<if test="vst_usac_channel != null and vst_usac_channel != ''">
+				AND vst_usac_channel like '%${vst_usac_channel}%'
+			</if>
+			<if test="vst_usac_channel_eq != null and vst_usac_channel_eq != ''">
+				AND vst_usac_channel = #{vst_usac_channel_eq}
+			</if>
+			<if test="vst_usac_channel_ne != null and vst_usac_channel_ne != ''">
+				AND vst_usac_channel != #{vst_usac_channel_ne}
+			</if>
+			<if test="vst_usac_state != null and vst_usac_state != ''">
+				AND vst_usac_state = #{vst_usac_state}
+			</if>
+			<if test="vst_usac_synctime_start != null and vst_usac_synctime_start != ''">
+				AND vst_usac_synctime >= #{vst_usac_synctime_start}
+			</if>
+			<if test="vst_usac_synctime_end != null and vst_usac_synctime_end != ''">
+				AND vst_usac_synctime &lt;= #{vst_usac_synctime_end}
+			</if>
+			<if test="list_channels != null and list_channels != ''">
+				AND vst_usac_channel IN
+				<foreach collection="list_channels" item="channel" open="(" separator="," close=")">
+					#{channel}
+				</foreach>
+			</if>
+			<if test="vst_usac_updator != null and vst_usac_updator != ''">
+				AND vst_usac_updator like '%${vst_usac_updator}%'
+			</if>
+		</where>
+		GROUP BY vst_usac_channel
+		ORDER BY ROUND(sum(vst_usac_amount * vst_usac_modulus)) DESC
+	</select>
+	
+</mapper>

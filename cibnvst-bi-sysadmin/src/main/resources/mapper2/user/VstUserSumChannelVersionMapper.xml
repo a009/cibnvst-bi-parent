@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 累计用户(渠道、版本)统计 -->
+<mapper namespace="com.vst.defend.dao2.user.VstUserSumChannelVersionDao">
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_uscv_date '日期', vst_uscv_pkg '包名', vst_uscv_channel '渠道', vst_uscv_version '版本',
+				vst_uscv_amount '累计用户数', vst_uscv_dod '天环比', vst_uscv_wow '周环比', vst_uscv_mom '月环比'
+			</otherwise>
+		</choose>
+		FROM vst_user_sum_channel_version
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_uscv_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_uscv_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_uscv_pkg = #{pkgName}
+			</if>
+			<if test="vst_uscv_channel != null and vst_uscv_channel != ''">
+				AND vst_uscv_channel like '%${vst_uscv_channel}%'
+			</if>
+			<if test="vst_uscv_version != null and vst_uscv_version != ''">
+				AND vst_uscv_version like '%${vst_uscv_version}%'
+			</if>
+			<if test="vst_uscv_channel_eq != null and vst_uscv_channel_eq != ''">
+				AND BINARY vst_uscv_channel = #{vst_uscv_channel_eq}
+			</if>
+			<if test="vst_uscv_channel_ne != null and vst_uscv_channel_ne != ''">
+				AND vst_uscv_channel != #{vst_uscv_channel_ne}
+			</if>
+			<if test="vst_uscv_version_eq != null and vst_uscv_version_eq != ''">
+				AND vst_uscv_version = #{vst_uscv_version_eq}
+			</if>
+			<if test="vst_uscv_version_ne != null and vst_uscv_version_ne != ''">
+				AND vst_uscv_version != #{vst_uscv_version_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_uscv_date DESC, vst_uscv_amount DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按版本统计 -->
+	<select id="queryReportByVersion" parameterType="map" resultType="map">
+		SELECT vst_uscv_date, vst_uscv_version, sum(vst_uscv_amount) vst_uscv_amount
+		FROM vst_user_sum_channel_version
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_uscv_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_uscv_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_uscv_pkg = #{pkgName}
+			</if>
+			<if test="vst_uscv_channel != null and vst_uscv_channel != ''">
+				AND vst_uscv_channel like '%${vst_uscv_channel}%'
+			</if>
+			<if test="vst_uscv_version != null and vst_uscv_version != ''">
+				AND vst_uscv_version like '%${vst_uscv_version}%'
+			</if>
+			<if test="vst_uscv_channel_eq != null and vst_uscv_channel_eq != ''">
+				AND vst_uscv_channel = #{vst_uscv_channel_eq}
+			</if>
+			<if test="vst_uscv_channel_ne != null and vst_uscv_channel_ne != ''">
+				AND vst_uscv_channel != #{vst_uscv_channel_ne}
+			</if>
+			<if test="vst_uscv_version_eq != null and vst_uscv_version_eq != ''">
+				AND vst_uscv_version = #{vst_uscv_version_eq}
+			</if>
+			<if test="vst_uscv_version_ne != null and vst_uscv_version_ne != ''">
+				AND vst_uscv_version != #{vst_uscv_version_ne}
+			</if>
+		</where>
+		GROUP BY vst_uscv_date, vst_uscv_version
+		ORDER BY vst_uscv_date ASC, vst_uscv_amount DESC
+	</select>
+	
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vst.quartz.dao.push.VstUserAddChannelMapper">
+	<resultMap id="BaseResultMap" type="com.vst.common.pojo.VstUserAddChannel">
+		<id property="vst_uac_id" column="vst_uac_id" jdbcType="VARCHAR"/>
+		<result property="vst_uac_date" column="vst_uac_date" jdbcType="INTEGER"/>
+		<result property="vst_uac_pkg" column="vst_uac_pkg" jdbcType="VARCHAR"/>
+		<result property="vst_uac_channel" column="vst_uac_channel" jdbcType="VARCHAR"/>
+		<result property="vst_uac_amount" column="vst_uac_amount" jdbcType="BIGINT"/>
+		<result property="vst_uac_dod" column="vst_uac_dod" jdbcType="VARCHAR"/>
+		<result property="vst_uac_wow" column="vst_uac_wow" jdbcType="VARCHAR"/>
+		<result property="vst_uac_mom" column="vst_uac_mom" jdbcType="VARCHAR"/>
+		<result property="vst_uac_addtime" column="vst_uac_addtime" jdbcType="BIGINT"/>
+		<result property="vst_uac_creator" column="vst_uac_creator" jdbcType="VARCHAR"/>
+		<result property="vst_uac_uptime" column="vst_uac_uptime" jdbcType="BIGINT"/>
+		<result property="vst_uac_updator" column="vst_uac_updator" jdbcType="VARCHAR"/>
+		<result property="vst_uac_summary" column="vst_uac_summary" jdbcType="VARCHAR"/>
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		vst_uac_id,vst_uac_date,vst_uac_pkg,vst_uac_channel,vst_uac_amount,vst_uac_dod,vst_uac_wow,vst_uac_mom
+		,vst_uac_addtime,vst_uac_creator,vst_uac_uptime,vst_uac_updator,vst_uac_summary
+	</sql>
+
+	<!--查询今天的数据-->
+	<select id="queryVstUserAddChannel" resultMap="BaseResultMap">
+	   SELECT * FROM  vst_user_add_channel WHERE vst_uac_date = date_format(now(),'%Y%m%d')
+	</select>
+
+	<!--根据传入的时间查询-->
+	<select id="queryVstUserDateChannel" resultMap="BaseResultMap" parameterType="java.util.Map">
+        <if test="date == 0">
+			SELECT * FROM vst_user_add_channel WHERE vst_uac_date >= #{maxOuter}
+		</if>
+		<if test="date > 0">
+			SELECT * FROM vst_user_add_channel WHERE vst_uac_date >= #{maxOuter} and <![CDATA[vst_uac_date<=#{maxUser}]]>
+		</if>
+	</select>
+
+	<!--查询所有的数据-->
+	<select id="queryAddAll" resultMap="BaseResultMap">
+		SELECT * FROM vst_user_add_channel
+	</select>
+
+	<!--查询最大的统计日期-->
+	<select id="queryMaxAdd" resultType="java.lang.Integer">
+		SELECT MAX(vst_uac_date) FROM vst_user_add_channel
+	</select>
+
+
+
+</mapper>

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 影片分类播放 -->
+<mapper namespace="com.vst.defend.dao2.movie.VstMovieClassifyPlayDao">
+	
+	<!-- 开启本mapper的namespace下的二级缓存 -->
+	<cache flushInterval="3600000" readOnly="true" />
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap" useCache="false">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_mcp_date '日期', vst_mcp_pkg '包名', vst_mcp_special_type '专区类型',
+				vst_mcp_cid '影片分类',
+				vst_mcp_vv '播放量', vst_mcp_vv_dod '播放量天环比', vst_mcp_vv_wow '播放量周环比',
+				vst_mcp_uv '独立用户', vst_mcp_uv_dod '独立用户天环比', vst_mcp_uv_wow '独立用户周环比',
+				vst_mcp_avg '人均播放量', vst_mcp_playtime '播放时长(H)', vst_mcp_playtime_avg '人均播放时长(m)'
+			</otherwise>
+		</choose>
+		FROM vst_movie_classify_play
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_mcp_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_mcp_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_mcp_pkg = #{pkgName}
+			</if>
+			<if test="vst_mcp_special_type != null and vst_mcp_special_type != ''">
+				AND vst_mcp_special_type = #{vst_mcp_special_type}
+			</if>
+			<if test="vst_mcp_cid != null and vst_mcp_cid != ''">
+				AND vst_mcp_cid = #{vst_mcp_cid}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_mcp_date DESC, vst_mcp_vv DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 导出总量 -->
+	<select id="queryExportSum" parameterType="map" resultType="HashMap" useCache="false">
+		SELECT
+			vst_mcp_date, vst_mcp_special_type, vst_mcp_cid,
+			sum(vst_mcp_vv) vst_mcp_vv, sum(vst_mcp_uv) vst_mcp_uv,
+			sum(vst_mcp_playtime) vst_mcp_playtime
+		FROM vst_movie_classify_play
+		<where>
+			vst_mcp_pkg IN ('net.myvst.v2','com.vst.itv52.v1')
+			<if test="startDay != null and startDay != ''">
+				AND vst_mcp_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_mcp_date &lt;= #{endDay}
+			</if>
+			<if test="vst_mcp_special_type != null and vst_mcp_special_type != ''">
+				AND vst_mcp_special_type = #{vst_mcp_special_type}
+			</if>
+			<if test="vst_mcp_cid != null and vst_mcp_cid != ''">
+				AND vst_mcp_cid = #{vst_mcp_cid}
+			</if>
+		</where>
+		GROUP BY vst_mcp_date, vst_mcp_special_type, vst_mcp_cid
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_mcp_date ASC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 获取列表数据 -->
+	<select id="queryForList" parameterType="map" resultType="java.util.HashMap" useCache="false">
+		SELECT * FROM vst_movie_classify_play
+		<where>
+			<if test="date != null and date != ''">
+				vst_mcp_date = #{date}
+			</if>
+			<if test="startDay != null and startDay != ''">
+				AND vst_mcp_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_mcp_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_mcp_pkg = #{pkgName}
+			</if>
+			<if test="vst_mcp_special_type != null and vst_mcp_special_type != ''">
+				AND vst_mcp_special_type = #{vst_mcp_special_type}
+			</if>
+			<if test="vst_mcp_cid != null and vst_mcp_cid != ''">
+				AND vst_mcp_cid = #{vst_mcp_cid}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_mcp_vv DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+	<!-- 获取首页数据(有缓存) -->
+	<select id="queryHomeList" parameterType="map" resultType="java.util.HashMap">
+		SELECT
+			vst_mcp_cid, vst_mcp_vv, vst_mcp_uv
+		FROM vst_movie_classify_play
+		<where>
+			<if test="date != null and date != ''">
+				vst_mcp_date = #{date}
+			</if>
+			<if test="startDay != null and startDay != ''">
+				AND vst_mcp_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_mcp_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_mcp_pkg = #{pkgName}
+			</if>
+			<if test="vst_mcp_special_type != null and vst_mcp_special_type != ''">
+				AND vst_mcp_special_type = #{vst_mcp_special_type}
+			</if>
+			<if test="vst_mcp_cid != null and vst_mcp_cid != ''">
+				AND vst_mcp_cid = #{vst_mcp_cid}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_mcp_vv DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+	<!-- 按分类统计 -->
+	<select id="queryReportByCid" parameterType="map" resultType="java.util.HashMap" useCache="false">
+		SELECT
+			vst_mcp_date, vst_mcp_cid,
+			sum(vst_mcp_vv) vst_mcp_vv
+		FROM vst_movie_classify_play
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_mcp_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_mcp_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_mcp_pkg = #{pkgName}
+			</if>
+			<if test="vst_mcp_special_type != null and vst_mcp_special_type != ''">
+				AND vst_mcp_special_type = #{vst_mcp_special_type}
+			</if>
+			<if test="vst_mcp_cid != null and vst_mcp_cid != ''">
+				AND vst_mcp_cid = #{vst_mcp_cid}
+			</if>
+		</where>
+		GROUP BY vst_mcp_date, vst_mcp_cid
+		ORDER BY vst_mcp_date ASC, vst_mcp_vv DESC
+	</select>
+	
+</mapper>

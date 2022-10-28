@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 汇总播放(渠道) -->
+<mapper namespace="com.vst.defend.dao2.movie.VstMovieTotalPlayChannelDao">
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_mtpc_date '日期', vst_mtpc_pkg '包名', vst_mtpc_channel '渠道',
+				vst_mtpc_vv '播放量', vst_mtpc_dod '播放量天环比', vst_mtpc_wow '播放量周环比',
+				vst_mtpc_uv '独立用户', vst_mtpc_uv_dod '独立用户天环比', vst_mtpc_uv_wow '独立用户周环比',
+				vst_mtpc_avg '人均播放量', vst_mtpc_playtime '播放时长(H)', vst_mtpc_playtime_avg '人均播放时长(m)',
+				vst_mtpc_rate '播放活跃比'
+			</otherwise>
+		</choose>
+		FROM vst_movie_total_play_channel
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_mtpc_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_mtpc_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_mtpc_pkg = #{pkgName}
+			</if>
+			<if test="vst_mtpc_channel != null and vst_mtpc_channel != ''">
+				AND vst_mtpc_channel like '%${vst_mtpc_channel}%'
+			</if>
+			<if test="vst_mtpc_channel_eq != null and vst_mtpc_channel_eq != ''">
+				AND BINARY vst_mtpc_channel = #{vst_mtpc_channel_eq}
+			</if>
+			<if test="vst_mtpc_channel_ne != null and vst_mtpc_channel_ne != ''">
+				AND vst_mtpc_channel != #{vst_mtpc_channel_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_mtpc_date DESC, vst_mtpc_vv DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+</mapper>

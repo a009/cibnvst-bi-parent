@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 运营页内容点击 -->
+<mapper namespace="com.vst.defend.dao2.home.VstOperateContentClickDao">
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_occ_date '日期', vst_occ_pkg '包名', vst_occ_type '类型',
+				vst_occ_cid '影片分类', vst_occ_uuid '影片ID', vst_occ_name '名称',
+				vst_occ_vv '点击量', vst_occ_vv_dod '天环比', vst_occ_vv_wow '周环比',
+				vst_occ_uv '独立用户', vst_occ_uv_dod '独立用户天环比', vst_occ_uv_wow '独立用户周环比',
+				vst_occ_avg '人均点击量'
+			</otherwise>
+		</choose>
+		FROM vst_operate_content_click
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_occ_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_occ_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_occ_pkg = #{pkgName}
+			</if>
+			<if test="vst_occ_type != null and vst_occ_type != ''">
+				AND vst_occ_type = #{vst_occ_type}
+			</if>
+			<if test="vst_occ_cid != null and vst_occ_cid != ''">
+				AND vst_occ_cid = #{vst_occ_cid}
+			</if>
+			<if test="vst_occ_uuid != null and vst_occ_uuid != ''">
+				AND vst_occ_uuid = #{vst_occ_uuid}
+			</if>
+			<if test="vst_occ_name != null and vst_occ_name != ''">
+				AND vst_occ_name like '%${vst_occ_name}%'
+			</if>
+			<if test="vst_occ_name_eq != null and vst_occ_name_eq != ''">
+				AND vst_occ_name = #{vst_occ_name_eq}
+			</if>
+			<if test="vst_occ_name_ne != null and vst_occ_name_ne != ''">
+				AND vst_occ_name != #{vst_occ_name_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_occ_date DESC, vst_occ_vv DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+</mapper>

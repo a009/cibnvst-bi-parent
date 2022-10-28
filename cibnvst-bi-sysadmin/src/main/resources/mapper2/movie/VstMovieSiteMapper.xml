@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 平台播放 -->
+<mapper namespace="com.vst.defend.dao2.movie.VstMovieSiteDao">
+	
+	<!-- 开启本mapper的namespace下的二级缓存 -->
+	<cache flushInterval="3600000" readOnly="true" />
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap" useCache="false">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_ms_date '日期', vst_ms_pkg '包名', vst_ms_site '平台名称',
+				vst_ms_vv '播放量', vst_ms_vv_dod '播放量天环比', vst_ms_vv_wow '播放量周环比',
+				vst_ms_uv '独立用户', vst_ms_uv_dod '独立用户天环比', vst_ms_uv_wow '独立用户周环比',
+				vst_ms_avg '人均播放量', vst_ms_playtime '播放时长(H)', vst_ms_playtime_avg '人均播放时长(m)'
+			</otherwise>
+		</choose>
+		FROM vst_movie_site
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_ms_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_ms_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_ms_pkg = #{pkgName}
+			</if>
+			<if test="vst_ms_special_type != null and vst_ms_special_type != ''">
+				AND vst_ms_special_type = #{vst_ms_special_type}
+			</if>
+			<if test="vst_ms_site != null and vst_ms_site != ''">
+				AND vst_ms_site like '%${vst_ms_site}%'
+			</if>
+			<if test="vst_ms_site_eq != null and vst_ms_site_eq != ''">
+				AND vst_ms_site = #{vst_ms_site_eq}
+			</if>
+			<if test="vst_ms_site_ne != null and vst_ms_site_ne != ''">
+				AND vst_ms_site != #{vst_ms_site_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_ms_date DESC, vst_ms_vv DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 获取列表数据 -->
+	<select id="queryForList" parameterType="map" resultType="java.util.HashMap" useCache="false">
+		SELECT
+			vst_ms_site,
+			vst_ms_vv, vst_ms_vv_dod, vst_ms_vv_wow,
+			vst_ms_uv, vst_ms_uv_dod, vst_ms_uv_wow,
+			vst_ms_avg, vst_ms_playtime_avg
+		FROM vst_movie_site
+		<where>
+			vst_ms_site != ''
+			<if test="date != null and date != ''">
+				AND vst_ms_date = #{date}
+			</if>
+			<if test="startDay != null and startDay != ''">
+				AND vst_ms_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_ms_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_ms_pkg = #{pkgName}
+			</if>
+			<if test="vst_ms_special_type != null and vst_ms_special_type != ''">
+				AND vst_ms_special_type = #{vst_ms_special_type}
+			</if>
+			<if test="vst_ms_site != null and vst_ms_site != ''">
+				AND vst_ms_site like '%${vst_ms_site}%'
+			</if>
+			<if test="vst_ms_site_eq != null and vst_ms_site_eq != ''">
+				AND vst_ms_site = #{vst_ms_site_eq}
+			</if>
+			<if test="vst_ms_site_ne != null and vst_ms_site_ne != ''">
+				AND vst_ms_site != #{vst_ms_site_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_ms_vv DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+	<!-- 获取首页数据(有缓存) -->
+	<select id="queryHomeList" parameterType="map" resultType="java.util.HashMap">
+		SELECT
+			vst_ms_site,
+			vst_ms_vv, vst_ms_vv_dod, vst_ms_vv_wow,
+			vst_ms_uv, vst_ms_uv_dod, vst_ms_uv_wow,
+			vst_ms_avg, vst_ms_playtime_avg
+		FROM vst_movie_site
+		<where>
+			vst_ms_site != ''
+			<if test="date != null and date != ''">
+				AND vst_ms_date = #{date}
+			</if>
+			<if test="startDay != null and startDay != ''">
+				AND vst_ms_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_ms_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_ms_pkg = #{pkgName}
+			</if>
+			<if test="vst_ms_special_type != null and vst_ms_special_type != ''">
+				AND vst_ms_special_type = #{vst_ms_special_type}
+			</if>
+			<if test="vst_ms_site != null and vst_ms_site != ''">
+				AND vst_ms_site like '%${vst_ms_site}%'
+			</if>
+			<if test="vst_ms_site_eq != null and vst_ms_site_eq != ''">
+				AND vst_ms_site = #{vst_ms_site_eq}
+			</if>
+			<if test="vst_ms_site_ne != null and vst_ms_site_ne != ''">
+				AND vst_ms_site != #{vst_ms_site_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_ms_vv DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+	<!-- 按平台统计 -->
+	<select id="queryReportBySite" parameterType="map" resultType="java.util.HashMap" useCache="false">
+		SELECT
+			vst_ms_date, vst_ms_site,
+			sum(vst_ms_vv) vst_ms_vv
+		FROM vst_movie_site
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_ms_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_ms_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_ms_pkg = #{pkgName}
+			</if>
+			<if test="vst_ms_special_type != null and vst_ms_special_type != ''">
+				AND vst_ms_special_type = #{vst_ms_special_type}
+			</if>
+			<if test="vst_ms_site != null and vst_ms_site != ''">
+				AND vst_ms_site like '%${vst_ms_site}%'
+			</if>
+			<if test="vst_ms_site_eq != null and vst_ms_site_eq != ''">
+				AND vst_ms_site = #{vst_ms_site_eq}
+			</if>
+			<if test="vst_ms_site_ne != null and vst_ms_site_ne != ''">
+				AND vst_ms_site != #{vst_ms_site_ne}
+			</if>
+		</where>
+		GROUP BY vst_ms_date, vst_ms_site
+		ORDER BY vst_ms_date ASC, vst_ms_vv DESC
+	</select>
+	
+</mapper>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 渠道质量 -->
+<mapper namespace="com.vst.defend.dao2.channel.VstChannelLevelDao">
+
+	<select id="queryForList" parameterType="map" resultType="java.util.HashMap">
+		SELECT * FROM vst_channel_level
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_cl_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_cl_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_cl_pkg = #{pkgName}
+			</if>
+			<if test="vst_cl_channel != null and vst_cl_channel != ''">
+				AND vst_cl_channel like '%${vst_cl_channel}%'
+			</if>
+			<if test="vst_cl_channel_eq != null and vst_cl_channel_eq != ''">
+				AND BINARY vst_cl_channel = #{vst_cl_channel_eq}
+			</if>
+			<if test="vst_cl_channel_ne != null and vst_cl_channel_ne != ''">
+				AND vst_cl_channel != #{vst_cl_channel_ne}
+			</if>
+			<if test="vst_cl_channel_not_null != null and vst_cl_channel_not_null != ''">
+				AND vst_cl_channel != ''
+			</if>
+			<if test="list_channels != null and list_channels != ''">
+				AND vst_cl_channel IN
+				<foreach collection="list_channels" item="channel" open="(" separator="," close=")">
+					#{channel}
+				</foreach>
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_cl_date DESC, vst_cl_user_sum DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+
+	<select id="queryCount" parameterType="map" resultType="int">
+		SELECT count(1) FROM vst_channel_level
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_cl_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_cl_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_cl_pkg = #{pkgName}
+			</if>
+			<if test="vst_cl_channel != null and vst_cl_channel != ''">
+				AND vst_cl_channel like '%${vst_cl_channel}%'
+			</if>
+			<if test="vst_cl_channel_eq != null and vst_cl_channel_eq != ''">
+				AND BINARY vst_cl_channel = #{vst_cl_channel_eq}
+			</if>
+			<if test="vst_cl_channel_ne != null and vst_cl_channel_ne != ''">
+				AND vst_cl_channel != #{vst_cl_channel_ne}
+			</if>
+			<if test="vst_cl_channel_not_null != null and vst_cl_channel_not_null != ''">
+				AND vst_cl_channel != ''
+			</if>
+			<if test="list_channels != null and list_channels != ''">
+				AND vst_cl_channel IN
+				<foreach collection="list_channels" item="channel" open="(" separator="," close=")">
+					#{channel}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_cl_date '日期', vst_cl_pkg '包名', vst_cl_channel '渠道', vst_cl_orders '订单数',
+				vst_cl_orders_amount '订单金额(分)', vst_cl_orders_price '客单价(分)', vst_cl_orders_price_avg '均价(分)'
+			</otherwise>
+		</choose>
+		FROM vst_channel_level
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_cl_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_cl_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_cl_pkg = #{pkgName}
+			</if>
+			<if test="vst_cl_channel != null and vst_cl_channel != ''">
+				AND vst_cl_channel like '%${vst_cl_channel}%'
+			</if>
+			<if test="vst_cl_channel_eq != null and vst_cl_channel_eq != ''">
+				AND BINARY vst_cl_channel = #{vst_cl_channel_eq}
+			</if>
+			<if test="vst_cl_channel_ne != null and vst_cl_channel_ne != ''">
+				AND vst_cl_channel != #{vst_cl_channel_ne}
+			</if>
+			<if test="vst_cl_channel_not_null != null and vst_cl_channel_not_null != ''">
+				AND vst_cl_channel != ''
+			</if>
+			<if test="list_channels != null and list_channels != ''">
+				AND vst_cl_channel IN
+				<foreach collection="list_channels" item="channel" open="(" separator="," close=")">
+					#{channel}
+				</foreach>
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_cl_date DESC, vst_cl_user_sum DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+</mapper>

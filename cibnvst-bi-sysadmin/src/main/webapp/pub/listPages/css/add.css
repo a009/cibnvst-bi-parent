@@ -1,0 +1,413 @@
+p{margin: 0;}
+.field>p{
+    float: left;
+}
+.clearfix{
+    zoom:1;
+}
+.clearfix:after{
+    clear:both;
+    display:block;
+    content:"";
+    height:0px;
+    overflow:hidden;
+}
+.input {
+	width:200px;
+	height:30px;
+	padding:5px;
+	font-size: 14px;
+	border: solid 1px #999;
+	border-radius: 3px;
+	outline: none;
+	box-sizing:border-box;
+}
+.btnfooter{
+	width:60px;
+	position: fixed;
+    bottom: 10px;
+    right: 20px;
+}
+.btnSubmit{
+    width: 60px;
+    height: 30px;
+    color: #fff;
+    line-height: 20px;
+    background: #3c8dbc;
+    border: 1px solid #3c8dbc;
+    border-radius: 4px;
+    outline: none;
+    margin-bottom: 5px;
+}
+.btnReset{
+    width: 60px;
+    height: 30px;
+    color: #fff;
+    line-height: 20px;
+    background: #666;
+    border: 1px solid #666;
+    border-radius: 4px;
+    outline: none;
+    margin-bottom: 5px;
+}
+@media (max-width:767px) {
+    .body-content>ul>li{
+        height: 42px;
+        line-height: 42px;
+        /*margin-bottom: 20px;*/
+    }
+    .tright{
+        width: 15%;
+        float: left;
+        text-align: right;
+    }
+    .field{
+        float: left;
+        width: 75%;
+        margin-left: 10px;
+        /*margin-bottom: 20px;*/
+    }
+    .inputSelect{
+        float: left;
+        font-size: 14px;
+        padding: 10px;
+        border: solid 1px #ddd;
+        width: 30%;
+        line-height: 20px;
+        display: block;
+        border-radius: 3px;
+        outline: none;
+    }
+    .inputAge{
+        float: left;
+        font-size: 14px;
+        padding: 10px;
+        border: solid 1px #ddd;
+        width: 30%;
+        line-height: 20px;
+        display: block;
+        border-radius: 3px;
+        outline: none;
+    }
+    .file {
+        width: 70px;
+        float: left;
+        text-align: center;
+        position: relative;
+        display: inline-block;
+        background: #D0EEFF;
+        border: 1px solid #99D3F5;
+        border-radius: 4px;
+        padding: 5px;
+        overflow: hidden;
+        color: #1E88C7;
+        text-decoration: none;
+        text-indent: 0;
+        line-height: 20px;
+        margin-left: 5px;
+        margin-bottom:3px;
+    }
+    .file input {
+        width: 100px;
+        height: 42px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        cursor: pointer;
+        opacity: 0;
+    }
+    .language{
+        width: 30%;
+        margin-left: 15%;
+        margin-bottom: 20px;
+    }
+    .language a{
+        padding:0 10px;
+        color: red;
+    }
+    .file:hover,.inputImgbtn01:hover,.inputImgbtn02:hover {
+        background: #AADFFD;
+        border-color: #78C3F3;
+        color: #004974;
+        text-decoration: none;
+    }
+    .inputImgbtn01,
+    .inputImgbtn02{
+        width: 70px;
+        height: 30px;
+        color: #1E88C7;
+        line-height: 20px;
+        background: #D0EEFF;
+        border: 1px solid #99D3F5;
+        border-radius: 4px;
+        outline: none;
+        margin-left: 5px;
+        margin-bottom:3px;
+    }
+    .field>span{
+        padding:0 5px;
+        float: left;
+        font-size: 16px;
+        line-height: 42px;
+        color: red;
+    }
+    .level{
+        float: left;
+        width: 45%;
+    }
+    .tips{
+        float: left;
+        padding-left: 17%;
+        color: #888;
+        line-height: 42px;
+    }
+    
+}
+
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+    .body-content>ul>li{
+        height: 100px;
+        line-height: 42px;
+    }
+    /*.tright{
+        width: 25%;
+        float: left;
+        text-align: right;
+    }*/
+    .tright2{
+        width: 30%;
+        float: left;
+        text-align: right;
+    }
+    .field{
+        float: left;
+        width: 70%;
+        margin-left: 10px;
+    }
+    .inputSelect{
+        float: left;
+        font-size: 14px;
+        padding: 10px;
+        border: solid 1px #ddd;
+        width: 30%;
+        line-height: 20px;
+        display: block;
+        border-radius: 3px;
+        outline: none;
+    }
+    .inputAge{
+        float: left;
+        font-size: 14px;
+        padding: 10px;
+        border: solid 1px #ddd;
+        width: 30%;
+        line-height: 20px;
+        display: block;
+        border-radius: 3px;
+        outline: none;
+    }
+    .file {
+        width: 70px;
+        float: left;
+        text-align: center;
+        position: relative;
+        display: inline-block;
+        background: #D0EEFF;
+        border: 1px solid #99D3F5;
+        border-radius: 4px;
+        padding: 5px;
+        overflow: hidden;
+        color: #1E88C7;
+        text-decoration: none;
+        text-indent: 0;
+        line-height: 20px;
+        margin-left: 5px;
+        margin-bottom:3px;
+    }
+    .file input {
+        width: 100px;
+        height: 42px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        cursor: pointer;
+        opacity: 0;
+    }
+    .language{
+        width: 50%;
+        margin-left: 25%;
+        margin-bottom: 20px;
+    }
+    .language a{
+        padding:0 10px;
+        color: red;
+    }
+    .file:hover,.inputImgbtn01:hover,.inputImgbtn02:hover {
+        background: #AADFFD;
+        border-color: #78C3F3;
+        color: #004974;
+        text-decoration: none;
+    }
+    .inputImgbtn01,
+    .inputImgbtn02{
+        width: 70px;
+        height: 30px;
+        color: #1E88C7;
+        line-height: 20px;
+        background: #D0EEFF;
+        border: 1px solid #99D3F5;
+        border-radius: 4px;
+        outline: none;
+        margin-left: 5px;
+        margin-bottom:3px;
+    }
+    .field>span{
+        padding:0 5px;
+        float: left;
+        font-size: 16px;
+        line-height: 42px;
+        color: red;
+    }
+    .field textarea{
+        width:80%;
+        margin-bottom: 15px;
+
+    }
+    .level{
+        float: left;
+        /*width: 45%;*/
+    }
+    .tips{
+        float: left;
+        padding-left: 27%;
+        color: #888;
+        line-height: 42px;
+    }
+}
+
+@media (min-width: 1025px) {
+    .body-content>ul>li{
+        height: 42px;
+        line-height: 42px;
+        margin-bottom: 20px;
+    }
+    /*.tright{
+          width: 15%;
+          float: left;
+          text-align: right;
+    }*/
+    .tright2{
+        width: 15%;
+        float: left;
+        text-align: right;
+    }
+    .field{
+        float: left;
+        width: 55%;
+        margin-left: 10px;
+        margin-bottom: 20px;
+    }
+    .inputSelect{
+        float: left;
+        font-size: 14px;
+        padding: 10px;
+        border: solid 1px #ddd;
+        width: 30%;
+        line-height: 20px;
+        display: block;
+        border-radius: 3px;
+        outline: none;
+    }
+    .inputAge{
+        float: left;
+        font-size: 14px;
+        padding: 10px;
+        border: solid 1px #ddd;
+        width: 30%;
+        line-height: 20px;
+        display: block;
+        border-radius: 3px;
+        outline: none;
+    }
+    .file {
+        width: 70px;
+        float: left;
+        text-align: center;
+        position: relative;
+        display: inline-block;
+        background: #D0EEFF;
+        border: 1px solid #99D3F5;
+        border-radius: 4px;
+        padding: 5px;
+        overflow: hidden;
+        color: #1E88C7;
+        text-decoration: none;
+        text-indent: 0;
+        line-height: 20px;
+        margin-left: 5px;
+        margin-bottom:3px;
+    }
+    .file input {
+        width: 100px;
+        height: 42px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        cursor: pointer;
+        opacity: 0;
+    }
+    .language{
+        width: 30%;
+        margin-left: 15%;
+        margin-bottom: 20px;
+    }
+    .language a{
+        padding:0 10px;
+        color: red;
+    }
+    .file:hover,.inputImgbtn01:hover,.inputImgbtn02:hover {
+        background: #AADFFD;
+        border-color: #78C3F3;
+        color: #004974;
+        text-decoration: none;
+    }
+    .inputImgbtn01,
+    .inputImgbtn02{
+        width: 70px;
+        height: 30px;
+        color: #1E88C7;
+        line-height: 20px;
+        background: #D0EEFF;
+        border: 1px solid #99D3F5;
+        border-radius: 4px;
+        outline: none;
+        margin-left: 5px;
+        margin-bottom:3px;
+    }
+    .field>span{
+        padding:0 5px;
+        float: left;
+        font-size: 16px;
+        line-height: 42px;
+        color: red;
+    }
+    .level{
+        float: left;
+        width: 45%;
+    }
+    .tips{
+        float: left;
+        padding-left: 5px;
+        color: #888;
+        line-height: 42px;
+    }
+}
+.btnSubmit:hover{
+    color: #fff;
+    background: #004974;
+    border: 1px solid #004974;
+}
+.btnReset:hover{
+    background: #8d8d8d;
+    border: 1px solid #8d8d8d;
+}

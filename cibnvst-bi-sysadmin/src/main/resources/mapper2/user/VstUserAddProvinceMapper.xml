@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 新增用户(省份)统计 -->
+<mapper namespace="com.vst.defend.dao2.user.VstUserAddProvinceDao">
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_uap_date '日期', vst_uap_pkg '包名', vst_uap_province '省份',
+				vst_uap_amount '新增用户数', vst_uap_dod '天环比', vst_uap_wow '周环比', vst_uap_mom '月环比'
+			</otherwise>
+		</choose>
+		FROM vst_user_add_province
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_uap_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_uap_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_uap_pkg = #{pkgName}
+			</if>
+			<if test="vst_uap_province != null and vst_uap_province != ''">
+				AND vst_uap_province like '%${vst_uap_province}%'
+			</if>
+			<if test="vst_uap_province_eq != null and vst_uap_province_eq != ''">
+				AND vst_uap_province = #{vst_uap_province_eq}
+			</if>
+			<if test="vst_uap_province_ne != null and vst_uap_province_ne != ''">
+				AND vst_uap_province != #{vst_uap_province_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_uap_date DESC, vst_uap_amount DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+</mapper>

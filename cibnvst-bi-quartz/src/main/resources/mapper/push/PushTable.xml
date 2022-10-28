@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vst.quartz.dao.push.VstUserLevelChannelMapper">
+
+	<!--查询表数据-->
+	<select id="queryTable" resultType="java.util.Map" parameterType="java.lang.String">
+		${VALUE}
+	</select>
+
+
+	<!--同步数据-->
+	<insert id="batchTable" parameterType="java.lang.String">
+		${VALUE }
+	</insert>
+
+
+
+
+
+
+
+</mapper>

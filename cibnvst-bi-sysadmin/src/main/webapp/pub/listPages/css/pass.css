@@ -1,0 +1,117 @@
+.setPassword li{
+    margin-bottom: 10px;
+    height: 42px;
+}
+.userAdmin{
+    padding: 7px 7px 7px 0;
+}
+@media (max-width:767px) {
+    .sitename{
+        width:30%;
+    }
+    .field{
+        width: 65%;
+    }
+    .passwordDiv{
+        width:110px;
+        margin: auto;
+        margin-top: 15px;
+    }
+    .psdButton{
+        border: solid 1px #ddd;
+        background: #0ae;
+        border-radius: 4px;
+        color: #fff;
+        padding: 10px 40px;
+        display: inline-block;
+        line-height: 20px;
+        outline: none;
+    }
+    .psderror{
+        height:30px;
+        line-height: 30px;
+        padding-left: 30%;
+        color: red;
+    }
+}
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+    .sitename{
+        width:20%;
+    }
+    .field{
+        width: 300px;
+    }
+    .psdButton{
+        border: solid 1px #ddd;
+        background: #0ae;
+        border-radius: 4px;
+        color: #fff;
+        padding: 10px 40px;
+        display: inline-block;
+        line-height: 20px;
+        outline: none;
+        margin:20px 0 20px 100px;
+    }
+    .psderror{
+        height:30px;
+        line-height: 30px;
+        padding-left: 15%;
+        color: red;
+    }
+}
+@media (min-width: 1025px) {
+    .sitename{
+        width:10%;
+    }
+    .field{
+        width: 300px;
+    }
+    .psdButton{
+        border: solid 1px #ddd;
+        background: #0ae;
+        border-radius: 4px;
+        color: #fff;
+        padding: 10px 40px;
+        display: inline-block;
+        line-height: 20px;
+        outline: none;
+        margin:20px 0 20px 165px;
+    }
+    .psderror{
+        height:30px;
+        line-height: 30px;
+        padding-left: 15%;
+        color: red;
+    }
+}
+.sitename{
+    float: left;
+    text-align: right;
+    padding: 7px 7px 7px 0;
+    white-space: nowrap;
+    display: block;
+    line-height: 20px;
+    color: #202020;
+}
+.field {
+    float: left;
+}
+.w50 {
+    width: 25%;
+    float: left;
+}
+.input {
+    font-size: 14px;
+    padding: 10px;
+    border: solid 1px #ddd;
+    width: 100%;
+    line-height: 20px;
+    display: block;
+    border-radius: 3px;
+    -webkit-appearance: none;
+    outline: none;
+}
+.psdButton:hover{
+    background: #08bbe1;
+}
+

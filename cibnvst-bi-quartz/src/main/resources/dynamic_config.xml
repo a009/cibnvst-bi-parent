@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+
+    <description>配置动态多数据源，动态切换</description>
+
+    <!-- 引入配置文件 -->
+    <context:property-placeholder location="classpath:db.properties"/>
+
+    <bean id="abstractXADataSource" class="com.atomikos.jdbc.AtomikosDataSourceBean"
+          destroy-method="close" abstract="true" >
+        <property name="xaDataSourceClassName" value="com.alibaba.druid.pool.xa.DruidXADataSource" />
+        <!--
+            SQLErrorCodes loaded: [DB2, Derby, H2, HSQL, Informix, MS-SQL, MySQL,
+            Oracle, PostgreSQL, Sybase, Hana]
+        -->
+        <!-- 初始化连接大小 -->
+        <property name="poolSize" value="20" />
+        <!-- 最小闲置连接大小 -->
+        <property name="minPoolSize" value="5" />
+        <!-- 连接池最大使用连接数量 -->
+        <property name="maxPoolSize" value="30" />
+        <!--获取连接失败重新获等待最大时间，在这个时间内如果有可用连接，将返回-->
+        <property name="borrowConnectionTimeout" value="60" />
+        <!--最大获取数据时间，Atomikos使用默认的5分钟 ,在处理大批量数据读取的时候，一旦超过5分钟，就会抛出类似 Resultset is close 的错误-->
+        <property name="reapTimeout" value="3000" />
+        <property name="maxIdleTime" value="60" />
+        <property name="maintenanceInterval" value="60" />
+        <property name="loginTimeout" value="60" />
+        <property name="testQuery" value="${validationQuery}" />
+    </bean>
+
+    <!--配置bi库数据源-->
+    <bean id="vst_bi" parent="abstractXADataSource" destroy-method="close">
+
+        <property name="uniqueResourceName" value="vst_bi" />
+        <property name="xaProperties">
+            <props>
+                <prop key="driverClassName">${jdbc.driver}</prop>
+                <prop key="url">${jdbc.url}</prop>
+                <prop key="password">${jdbc.password}</prop>
+                <prop key="username">${jdbc.username}</prop>   <!-- durid -->
+                <prop key="initialSize">${jdbc.initialSize}</prop>
+                <prop key="maxActive">${jdbc.maxActive}</prop> <!-- 若不配置则代码执行"{dataSource-1} inited"此处停止  -->
+                <prop key="maxIdle">${jdbc.maxIdle}</prop>
+                <prop key="minIdle">${jdbc.minIdle}</prop>
+                <prop key="maxWait">${jdbc.maxWait}</prop>
+                <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+                <prop key="timeBetweenEvictionRunsMillis">60000</prop>
+                <prop key="minEvictableIdleTimeMillis">1800000</prop>
+                <prop key="validationQuery">${validationQuery}</prop>
+                <prop key="testOnBorrow">true</prop>
+                <prop key="testOnReturn">true</prop>
+                <prop key="testWhileIdle">true</prop>
+                <!-- 超过时间限制是否回收 -->
+                <prop key="removeAbandoned">false</prop>
+                <!-- 超时时间；单位为秒。180秒=3分钟 -->
+                <prop key="removeAbandonedTimeout">1800</prop>
+                <!-- 关闭abanded连接时输出错误日志 -->
+                <prop key="logAbandoned">true</prop>
+                <!-- 监控数据库 -->
+                <prop key="filters">mergeStat</prop>
+            </props>
+        </property>
+
+    </bean>
+
+    <!--配置config库数据源-->
+    <bean id="vst_config" parent="abstractXADataSource" destroy-method="close">
+
+        <property name="uniqueResourceName" value="vst_config" />
+        <property name="xaProperties">
+            <props>
+                <prop key="driverClassName">${jdbc.driver_config}</prop>
+                <prop key="url">${jdbc.url_config}</prop>
+                <prop key="password">${jdbc.password_config}</prop>
+                <prop key="username">${jdbc.username_config}</prop>   <!-- durid -->
+                <prop key="initialSize">${jdbc.initialSize_config}</prop>
+                <prop key="maxActive">${jdbc.maxActive_config}</prop> <!-- 若不配置则代码执行"{dataSource-1} inited"此处停止  -->
+                <prop key="maxIdle">${jdbc.maxIdle_config}</prop>
+                <prop key="minIdle">${jdbc.minIdle_config}</prop>
+                <prop key="maxWait">${jdbc.maxWait_config}</prop>
+                <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+                <prop key="timeBetweenEvictionRunsMillis">60000</prop>
+                <prop key="minEvictableIdleTimeMillis">1800000</prop>
+                <prop key="validationQuery">${validationQuery}</prop>
+                <prop key="testOnBorrow">true</prop>
+                <prop key="testOnReturn">true</prop>
+                <prop key="testWhileIdle">true</prop>
+                <!-- 超过时间限制是否回收 -->
+                <prop key="removeAbandoned">false</prop>
+                <!-- 超时时间；单位为秒。180秒=3分钟 -->
+                <prop key="removeAbandonedTimeout">1800</prop>
+                <!-- 关闭abanded连接时输出错误日志 -->
+                <prop key="logAbandoned">true</prop>
+                <!-- 监控数据库 -->
+                <prop key="filters">mergeStat</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!--配置数据源动态切换bean-->
+    <bean id="dynamicDataSource" class="com.vst.quartz.config.dynamic.DynamicDataSource">
+        <property name="targetDataSources">
+            <map key-type="java.lang.String">
+                <entry key="vst_bi" value-ref="vst_bi" />
+                <entry key="vst_config" value-ref="vst_config" />
+            </map>
+        </property>
+        <property name="defaultTargetDataSource" ref="vst_bi"/>
+
+    </bean>
+
+    <!--注入mybatis Bean-->
+    <bean id="sqlSessionFactory_bean" class="org.mybatis.spring.SqlSessionFactoryBean" abstract="true">
+        <property name="configLocation" value="classpath:mybatis/mybatis-config.xml"/>
+        <property name="mapperLocations">
+            <array>
+                <value>classpath:mapper/**/*.xml</value>
+                <value>classpath:mapper2/**/*.xml</value>
+            </array>
+        </property>
+    </bean>
+
+
+    <bean id="sqlSessionFactory_bi" class="org.mybatis.spring.SqlSessionFactoryBean"
+          parent="sqlSessionFactory_bean">
+        <property name="dataSource" ref="vst_bi" />
+    </bean>
+
+
+    <bean id="sqlSessionFactory_config" class="org.mybatis.spring.SqlSessionFactoryBean"
+          parent="sqlSessionFactory_bean">
+        <property name="dataSource" ref="vst_config" />
+    </bean>
+
+
+    <!-- 配置自定义的SqlSessionTemplate模板，注入相关配置 -->
+    <bean id="sqlSessionTemplate" class="com.vst.quartz.config.CustomSqlSessionTemplate"
+          scope="prototype">
+        <!-- 构造注入参数指定本地默认数据源对应的SqlSessionFactoryBean -->
+        <constructor-arg ref="sqlSessionFactory_bi" />
+        <property name="targetSqlSessionFactorys">
+            <map>
+                <entry value-ref="sqlSessionFactory_config" key="vst_config"/>
+                <entry value-ref="sqlSessionFactory_bi" key="vst_bi"/>
+            </map>
+        </property>
+    </bean>
+
+
+
+
+</beans>
+

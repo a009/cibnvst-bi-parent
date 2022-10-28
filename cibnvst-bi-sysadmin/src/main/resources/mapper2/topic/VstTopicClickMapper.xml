@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 专题点击 -->
+<mapper namespace="com.vst.defend.dao2.topic.VstTopicClickDao">
+	
+	<!-- 开启本mapper的namespace下的二级缓存 -->
+	<cache flushInterval="3600000" readOnly="true" />
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap" useCache="false">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_tc_date '日期', vst_tc_pkg '包名', vst_tc_template '模版类型',
+				vst_tc_special_type '专区类型', vst_tc_cid '分类',
+				vst_tc_topicId '专题ID', vst_tc_name '专题名称',
+				vst_tc_amount '点击量', vst_tc_amount_dod '点击量天环比', vst_tc_amount_wow '点击量周环比',
+				vst_tc_uv '独立用户', vst_tc_uv_dod '独立用户天环比', vst_tc_uv_wow '独立用户周环比',
+				vst_tc_avg '人均点击量'
+			</otherwise>
+		</choose>
+		FROM vst_topic_click
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_tc_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_tc_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_tc_pkg = #{pkgName}
+			</if>
+			<if test="vst_tc_special_type != null and vst_tc_special_type != ''">
+				AND vst_tc_special_type = #{vst_tc_special_type}
+			</if>
+			<if test="vst_tc_cid != null and vst_tc_cid != ''">
+				AND vst_tc_cid = #{vst_tc_cid}
+			</if>
+			<if test="vst_tc_template != null and vst_tc_template != ''">
+				AND vst_tc_template = #{vst_tc_template}
+			</if>
+			<if test="vst_tc_topicId != null and vst_tc_topicId != ''">
+				AND vst_tc_topicId = #{vst_tc_topicId}
+			</if>
+			<if test="vst_tc_name != null and vst_tc_name != ''">
+				AND vst_tc_name like '%${vst_tc_name}%'
+			</if>
+			<if test="vst_tc_name_eq != null and vst_tc_name_eq != ''">
+				AND vst_tc_name = #{vst_tc_name_eq}
+			</if>
+			<if test="vst_tc_name_ne != null and vst_tc_name_ne != ''">
+				AND vst_tc_name != #{vst_tc_name_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_tc_date DESC, vst_tc_amount DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 查询专题点击汇总排行 -->
+	<select id="queryTopList" parameterType="map" resultType="java.util.HashMap">
+		SELECT
+			max(vst_tc_special_type) vst_tc_special_type,
+			max(vst_tc_cid) vst_tc_cid,
+			max(vst_tc_template) vst_tc_template,
+			vst_tc_topicId,
+			max(vst_tc_name) vst_tc_name,
+			sum(vst_tc_amount) vst_tc_amount
+		FROM vst_topic_click
+		<where>
+			<if test="date != null and date != ''">
+				vst_tc_date = #{date}
+			</if>
+			<if test="startDay != null and startDay != ''">
+				AND vst_tc_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_tc_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_tc_pkg = #{pkgName}
+			</if>
+			<if test="vst_tc_special_type != null and vst_tc_special_type != ''">
+				AND vst_tc_special_type = #{vst_tc_special_type}
+			</if>
+			<if test="vst_tc_cid != null and vst_tc_cid != ''">
+				AND vst_tc_cid = #{vst_tc_cid}
+			</if>
+			<if test="vst_tc_template != null and vst_tc_template != ''">
+				AND vst_tc_template = #{vst_tc_template}
+			</if>
+			<if test="vst_tc_topicId != null and vst_tc_topicId != ''">
+				AND vst_tc_topicId = #{vst_tc_topicId}
+			</if>
+			<if test="vst_tc_name != null and vst_tc_name != ''">
+				AND vst_tc_name like '%${vst_tc_name}%'
+			</if>
+			<if test="vst_tc_name_eq != null and vst_tc_name_eq != ''">
+				AND vst_tc_name = #{vst_tc_name_eq}
+			</if>
+			<if test="vst_tc_name_ne != null and vst_tc_name_ne != ''">
+				AND vst_tc_name != #{vst_tc_name_ne}
+			</if>
+		</where>
+		GROUP BY vst_tc_topicId
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_tc_amount DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+	<!-- 查询专题点击汇总记录数 -->
+	<select id="queryTopCount" parameterType="map" resultType="int">
+		SELECT count(1) FROM (
+			SELECT vst_tc_topicId FROM vst_topic_click
+			<where>
+				<if test="date != null and date != ''">
+					vst_tc_date = #{date}
+				</if>
+				<if test="startDay != null and startDay != ''">
+					AND vst_tc_date >= #{startDay}
+				</if>
+				<if test="endDay != null and endDay != ''">
+					AND vst_tc_date &lt;= #{endDay}
+				</if>
+				<if test="pkgName != null and pkgName != ''">
+					AND vst_tc_pkg = #{pkgName}
+				</if>
+				<if test="vst_tc_special_type != null and vst_tc_special_type != ''">
+					AND vst_tc_special_type = #{vst_tc_special_type}
+				</if>
+				<if test="vst_tc_cid != null and vst_tc_cid != ''">
+					AND vst_tc_cid = #{vst_tc_cid}
+				</if>
+				<if test="vst_tc_template != null and vst_tc_template != ''">
+					AND vst_tc_template = #{vst_tc_template}
+				</if>
+				<if test="vst_tc_topicId != null and vst_tc_topicId != ''">
+					AND vst_tc_topicId = #{vst_tc_topicId}
+				</if>
+				<if test="vst_tc_name != null and vst_tc_name != ''">
+					AND vst_tc_name like '%${vst_tc_name}%'
+				</if>
+				<if test="vst_tc_name_eq != null and vst_tc_name_eq != ''">
+					AND vst_tc_name = #{vst_tc_name_eq}
+				</if>
+				<if test="vst_tc_name_ne != null and vst_tc_name_ne != ''">
+					AND vst_tc_name != #{vst_tc_name_ne}
+				</if>
+			</where>
+			GROUP BY vst_tc_topicId
+		) a
+	</select>
+	
+	<!-- 导出专题点击汇总数据 -->
+	<select id="queryTopExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+			max(vst_tc_special_type) '专区类型',
+			max(vst_tc_cid) '分类',
+			max(vst_tc_template) '模版类型',
+			vst_tc_topicId '专题ID',
+			max(vst_tc_name) '专题名称',
+			sum(vst_tc_amount) '总点击量'
+		FROM vst_topic_click
+		<where>
+			<if test="date != null and date != ''">
+				vst_tc_date = #{date}
+			</if>
+			<if test="startDay != null and startDay != ''">
+				AND vst_tc_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_tc_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_tc_pkg = #{pkgName}
+			</if>
+			<if test="vst_tc_special_type != null and vst_tc_special_type != ''">
+				AND vst_tc_special_type = #{vst_tc_special_type}
+			</if>
+			<if test="vst_tc_cid != null and vst_tc_cid != ''">
+				AND vst_tc_cid = #{vst_tc_cid}
+			</if>
+			<if test="vst_tc_template != null and vst_tc_template != ''">
+				AND vst_tc_template = #{vst_tc_template}
+			</if>
+			<if test="vst_tc_topicId != null and vst_tc_topicId != ''">
+				AND vst_tc_topicId = #{vst_tc_topicId}
+			</if>
+			<if test="vst_tc_name != null and vst_tc_name != ''">
+				AND vst_tc_name like '%${vst_tc_name}%'
+			</if>
+			<if test="vst_tc_name_eq != null and vst_tc_name_eq != ''">
+				AND vst_tc_name = #{vst_tc_name_eq}
+			</if>
+			<if test="vst_tc_name_ne != null and vst_tc_name_ne != ''">
+				AND vst_tc_name != #{vst_tc_name_ne}
+			</if>
+		</where>
+		GROUP BY vst_tc_topicId
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				sum(vst_tc_amount) DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+</mapper>

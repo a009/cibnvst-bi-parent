@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 系统用户 -->
+<mapper namespace="com.vst.defend.dao.sys.VstSysUserDao">
+	
+	<select id="queryForList" parameterType="map" resultType="java.util.HashMap">
+		SELECT a.*, b.vst_role_name as roleName
+		FROM vst_sys_user a
+		LEFT JOIN vst_sys_role b on a.vst_role_id = b.vst_role_id
+		<where>
+			<if test="vst_sys_id != null and vst_sys_id != ''">
+				a.vst_sys_id = #{vst_sys_id}
+			</if>
+			<if test="vst_sys_name != null and vst_sys_name != ''">
+				AND a.vst_sys_name like '%${vst_sys_name}%'
+			</if>
+			<if test="vst_sys_username != null and vst_sys_username != ''">
+				AND a.vst_sys_username = #{vst_sys_username}
+			</if>
+			<if test="vst_sys_password != null and vst_sys_password != ''">
+				AND a.vst_sys_password = #{vst_sys_password}
+			</if>
+			<if test="vst_sys_type != null and vst_sys_type != ''">
+				AND a.vst_sys_type = #{vst_sys_type}
+			</if>
+			<if test="vst_role_id != null and vst_role_id != ''">
+				AND a.vst_role_id = #{vst_role_id}
+			</if>
+			<if test="vst_sys_division != null and vst_sys_division != ''">
+				AND a.vst_sys_division = #{vst_sys_division}
+			</if>
+			<if test="vst_sys_job != null and vst_sys_job != ''">
+				AND a.vst_sys_job = #{vst_sys_job}
+			</if>
+			<if test="vst_sys_channel != null and vst_sys_channel != ''">
+				AND a.vst_sys_channel like '%${vst_sys_channel}%'
+			</if>
+			<if test="vst_sys_state != null and vst_sys_state != ''">
+				AND a.vst_sys_state = #{vst_sys_state}
+			</if>
+			<if test="vst_sys_summary != null and vst_sys_summary != ''">
+				AND a.vst_sys_summary like '%${vst_sys_summary}%'
+			</if>
+			<if test="vst_sys_name_eq != null and vst_sys_name_eq != ''">
+				AND a.vst_sys_name = #{vst_sys_name_eq}
+			</if>
+			<if test="vst_sys_name_ne != null and vst_sys_name_ne != ''">
+				AND a.vst_sys_name != #{vst_sys_name_ne}
+			</if>
+			<if test="vst_sys_channel_eq != null and vst_sys_channel_eq != ''">
+				AND a.vst_sys_channel = #{vst_sys_channel_eq}
+			</if>
+			<if test="vst_sys_channel_ne != null and vst_sys_channel_ne != ''">
+				AND a.vst_sys_channel != #{vst_sys_channel_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				a.vst_sys_job ASC, a.vst_sys_addtime ASC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			limit #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			offset #{offset}
+		</if>
+	</select>
+	
+	<select id="queryCount" parameterType="map" resultType="int">
+		SELECT count(1) FROM vst_sys_user a
+		LEFT JOIN vst_sys_role b on a.vst_role_id = b.vst_role_id
+		<where>
+			<if test="vst_sys_id != null and vst_sys_id != ''">
+				a.vst_sys_id = #{vst_sys_id}
+			</if>
+			<if test="vst_sys_name != null and vst_sys_name != ''">
+				AND a.vst_sys_name like '%${vst_sys_name}%'
+			</if>
+			<if test="vst_sys_username != null and vst_sys_username != ''">
+				AND a.vst_sys_username = #{vst_sys_username}
+			</if>
+			<if test="vst_sys_password != null and vst_sys_password != ''">
+				AND a.vst_sys_password = #{vst_sys_password}
+			</if>
+			<if test="vst_sys_type != null and vst_sys_type != ''">
+				AND a.vst_sys_type = #{vst_sys_type}
+			</if>
+			<if test="vst_role_id != null and vst_role_id != ''">
+				AND a.vst_role_id = #{vst_role_id}
+			</if>
+			<if test="vst_sys_division != null and vst_sys_division != ''">
+				AND a.vst_sys_division = #{vst_sys_division}
+			</if>
+			<if test="vst_sys_job != null and vst_sys_job != ''">
+				AND a.vst_sys_job = #{vst_sys_job}
+			</if>
+			<if test="vst_sys_channel != null and vst_sys_channel != ''">
+				AND a.vst_sys_channel like '%${vst_sys_channel}%'
+			</if>
+			<if test="vst_sys_state != null and vst_sys_state != ''">
+				AND a.vst_sys_state = #{vst_sys_state}
+			</if>
+			<if test="vst_sys_summary != null and vst_sys_summary != ''">
+				AND a.vst_sys_summary like '%${vst_sys_summary}%'
+			</if>
+			<if test="vst_sys_name_eq != null and vst_sys_name_eq != ''">
+				AND a.vst_sys_name = #{vst_sys_name_eq}
+			</if>
+			<if test="vst_sys_name_ne != null and vst_sys_name_ne != ''">
+				AND a.vst_sys_name != #{vst_sys_name_ne}
+			</if>
+			<if test="vst_sys_channel_eq != null and vst_sys_channel_eq != ''">
+				AND a.vst_sys_channel = #{vst_sys_channel_eq}
+			</if>
+			<if test="vst_sys_channel_ne != null and vst_sys_channel_ne != ''">
+				AND a.vst_sys_channel != #{vst_sys_channel_ne}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryForListAsBean" parameterType="map" resultType="VstSysUser">
+		SELECT * FROM vst_sys_user
+		<where>
+			<if test="vst_sys_id != null and vst_sys_id != ''">
+				vst_sys_id = #{vst_sys_id}
+			</if>
+			<if test="vst_sys_name != null and vst_sys_name != ''">
+				AND vst_sys_name like '%${vst_sys_name}%'
+			</if>
+			<if test="vst_sys_username != null and vst_sys_username != ''">
+				AND vst_sys_username = #{vst_sys_username}
+			</if>
+			<if test="vst_sys_password != null and vst_sys_password != ''">
+				AND vst_sys_password = #{vst_sys_password}
+			</if>
+			<if test="vst_sys_type != null and vst_sys_type != ''">
+				AND vst_sys_type = #{vst_sys_type}
+			</if>
+			<if test="vst_role_id != null and vst_role_id != ''">
+				AND vst_role_id = #{vst_role_id}
+			</if>
+			<if test="vst_sys_division != null and vst_sys_division != ''">
+				AND vst_sys_division = #{vst_sys_division}
+			</if>
+			<if test="vst_sys_job != null and vst_sys_job != ''">
+				AND vst_sys_job = #{vst_sys_job}
+			</if>
+			<if test="vst_sys_channel != null and vst_sys_channel != ''">
+				AND vst_sys_channel like '%${vst_sys_channel}%'
+			</if>
+			<if test="vst_sys_state != null and vst_sys_state != ''">
+				AND vst_sys_state = #{vst_sys_state}
+			</if>
+			<if test="vst_sys_summary != null and vst_sys_summary != ''">
+				AND vst_sys_summary like '%${vst_sys_summary}%'
+			</if>
+			<if test="vst_sys_name_eq != null and vst_sys_name_eq != ''">
+				AND vst_sys_name = #{vst_sys_name_eq}
+			</if>
+			<if test="vst_sys_name_ne != null and vst_sys_name_ne != ''">
+				AND vst_sys_name != #{vst_sys_name_ne}
+			</if>
+			<if test="vst_sys_channel_eq != null and vst_sys_channel_eq != ''">
+				AND vst_sys_channel = #{vst_sys_channel_eq}
+			</if>
+			<if test="vst_sys_channel_ne != null and vst_sys_channel_ne != ''">
+				AND vst_sys_channel != #{vst_sys_channel_ne}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryById" parameterType="String" resultType="map">
+		SELECT * FROM vst_sys_user
+		WHERE vst_sys_id = #{vst_sys_id}
+	</select>
+	
+	<select id="queryForMap" parameterType="map" resultType="java.util.HashMap">
+		SELECT * FROM vst_sys_user 
+		<where>
+			<if test="vst_sys_username != null and vst_sys_username != ''">
+				AND vst_sys_username = #{vst_sys_username}
+			</if>
+			<if test="vst_sys_password != null and vst_sys_password != ''">
+				AND vst_sys_password = #{vst_sys_password}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="insert" parameterType="VstSysUser">
+		INSERT INTO vst_sys_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="vst_sys_id != null">
+				vst_sys_id,
+		  	</if>
+			<if test="vst_sys_name != null">
+				vst_sys_name,
+		  	</if>
+			<if test="vst_sys_username != null">
+				vst_sys_username,
+		  	</if>
+			<if test="vst_sys_password != null">
+				vst_sys_password,
+		  	</if>
+		  	<if test="vst_sys_type != null">
+				vst_sys_type,
+		  	</if>
+		  	<if test="vst_role_id != null">
+				vst_role_id,
+		  	</if>
+		  	<if test="vst_sys_division != null">
+				vst_sys_division,
+		  	</if>
+		  	<if test="vst_sys_job != null">
+				vst_sys_job,
+		  	</if>
+		  	<if test="vst_sys_channel != null">
+				vst_sys_channel,
+		  	</if>
+		  	<if test="vst_sys_photo != null">
+				vst_sys_photo,
+		  	</if>
+			<if test="vst_sys_state != null">
+				vst_sys_state,
+		  	</if>
+			<if test="vst_sys_addtime != null">
+				vst_sys_addtime,
+		  	</if>
+			<if test="vst_sys_uptime != null">
+				vst_sys_uptime,
+		  	</if>
+			<if test="vst_sys_operator != null">
+				vst_sys_operator,
+		  	</if>
+		  	<if test="vst_sys_summary != null">
+				vst_sys_summary,
+		  	</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="vst_sys_id != null">
+				#{vst_sys_id},
+		  	</if>
+			<if test="vst_sys_name != null">
+				#{vst_sys_name},
+		  	</if>
+		  	<if test="vst_sys_username != null">
+				#{vst_sys_username},
+		  	</if>
+		  	<if test="vst_sys_password != null">
+				#{vst_sys_password},
+		  	</if>
+		  	<if test="vst_sys_type != null">
+				#{vst_sys_type},
+		  	</if>
+		  	<if test="vst_role_id != null">
+				#{vst_role_id},
+		  	</if>
+		  	<if test="vst_sys_division != null">
+				#{vst_sys_division},
+		  	</if>
+		  	<if test="vst_sys_job != null">
+				#{vst_sys_job},
+		  	</if>
+		  	<if test="vst_sys_channel != null">
+				#{vst_sys_channel},
+		  	</if>
+		  	<if test="vst_sys_photo != null">
+				#{vst_sys_photo},
+		  	</if>
+		  	<if test="vst_sys_state != null">
+				#{vst_sys_state},
+		  	</if>
+		  	<if test="vst_sys_addtime != null">
+				#{vst_sys_addtime},
+		  	</if>
+		  	<if test="vst_sys_uptime != null">
+				#{vst_sys_uptime},
+		  	</if>
+		  	<if test="vst_sys_operator != null">
+				#{vst_sys_operator},
+		  	</if>
+			<if test="vst_sys_summary != null">
+				#{vst_sys_summary},
+		  	</if>
+		</trim>
+	</insert>
+	
+	<update id="update" parameterType="VstSysUser">
+		UPDATE vst_sys_user
+		<set>
+			<if test="vst_sys_name != null">
+				vst_sys_name = #{vst_sys_name},
+		  	</if>
+		  	<if test="vst_sys_username != null">
+				vst_sys_username = #{vst_sys_username},
+		  	</if>
+		  	<if test="vst_sys_password != null">
+				vst_sys_password = #{vst_sys_password},
+		  	</if>
+		  	<if test="vst_sys_type != null">
+				vst_sys_type = #{vst_sys_type},
+		  	</if>
+		  	<if test="vst_role_id != null">
+				vst_role_id = #{vst_role_id},
+		  	</if>
+		  	<if test="vst_sys_division != null">
+				vst_sys_division = #{vst_sys_division},
+		  	</if>
+		  	<if test="vst_sys_job != null">
+				vst_sys_job = #{vst_sys_job},
+		  	</if>
+		  	<if test="vst_sys_channel != null">
+				vst_sys_channel = #{vst_sys_channel},
+		  	</if>
+		  	<if test="vst_sys_photo != null">
+				vst_sys_photo = #{vst_sys_photo},
+		  	</if>
+		  	<if test="vst_sys_state != null">
+				vst_sys_state = #{vst_sys_state},
+		  	</if>
+		  	<if test="vst_sys_uptime != null">
+				vst_sys_uptime = #{vst_sys_uptime},
+		  	</if>
+		  	<if test="vst_sys_operator != null">
+				vst_sys_operator = #{vst_sys_operator},
+		  	</if>
+			<if test="vst_sys_summary != null">
+				vst_sys_summary = #{vst_sys_summary},
+		  	</if>
+		</set>
+		WHERE vst_sys_id = #{vst_sys_id}
+	</update>
+	
+	<update id="modifyState" parameterType="map">
+		UPDATE vst_sys_user
+		<set>
+		  	<if test="vst_sys_state != null">
+				vst_sys_state = #{vst_sys_state},
+		  	</if>
+		  	<if test="vst_sys_uptime != null">
+				vst_sys_uptime = #{vst_sys_uptime},
+		  	</if>
+		  	<if test="vst_sys_operator != null">
+				vst_sys_operator = #{vst_sys_operator},
+		  	</if>
+		</set>
+		WHERE vst_sys_id IN
+		<foreach collection="list_ids" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</update>
+	
+	<delete id="delete" parameterType="map">
+		DELETE FROM vst_sys_user
+		WHERE vst_sys_id IN
+		<foreach collection="list_ids" item="id" open="(" separator="," close=")">
+			#{id}
+	     </foreach>
+	</delete>
+	
+</mapper>

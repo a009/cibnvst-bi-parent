@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 插件分布 -->
+<mapper namespace="com.vst.defend.dao2.plugin.VstPluginsVersionDao">
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_pv_date '日期', vst_pv_pkg '包名', vst_pv_version '版本', vst_pv_plugin_pkg '插件包',
+				vst_pv_plugin_version '插件版本', vst_pv_uv '用户数',
+				vst_pv_dod '天环比', vst_pv_wow '周环比', vst_pv_mom '月环比'
+			</otherwise>
+		</choose>
+		FROM vst_plugins_version
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_pv_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_pv_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_pv_pkg = #{pkgName}
+			</if>
+			<if test="vst_pv_version != null and vst_pv_version != ''">
+				AND vst_pv_version like '%${vst_pv_version}%'
+			</if>
+			<if test="vst_pv_version_eq != null and vst_pv_version_eq != ''">
+				AND vst_pv_version = #{vst_pv_version_eq}
+			</if>
+			<if test="vst_pv_version_ne != null and vst_pv_version_ne != ''">
+				AND vst_pv_version != #{vst_pv_version_ne}
+			</if>
+			<if test="vst_pv_plugin_pkg != null and vst_pv_plugin_pkg != ''">
+				AND vst_pv_plugin_pkg like '%${vst_pv_plugin_pkg}%'
+			</if>
+			<if test="vst_pv_plugin_pkg_eq != null and vst_pv_plugin_pkg_eq != ''">
+				AND vst_pv_plugin_pkg = #{vst_pv_plugin_pkg_eq}
+			</if>
+			<if test="vst_pv_plugin_pkg_ne != null and vst_pv_plugin_pkg_ne != ''">
+				AND vst_pv_plugin_pkg != #{vst_pv_plugin_pkg_ne}
+			</if>
+			<if test="vst_pv_plugin_version != null and vst_pv_plugin_version != ''">
+				AND vst_pv_plugin_version = #{vst_pv_plugin_version}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_pv_date DESC, vst_pv_uv DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按版本统计 -->
+	<select id="queryReportByVersion" parameterType="map" resultType="java.util.HashMap">
+		SELECT
+			vst_pv_date, vst_pv_version,
+			sum(vst_pv_uv) vst_pv_uv
+		FROM vst_plugins_version
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_pv_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_pv_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_pv_pkg = #{pkgName}
+			</if>
+			<if test="vst_pv_version != null and vst_pv_version != ''">
+				AND vst_pv_version like '%${vst_pv_version}%'
+			</if>
+			<if test="vst_pv_version_eq != null and vst_pv_version_eq != ''">
+				AND vst_pv_version = #{vst_pv_version_eq}
+			</if>
+			<if test="vst_pv_version_ne != null and vst_pv_version_ne != ''">
+				AND vst_pv_version != #{vst_pv_version_ne}
+			</if>
+			<if test="vst_pv_plugin_pkg != null and vst_pv_plugin_pkg != ''">
+				AND vst_pv_plugin_pkg like '%${vst_pv_plugin_pkg}%'
+			</if>
+			<if test="vst_pv_plugin_pkg_eq != null and vst_pv_plugin_pkg_eq != ''">
+				AND vst_pv_plugin_pkg = #{vst_pv_plugin_pkg_eq}
+			</if>
+			<if test="vst_pv_plugin_pkg_ne != null and vst_pv_plugin_pkg_ne != ''">
+				AND vst_pv_plugin_pkg != #{vst_pv_plugin_pkg_ne}
+			</if>
+			<if test="vst_pv_plugin_version != null and vst_pv_plugin_version != ''">
+				AND vst_pv_plugin_version = #{vst_pv_plugin_version}
+			</if>
+		</where>
+		GROUP BY vst_pv_date, vst_pv_version
+		ORDER BY vst_pv_date ASC, vst_pv_uv DESC
+	</select>
+	
+	<!-- 按插件包统计 -->
+	<select id="queryReportByPluginPkg" parameterType="map" resultType="java.util.HashMap">
+		SELECT
+			vst_pv_date, vst_pv_plugin_pkg,
+			sum(vst_pv_uv) vst_pv_uv
+		FROM vst_plugins_version
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_pv_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_pv_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_pv_pkg = #{pkgName}
+			</if>
+			<if test="vst_pv_version != null and vst_pv_version != ''">
+				AND vst_pv_version like '%${vst_pv_version}%'
+			</if>
+			<if test="vst_pv_version_eq != null and vst_pv_version_eq != ''">
+				AND vst_pv_version = #{vst_pv_version_eq}
+			</if>
+			<if test="vst_pv_version_ne != null and vst_pv_version_ne != ''">
+				AND vst_pv_version != #{vst_pv_version_ne}
+			</if>
+			<if test="vst_pv_plugin_pkg != null and vst_pv_plugin_pkg != ''">
+				AND vst_pv_plugin_pkg like '%${vst_pv_plugin_pkg}%'
+			</if>
+			<if test="vst_pv_plugin_pkg_eq != null and vst_pv_plugin_pkg_eq != ''">
+				AND vst_pv_plugin_pkg = #{vst_pv_plugin_pkg_eq}
+			</if>
+			<if test="vst_pv_plugin_pkg_ne != null and vst_pv_plugin_pkg_ne != ''">
+				AND vst_pv_plugin_pkg != #{vst_pv_plugin_pkg_ne}
+			</if>
+			<if test="vst_pv_plugin_version != null and vst_pv_plugin_version != ''">
+				AND vst_pv_plugin_version = #{vst_pv_plugin_version}
+			</if>
+		</where>
+		GROUP BY vst_pv_date, vst_pv_plugin_pkg
+		ORDER BY vst_pv_date ASC, vst_pv_uv DESC
+	</select>
+	
+	<!-- 按插件版本统计 -->
+	<select id="queryReportByPluginVersion" parameterType="map" resultType="java.util.HashMap">
+		SELECT
+			vst_pv_date, vst_pv_plugin_version,
+			sum(vst_pv_uv) vst_pv_uv
+		FROM vst_plugins_version
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_pv_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_pv_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_pv_pkg = #{pkgName}
+			</if>
+			<if test="vst_pv_version != null and vst_pv_version != ''">
+				AND vst_pv_version like '%${vst_pv_version}%'
+			</if>
+			<if test="vst_pv_version_eq != null and vst_pv_version_eq != ''">
+				AND vst_pv_version = #{vst_pv_version_eq}
+			</if>
+			<if test="vst_pv_version_ne != null and vst_pv_version_ne != ''">
+				AND vst_pv_version != #{vst_pv_version_ne}
+			</if>
+			<if test="vst_pv_plugin_pkg != null and vst_pv_plugin_pkg != ''">
+				AND vst_pv_plugin_pkg like '%${vst_pv_plugin_pkg}%'
+			</if>
+			<if test="vst_pv_plugin_pkg_eq != null and vst_pv_plugin_pkg_eq != ''">
+				AND vst_pv_plugin_pkg = #{vst_pv_plugin_pkg_eq}
+			</if>
+			<if test="vst_pv_plugin_pkg_ne != null and vst_pv_plugin_pkg_ne != ''">
+				AND vst_pv_plugin_pkg != #{vst_pv_plugin_pkg_ne}
+			</if>
+			<if test="vst_pv_plugin_version != null and vst_pv_plugin_version != ''">
+				AND vst_pv_plugin_version = #{vst_pv_plugin_version}
+			</if>
+		</where>
+		GROUP BY vst_pv_date, vst_pv_plugin_version
+		ORDER BY vst_pv_date ASC, vst_pv_uv DESC
+	</select>
+	
+</mapper>

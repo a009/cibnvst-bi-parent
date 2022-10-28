@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- SQL执行 -->
+<mapper namespace="com.vst.defend.dao2.sql.VstSQLDao">
+	
+	<!-- 开启本mapper的namespace下的二级缓存 -->
+	<cache flushInterval="300000" readOnly="true" />
+	
+	<!-- 查询结果集 -->
+	<select id="queryBySqlList" parameterType="String" resultType="java.util.HashMap" useCache="false">
+		${value}
+	</select>
+	
+	<!-- 查询记录数 -->
+	<select id="queryBySqlCount" parameterType="String" resultType="int" useCache="true">
+		${value}
+	</select>
+	
+	<!-- 查询分页数据 -->
+	<select id="querySqlList" parameterType="map" resultType="java.util.LinkedHashMap" useCache="false">
+		${sql}
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+</mapper>

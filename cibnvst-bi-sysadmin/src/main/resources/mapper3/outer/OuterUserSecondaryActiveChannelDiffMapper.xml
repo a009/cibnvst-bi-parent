@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 二次活跃渠道用户(对外) -->
+<mapper namespace="com.vst.defend.dao3.outer.OuterUserSecondaryActiveChannelDiffDao">
+	
+	<select id="queryForList" parameterType="map" resultType="java.util.HashMap">
+		SELECT vst_usacd_date, vst_usacd_channel,
+			CASE vst_usacd_modulus
+			WHEN '-1' THEN vst_usacd_amount
+			ELSE ROUND(vst_usacd_umeng_uv * vst_usacd_amount / vst_usacd_uv * vst_usacd_modulus)
+			END as vst_usacd_new_amount
+		FROM vst_user_secondary_active_channel_diff
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_usacd_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_usacd_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_usacd_pkg = #{pkgName}
+			</if>
+			<if test="vst_usacd_channel != null and vst_usacd_channel != ''">
+				AND vst_usacd_channel like '%${vst_usacd_channel}%'
+			</if>
+			<if test="vst_usacd_channel_eq != null and vst_usacd_channel_eq != ''">
+				AND vst_usacd_channel = #{vst_usacd_channel_eq}
+			</if>
+			<if test="vst_usacd_channel_ne != null and vst_usacd_channel_ne != ''">
+				AND vst_usacd_channel != #{vst_usacd_channel_ne}
+			</if>
+			<if test="list_channels != null and list_channels != ''">
+				AND vst_usacd_channel IN
+				<foreach collection="list_channels" item="channel" open="(" separator="," close=")">
+					#{channel}
+				</foreach>
+			</if>
+			<if test="vst_usacd_updator != null and vst_usacd_updator != ''">
+				AND vst_usacd_updator like '%${vst_usacd_updator}%'
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_usacd_date DESC, vst_usacd_amount DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+	<select id="queryCount" parameterType="map" resultType="int">
+		SELECT count(1) FROM vst_user_secondary_active_channel_diff
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_usacd_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_usacd_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_usacd_pkg = #{pkgName}
+			</if>
+			<if test="vst_usacd_channel != null and vst_usacd_channel != ''">
+				AND vst_usacd_channel like '%${vst_usacd_channel}%'
+			</if>
+			<if test="vst_usacd_channel_eq != null and vst_usacd_channel_eq != ''">
+				AND vst_usacd_channel = #{vst_usacd_channel_eq}
+			</if>
+			<if test="vst_usacd_channel_ne != null and vst_usacd_channel_ne != ''">
+				AND vst_usacd_channel != #{vst_usacd_channel_ne}
+			</if>
+			<if test="list_channels != null and list_channels != ''">
+				AND vst_usacd_channel IN
+				<foreach collection="list_channels" item="channel" open="(" separator="," close=")">
+					#{channel}
+				</foreach>
+			</if>
+			<if test="vst_usacd_updator != null and vst_usacd_updator != ''">
+				AND vst_usacd_updator like '%${vst_usacd_updator}%'
+			</if>
+		</where>
+	</select>
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+			vst_usacd_date '日期', vst_usacd_pkg '包名', vst_usacd_channel '渠道',
+			vst_usacd_uv '当日新增用户', vst_usacd_amount '二次活跃用户',
+			vst_usacd_umeng_uv '友盟新增用户', vst_usacd_modulus '调整系数'
+		FROM vst_user_secondary_active_channel_diff
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_usacd_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_usacd_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_usacd_pkg = #{pkgName}
+			</if>
+			<if test="vst_usacd_channel != null and vst_usacd_channel != ''">
+				AND vst_usacd_channel like '%${vst_usacd_channel}%'
+			</if>
+			<if test="vst_usacd_channel_eq != null and vst_usacd_channel_eq != ''">
+				AND vst_usacd_channel = #{vst_usacd_channel_eq}
+			</if>
+			<if test="vst_usacd_channel_ne != null and vst_usacd_channel_ne != ''">
+				AND vst_usacd_channel != #{vst_usacd_channel_ne}
+			</if>
+			<if test="list_channels != null and list_channels != ''">
+				AND vst_usacd_channel IN
+				<foreach collection="list_channels" item="channel" open="(" separator="," close=")">
+					#{channel}
+				</foreach>
+			</if>
+			<if test="vst_usacd_updator != null and vst_usacd_updator != ''">
+				AND vst_usacd_updator like '%${vst_usacd_updator}%'
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_usacd_date DESC, vst_usacd_amount DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 根据日期统计 -->
+	<select id="queryReportByDate" parameterType="map" resultType="java.util.HashMap">
+		SELECT vst_usacd_date as date,
+			SUM(CASE vst_usacd_modulus
+				WHEN '-1' THEN vst_usacd_amount
+				ELSE ROUND(vst_usacd_umeng_uv * vst_usacd_amount / vst_usacd_uv * vst_usacd_modulus)
+				END) as vst_usacd_new_amount
+		FROM vst_user_secondary_active_channel_diff
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_usacd_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_usacd_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_usacd_pkg = #{pkgName}
+			</if>
+			<if test="vst_usacd_channel != null and vst_usacd_channel != ''">
+				AND vst_usacd_channel like '%${vst_usacd_channel}%'
+			</if>
+			<if test="vst_usacd_channel_eq != null and vst_usacd_channel_eq != ''">
+				AND vst_usacd_channel = #{vst_usacd_channel_eq}
+			</if>
+			<if test="vst_usacd_channel_ne != null and vst_usacd_channel_ne != ''">
+				AND vst_usacd_channel != #{vst_usacd_channel_ne}
+			</if>
+			<if test="list_channels != null and list_channels != ''">
+				AND vst_usacd_channel IN
+				<foreach collection="list_channels" item="channel" open="(" separator="," close=")">
+					#{channel}
+				</foreach>
+			</if>
+			<if test="vst_usacd_updator != null and vst_usacd_updator != ''">
+				AND vst_usacd_updator like '%${vst_usacd_updator}%'
+			</if>
+		</where>
+		GROUP BY vst_usacd_date
+		ORDER BY vst_usacd_date ASC
+	</select>
+	
+	<!-- 根据维度统计 -->
+	<select id="queryReportByDim" parameterType="map" resultType="java.util.HashMap">
+		SELECT vst_usacd_channel as value,
+			SUM(CASE vst_usacd_modulus
+				WHEN '-1' THEN vst_usacd_amount
+				ELSE ROUND(vst_usacd_umeng_uv * vst_usacd_amount / vst_usacd_uv * vst_usacd_modulus)
+				END) as vst_usacd_new_amount
+		FROM vst_user_secondary_active_channel_diff
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_usacd_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_usacd_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_usacd_pkg = #{pkgName}
+			</if>
+			<if test="vst_usacd_channel != null and vst_usacd_channel != ''">
+				AND vst_usacd_channel like '%${vst_usacd_channel}%'
+			</if>
+			<if test="vst_usacd_channel_eq != null and vst_usacd_channel_eq != ''">
+				AND vst_usacd_channel = #{vst_usacd_channel_eq}
+			</if>
+			<if test="vst_usacd_channel_ne != null and vst_usacd_channel_ne != ''">
+				AND vst_usacd_channel != #{vst_usacd_channel_ne}
+			</if>
+			<if test="list_channels != null and list_channels != ''">
+				AND vst_usacd_channel IN
+				<foreach collection="list_channels" item="channel" open="(" separator="," close=")">
+					#{channel}
+				</foreach>
+			</if>
+			<if test="vst_usacd_updator != null and vst_usacd_updator != ''">
+				AND vst_usacd_updator like '%${vst_usacd_updator}%'
+			</if>
+		</where>
+		GROUP BY vst_usacd_channel
+		ORDER BY vst_usacd_new_amount DESC
+	</select>
+	
+</mapper>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 控制面板 -->
+<mapper namespace="com.vst.defend.dao.sys.VstOptionsDao">
+	
+	<select id="queryForList" parameterType="map" resultType="java.util.HashMap">
+		SELECT * FROM vst_options
+		<where>
+			<if test="vst_option_key != null and vst_option_key != ''">
+				vst_option_key like '%${vst_option_key}%'
+			</if>
+			<if test="vst_option_value != null and vst_option_value != ''">
+				AND vst_option_value like '%${vst_option_value}%'
+			</if>
+			<if test="vst_option_desc != null and vst_option_desc != ''">
+				AND vst_option_desc like '%${vst_option_desc}%'
+			</if>
+			<if test="optionKey != null and optionKey != ''">
+				AND vst_option_key = #{optionKey}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_option_key ASC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+	<select id="queryCount" parameterType="map" resultType="int">
+		SELECT count(1) FROM vst_options
+		<where>
+			<if test="vst_option_key != null and vst_option_key != ''">
+				vst_option_key like '%${vst_option_key}%'
+			</if>
+			<if test="vst_option_value != null and vst_option_value != ''">
+				AND vst_option_value like '%${vst_option_value}%'
+			</if>
+			<if test="vst_option_desc != null and vst_option_desc != ''">
+				AND vst_option_desc like '%${vst_option_desc}%'
+			</if>
+			<if test="optionKey != null and optionKey != ''">
+				AND vst_option_key = #{optionKey}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryForListAsBean" parameterType="map" resultType="VstOptions">
+		SELECT * FROM vst_options
+		<where>
+			<if test="vst_option_key != null and vst_option_key != ''">
+				vst_option_key like '%${vst_option_key}%'
+			</if>
+			<if test="vst_option_value != null and vst_option_value != ''">
+				AND vst_option_value like '%${vst_option_value}%'
+			</if>
+			<if test="vst_option_desc != null and vst_option_desc != ''">
+				AND vst_option_desc like '%${vst_option_desc}%'
+			</if>
+			<if test="optionKey != null and optionKey != ''">
+				AND vst_option_key = #{optionKey}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryById" parameterType="String" resultType="map">
+		SELECT * FROM vst_options
+		WHERE vst_option_key = #{vst_option_key}
+	</select>
+	
+	<insert id="insert" parameterType="VstOptions">
+		INSERT INTO vst_options
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="vst_option_key != null">
+				vst_option_key,
+		  	</if>
+			<if test="vst_option_value != null">
+				vst_option_value,
+		  	</if>
+			<if test="vst_option_desc != null">
+				vst_option_desc,
+		  	</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="vst_option_key != null">
+				#{vst_option_key},
+		  	</if>
+			<if test="vst_option_value != null">
+				#{vst_option_value},
+		  	</if>
+		  	<if test="vst_option_desc != null">
+				#{vst_option_desc},
+		  	</if>
+		</trim>
+	</insert>
+	
+	<update id="update" parameterType="VstOptions">
+		UPDATE vst_options
+		<set>
+			<if test="vst_option_value != null">
+				vst_option_value = #{vst_option_value},
+		  	</if>
+		  	<if test="vst_option_desc != null">
+				vst_option_desc = #{vst_option_desc},
+		  	</if>
+		</set>
+		WHERE vst_option_key = #{vst_option_key}
+	</update>
+	
+	<delete id="delete" parameterType="map">
+		DELETE FROM vst_options
+		WHERE vst_option_key IN
+		<foreach collection="list_ids" item="id" open="(" separator="," close=")">
+			#{id}
+	     </foreach>
+	</delete>
+	
+	<!-- 批量修改 -->
+	<update id="batchUpdate" parameterType="list">
+    	update vst_options 
+        <trim prefix="set" suffixOverrides=",">
+			<trim prefix="vst_option_value =case" suffix="end,">
+				<foreach collection="list" item="i" index="index">
+			    	<if test="i.vst_option_value != null">
+			        	when vst_option_key=#{i.vst_option_key} then #{i.vst_option_value}
+			    	</if>
+				</foreach>
+			</trim>
+			<trim prefix="vst_option_desc =case" suffix="end,">
+				<foreach collection="list" item="i" index="index">
+			    	<if test="i.vst_option_desc != null">
+			        	when vst_option_key=#{i.vst_option_key} then #{i.vst_option_desc}
+			    	</if>
+				</foreach>
+			</trim>
+		</trim>
+        <where>
+			<foreach collection="list" separator="or" item="i" index="index" >
+	        	vst_option_key = #{i.vst_option_key}
+			</foreach>
+		</where>
+	</update>
+</mapper>

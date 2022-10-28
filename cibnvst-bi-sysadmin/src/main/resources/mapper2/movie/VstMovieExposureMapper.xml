@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 影片曝光 -->
+<mapper namespace="com.vst.defend.dao2.movie.VstMovieExposureDao">
+
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_me_date '日期', vst_me_pkg '包名', vst_me_special_type '专区类型',
+				vst_me_cid '影片分类', vst_me_uuid '影片ID', vst_me_name '影片名称',
+				vst_me_amount '曝光量', vst_me_amount_dod '曝光量天环比', vst_me_amount_wow '曝光量周环比',
+				vst_me_uv '独立用户', vst_me_uv_dod '独立用户天环比', vst_me_uv_wow '独立用户周环比',
+				vst_me_avg '人均曝光量'
+			</otherwise>
+		</choose>
+		FROM vst_movie_exposure
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_me_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_me_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_me_pkg = #{pkgName}
+			</if>
+			<if test="vst_me_special_type != null and vst_me_special_type != ''">
+				AND vst_me_special_type = #{vst_me_special_type}
+			</if>
+			<if test="vst_me_cid != null and vst_me_cid != ''">
+				AND vst_me_cid = #{vst_me_cid}
+			</if>
+			<if test="vst_me_uuid != null and vst_me_uuid != ''">
+				AND vst_me_uuid = #{vst_me_uuid}
+			</if>
+			<if test="vst_me_name != null and vst_me_name != ''">
+				AND vst_me_name like '%${vst_me_name}%'
+			</if>
+			<if test="vst_me_name_eq != null and vst_me_name_eq != ''">
+				AND vst_me_name = #{vst_me_name_eq}
+			</if>
+			<if test="vst_me_name_ne != null and vst_me_name_ne != ''">
+				AND vst_me_name != #{vst_me_name_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_me_date DESC, vst_me_amount DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+</mapper>

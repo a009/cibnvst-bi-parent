@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-4.2.xsd">
+
+    <description>动态数据源，分布式事物，</description>
+
+    <!--加载动态数据源配置-->
+    <import resource="dynamic_config.xml"/>
+
+    <!--通用mapper设置-->
+    <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.vst.quartz.dao,com.vst.quartz.daoconfig"/>
+        <property name="sqlSessionTemplateBeanName" value="sqlSessionTemplate"/>
+    </bean>
+
+    <!-- 使用AspectJ方式配置AOP -->
+    <aop:aspectj-autoproxy />
+
+
+    <!-- atomikos事务管理器 -->
+    <bean id="atomikosTransactionManager" class="com.atomikos.icatch.jta.UserTransactionManager" init-method="init" destroy-method="close">
+        <property name="forceShutdown">
+            <value>true</value>
+        </property>
+    </bean>
+
+    <!-- 声明atomik分布式事务 -->
+    <bean id="atomikosUserTransaction" class="com.atomikos.icatch.jta.UserTransactionImp">
+        <!-- 一次事务的最长等待时间 -->
+        <property name="transactionTimeout" value="300" />
+    </bean>
+
+    <!-- spring 事务管理器 -->
+    <bean id="springTransactionManager" class="org.springframework.transaction.jta.JtaTransactionManager">
+        <property name="transactionManager" ref="atomikosTransactionManager" />
+        <property name="userTransaction" ref="atomikosUserTransaction" />
+        <!-- 必须设置，否则程序出现异常 JtaTransactionManager does not support custom isolation levels by default -->
+        <property name="allowCustomIsolationLevels" value="true"/>
+    </bean>
+
+    <!-- 配置注解事务管理 -->
+    <tx:annotation-driven transaction-manager="springTransactionManager" proxy-target-class="true" />
+
+    <!-- txAdvice切面模式,就是怎么切,按照名称通配符 -->
+    <tx:advice id="txAdvice" transaction-manager="springTransactionManager">
+        <tx:attributes>
+            <tx:method name="get*"  propagation="REQUIRED"  read-only="true" />
+            <tx:method name="find*"  propagation="REQUIRED"  read-only="true" />
+            <tx:method name="has*"  propagation="REQUIRED"  read-only="true" />
+            <tx:method name="locate*"  propagation="REQUIRED"  read-only="true" />
+            <tx:method name="clean*"  propagation="REQUIRED"  read-only="true" />
+            <tx:method name="save*"  propagation="REQUIRED"  rollback-for="java.lang.Exception" />
+            <!--<tx:method name="clean*"  propagation="REQUIRED"  rollback-for="java.lang.Exception" />-->
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config  proxy-target-class="true">
+        <aop:advisor pointcut="(execution(* com.vst.quartz.service..*.*(..)))" advice-ref="txAdvice" />
+    </aop:config>
+
+</beans>

@@ -1,0 +1,218 @@
+
+.queryBtn{
+    width: 120px;
+    height: 30px;
+    line-height: 30px;
+    background: #00a7d0;
+    color: #fff;
+    border: none;
+    font-size: 16px;
+    outline: none;
+    border-radius: 3px;
+}
+.queryBtn_mousedown{
+    background: #ccc;
+}
+.queryBtn:disabled{
+    background: #ccc;
+    pointer-events: none;
+}
+
+.resetBtn{
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    background: #2c3b41;
+    color: #fff;
+    border: none;
+    font-size: 16px;
+    outline: none;
+}
+.box-body .searchBar p{
+    line-height:30px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.box-body .searchBar p input,
+.box-body .searchBar p select{
+    width:150px;
+    line-height:30px;
+    height: 30px;
+    padding-left: 10px;
+    border-radius: 3px;
+    outline: none;
+    border: 1px solid #ccc;
+}
+#singleCount{
+	outline:none;
+}
+#page{
+	outline:none;
+}
+.loadImg{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+/****index图锟斤拷锟叫伙拷****/
+@media (max-width: 440px) {
+    .big-screen{
+        display:none;
+    }
+    .row-screen{
+        display:block;
+    }
+}
+@media (min-width: 441px) {
+    .big-screen{
+        display:block;
+    }
+    .row-screen{
+        display:none;
+    }
+}
+small.table-left-title,i.table-left-icon{
+    font-size: 16px;
+    line-height: 32px;
+    text-indent: 10px;}
+.small-screen{
+    position: relative;}
+.table-active{
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    background-color: #efefef;
+    text-align: center;
+    display: block;
+    margin: 2px 2px;
+    border-radius: 6px}
+.small-screen-table{
+    position: absolute;
+    z-index: 999;
+    margin-top:32px;
+    /**margin-left: -40px;**/
+    opacity: 0;
+    filter:alpha(opacity: 0);}
+.small-screen-table li{
+    list-style-type: none;}
+.small-screen-table li>a{
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    background-color: #efefef;
+    text-align: center;
+    display: block;
+    margin: 2px 2px;
+    border-radius: 6px;}
+.small-screen-table li>a:hover{
+    background-color: #999;}
+.small-screen-table li>a:hover{
+    color: white}
+
+/***表格隐藏不换行（如查询显示页面）***/
+#example1{
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+/***表格隐藏换行(非查询显示页面，如新增修改页面)***/
+#example2{
+	overflow: hidden;
+	text-overflow: ellipsis;
+	/*white-space: nowrap;*/
+}
+
+/***滚动条样式(overflow-x: scroll;显示滚动条)***/
+/*
+#move{
+	overflow-x: scroll;
+	scrollbar-face-color:#B3DDF7;
+    scrollbar-shadow-color:#B3DDF7;
+    scrollbar-highlight-color:#B3DDF7;
+    scrollbar-3dlight-color:#EBEBE4;
+    scrollbar-darkshadow-color:#EBEBE4;
+    scrollbar-track-color:#F4F4F0;
+    scrollbar-arrow-color:#000000;
+}
+*/
+
+/**抓取弹窗**/
+ul,li{
+    list-style: none;
+}
+@media (min-width: 768px) {
+    .modal-dialog {
+        width: 800px;
+    }
+    .modalGrap{
+        height:400px;
+        position: absolute;
+        top:0;
+        left: 0;
+        right:0;
+        bottom: 0;
+        margin: auto;
+        overflow-y: auto;
+    }
+    .modalGrap-cont{
+        height:auto;
+    }
+    .clearfix:after {
+        content:"";
+        display: block;
+        clear: both;
+    }
+    .modalGrap-cont ul li span{
+        width: 100px;
+        float: left;
+        text-align: right;
+        margin-right: 5px;
+    }
+    .dialoginput{
+        width:150px;
+        float: left;
+        line-height:30px;
+        padding-left: 10px;
+        outline: none;
+    }
+    .tips{
+        float: left;
+        margin-left: 20px;
+        color: #666;
+    }
+    .modal-footer{
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+    }
+
+}
+
+
+@media (max-width: 767px) {
+    .modalGrap{
+        height:400px;
+        position: absolute;
+        top:10%;
+        left: 0;
+        right:0;
+        bottom: 0;
+        margin: 20px;
+        overflow-y: auto;
+    }
+    .modalGrap-cont ul li span{
+        width: 80px;
+        float: left;
+        text-align: right;
+        margin-right: 20px;
+    }
+}
+
+.modalGrap-cont ul li{
+    line-height:30px;
+    margin-bottom: 20px;
+}

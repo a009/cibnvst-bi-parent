@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 累计用户(显示版本、升级版本)统计 -->
+<mapper namespace="com.vst.defend.dao2.user.VstUserSumVersionUpVerDao">
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_usvu_date '日期', vst_usvu_pkg '包名', vst_usvu_version '显示版本', vst_usvu_upVer '升级版本',
+				vst_usvu_amount '累计用户数', vst_usvu_dod '天环比', vst_usvu_wow '周环比', vst_usvu_mom '月环比'
+			</otherwise>
+		</choose>
+		FROM vst_user_sum_version_upVer
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_usvu_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_usvu_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_usvu_pkg = #{pkgName}
+			</if>
+			<if test="vst_usvu_version != null and vst_usvu_version != ''">
+				AND vst_usvu_version like '%${vst_usvu_version}%'
+			</if>
+			<if test="vst_usvu_upVer != null and vst_usvu_upVer != ''">
+				AND vst_usvu_upVer like '%${vst_usvu_upVer}%'
+			</if>
+			<if test="vst_usvu_version_eq != null and vst_usvu_version_eq != ''">
+				AND vst_usvu_version = #{vst_usvu_version_eq}
+			</if>
+			<if test="vst_usvu_version_ne != null and vst_usvu_version_ne != ''">
+				AND vst_usvu_version != #{vst_usvu_version_ne}
+			</if>
+			<if test="vst_usvu_upVer_eq != null and vst_usvu_upVer_eq != ''">
+				AND vst_usvu_upVer = #{vst_usvu_upVer_eq}
+			</if>
+			<if test="vst_usvu_upVer_ne != null and vst_usvu_upVer_ne != ''">
+				AND vst_usvu_upVer != #{vst_usvu_upVer_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_usvu_date DESC, vst_usvu_amount DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按升级版本统计 -->
+	<select id="queryReportByUpVer" parameterType="map" resultType="map">
+		SELECT vst_usvu_date, vst_usvu_upVer, sum(vst_usvu_amount) vst_usvu_amount
+		FROM vst_user_sum_version_upVer
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_usvu_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_usvu_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_usvu_pkg = #{pkgName}
+			</if>
+			<if test="vst_usvu_version != null and vst_usvu_version != ''">
+				AND vst_usvu_version like '%${vst_usvu_version}%'
+			</if>
+			<if test="vst_usvu_upVer != null and vst_usvu_upVer != ''">
+				AND vst_usvu_upVer like '%${vst_usvu_upVer}%'
+			</if>
+			<if test="vst_usvu_version_eq != null and vst_usvu_version_eq != ''">
+				AND vst_usvu_version = #{vst_usvu_version_eq}
+			</if>
+			<if test="vst_usvu_version_ne != null and vst_usvu_version_ne != ''">
+				AND vst_usvu_version != #{vst_usvu_version_ne}
+			</if>
+			<if test="vst_usvu_upVer_eq != null and vst_usvu_upVer_eq != ''">
+				AND vst_usvu_upVer = #{vst_usvu_upVer_eq}
+			</if>
+			<if test="vst_usvu_upVer_ne != null and vst_usvu_upVer_ne != ''">
+				AND vst_usvu_upVer != #{vst_usvu_upVer_ne}
+			</if>
+		</where>
+		GROUP BY vst_usvu_date, vst_usvu_upVer
+		ORDER BY vst_usvu_date ASC, vst_usvu_amount DESC
+	</select>
+	
+</mapper>

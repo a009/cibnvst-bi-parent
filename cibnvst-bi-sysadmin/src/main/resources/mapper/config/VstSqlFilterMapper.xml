@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- sql筛选配置 -->
+<mapper namespace="com.vst.defend.dao.config.VstSqlFilterDao">
+	
+	<select id="queryForList" parameterType="map" resultType="java.util.HashMap">
+		SELECT * FROM vst_sql_filter
+		<where>
+			<if test="vst_filter_id != null and vst_filter_id != ''">
+				vst_filter_id = #{vst_filter_id}
+			</if>
+			<if test="vst_sql_id != null and vst_sql_id != ''">
+				AND vst_sql_id = #{vst_sql_id}
+			</if>
+			<if test="vst_filter_key != null and vst_filter_key != ''">
+				AND vst_filter_key like '%${vst_filter_key}%'
+			</if>
+			<if test="vst_filter_value != null and vst_filter_value != ''">
+				AND vst_filter_value like '%${vst_filter_value}%'
+			</if>
+			<if test="vst_filter_pkg != null and vst_filter_pkg != ''">
+				AND vst_filter_pkg like '%${vst_filter_pkg}%'
+			</if>
+			<if test="vst_filter_pkg_block != null and vst_filter_pkg_block != ''">
+				AND vst_filter_pkg_block like '%${vst_filter_pkg_block}%'
+			</if>
+			<if test="vst_filter_match_type != null and vst_filter_match_type != ''">
+				AND vst_filter_match_type = #{vst_filter_match_type}
+			</if>
+			<if test="vst_filter_yes_type != null and vst_filter_yes_type != ''">
+				AND vst_filter_yes_type = #{vst_filter_yes_type}
+			</if>
+			<if test="vst_filter_no_type != null and vst_filter_no_type != ''">
+				AND vst_filter_no_type = #{vst_filter_no_type}
+			</if>
+			<if test="vst_filter_action_type != null and vst_filter_action_type != ''">
+				AND vst_filter_action_type = #{vst_filter_action_type}
+			</if>
+			<if test="vst_filter_action_key != null and vst_filter_action_key != ''">
+				AND vst_filter_action_key like '%${vst_filter_action_key}%'
+			</if>
+			<if test="vst_filter_action_value != null and vst_filter_action_value != ''">
+				AND vst_filter_action_value like '%${vst_filter_action_value}%'
+			</if>
+			<if test="vst_filter_state != null and vst_filter_state != ''">
+				AND vst_filter_state = #{vst_filter_state}
+			</if>
+			<if test="vst_filter_key_eq != null and vst_filter_key_eq != ''">
+				AND vst_filter_key = #{vst_filter_key_eq}
+			</if>
+			<if test="vst_filter_key_ne != null and vst_filter_key_ne != ''">
+				AND vst_filter_key != #{vst_filter_key_ne}
+			</if>
+			<if test="vst_filter_value_eq != null and vst_filter_value_eq != ''">
+				AND vst_filter_value = #{vst_filter_value_eq}
+			</if>
+			<if test="vst_filter_value_ne != null and vst_filter_value_ne != ''">
+				AND vst_filter_value != #{vst_filter_value_ne}
+			</if>
+			<if test="vst_filter_action_key_eq != null and vst_filter_action_key_eq != ''">
+				AND vst_filter_action_key = #{vst_filter_action_key_eq}
+			</if>
+			<if test="vst_filter_action_key_ne != null and vst_filter_action_key_ne != ''">
+				AND vst_filter_action_key != #{vst_filter_action_key_ne}
+			</if>
+			<if test="vst_filter_action_value_eq != null and vst_filter_action_value_eq != ''">
+				AND vst_filter_action_value = #{vst_filter_action_value_eq}
+			</if>
+			<if test="vst_filter_action_value_ne != null and vst_filter_action_value_ne != ''">
+				AND vst_filter_action_value != #{vst_filter_action_value_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_filter_index DESC, vst_filter_uptime DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+	<select id="queryCount" parameterType="map" resultType="int">
+		SELECT count(1) FROM vst_sql_filter
+		<where>
+			<if test="vst_filter_id != null and vst_filter_id != ''">
+				vst_filter_id = #{vst_filter_id}
+			</if>
+			<if test="vst_sql_id != null and vst_sql_id != ''">
+				AND vst_sql_id = #{vst_sql_id}
+			</if>
+			<if test="vst_filter_key != null and vst_filter_key != ''">
+				AND vst_filter_key like '%${vst_filter_key}%'
+			</if>
+			<if test="vst_filter_value != null and vst_filter_value != ''">
+				AND vst_filter_value like '%${vst_filter_value}%'
+			</if>
+			<if test="vst_filter_pkg != null and vst_filter_pkg != ''">
+				AND vst_filter_pkg like '%${vst_filter_pkg}%'
+			</if>
+			<if test="vst_filter_pkg_block != null and vst_filter_pkg_block != ''">
+				AND vst_filter_pkg_block like '%${vst_filter_pkg_block}%'
+			</if>
+			<if test="vst_filter_match_type != null and vst_filter_match_type != ''">
+				AND vst_filter_match_type = #{vst_filter_match_type}
+			</if>
+			<if test="vst_filter_yes_type != null and vst_filter_yes_type != ''">
+				AND vst_filter_yes_type = #{vst_filter_yes_type}
+			</if>
+			<if test="vst_filter_no_type != null and vst_filter_no_type != ''">
+				AND vst_filter_no_type = #{vst_filter_no_type}
+			</if>
+			<if test="vst_filter_action_type != null and vst_filter_action_type != ''">
+				AND vst_filter_action_type = #{vst_filter_action_type}
+			</if>
+			<if test="vst_filter_action_key != null and vst_filter_action_key != ''">
+				AND vst_filter_action_key like '%${vst_filter_action_key}%'
+			</if>
+			<if test="vst_filter_action_value != null and vst_filter_action_value != ''">
+				AND vst_filter_action_value like '%${vst_filter_action_value}%'
+			</if>
+			<if test="vst_filter_state != null and vst_filter_state != ''">
+				AND vst_filter_state = #{vst_filter_state}
+			</if>
+			<if test="vst_filter_key_eq != null and vst_filter_key_eq != ''">
+				AND vst_filter_key = #{vst_filter_key_eq}
+			</if>
+			<if test="vst_filter_key_ne != null and vst_filter_key_ne != ''">
+				AND vst_filter_key != #{vst_filter_key_ne}
+			</if>
+			<if test="vst_filter_value_eq != null and vst_filter_value_eq != ''">
+				AND vst_filter_value = #{vst_filter_value_eq}
+			</if>
+			<if test="vst_filter_value_ne != null and vst_filter_value_ne != ''">
+				AND vst_filter_value != #{vst_filter_value_ne}
+			</if>
+			<if test="vst_filter_action_key_eq != null and vst_filter_action_key_eq != ''">
+				AND vst_filter_action_key = #{vst_filter_action_key_eq}
+			</if>
+			<if test="vst_filter_action_key_ne != null and vst_filter_action_key_ne != ''">
+				AND vst_filter_action_key != #{vst_filter_action_key_ne}
+			</if>
+			<if test="vst_filter_action_value_eq != null and vst_filter_action_value_eq != ''">
+				AND vst_filter_action_value = #{vst_filter_action_value_eq}
+			</if>
+			<if test="vst_filter_action_value_ne != null and vst_filter_action_value_ne != ''">
+				AND vst_filter_action_value != #{vst_filter_action_value_ne}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryForListAsBean" parameterType="map" resultType="VstSqlFilter">
+		SELECT * FROM vst_sql_filter
+		<where>
+			<if test="vst_filter_id != null and vst_filter_id != ''">
+				vst_filter_id = #{vst_filter_id}
+			</if>
+			<if test="vst_sql_id != null and vst_sql_id != ''">
+				AND vst_sql_id = #{vst_sql_id}
+			</if>
+			<if test="vst_filter_key != null and vst_filter_key != ''">
+				AND vst_filter_key like '%${vst_filter_key}%'
+			</if>
+			<if test="vst_filter_value != null and vst_filter_value != ''">
+				AND vst_filter_value like '%${vst_filter_value}%'
+			</if>
+			<if test="vst_filter_pkg != null and vst_filter_pkg != ''">
+				AND vst_filter_pkg like '%${vst_filter_pkg}%'
+			</if>
+			<if test="vst_filter_pkg_block != null and vst_filter_pkg_block != ''">
+				AND vst_filter_pkg_block like '%${vst_filter_pkg_block}%'
+			</if>
+			<if test="vst_filter_match_type != null and vst_filter_match_type != ''">
+				AND vst_filter_match_type = #{vst_filter_match_type}
+			</if>
+			<if test="vst_filter_yes_type != null and vst_filter_yes_type != ''">
+				AND vst_filter_yes_type = #{vst_filter_yes_type}
+			</if>
+			<if test="vst_filter_no_type != null and vst_filter_no_type != ''">
+				AND vst_filter_no_type = #{vst_filter_no_type}
+			</if>
+			<if test="vst_filter_action_type != null and vst_filter_action_type != ''">
+				AND vst_filter_action_type = #{vst_filter_action_type}
+			</if>
+			<if test="vst_filter_action_key != null and vst_filter_action_key != ''">
+				AND vst_filter_action_key like '%${vst_filter_action_key}%'
+			</if>
+			<if test="vst_filter_action_value != null and vst_filter_action_value != ''">
+				AND vst_filter_action_value like '%${vst_filter_action_value}%'
+			</if>
+			<if test="vst_filter_state != null and vst_filter_state != ''">
+				AND vst_filter_state = #{vst_filter_state}
+			</if>
+			<if test="vst_filter_key_eq != null and vst_filter_key_eq != ''">
+				AND vst_filter_key = #{vst_filter_key_eq}
+			</if>
+			<if test="vst_filter_key_ne != null and vst_filter_key_ne != ''">
+				AND vst_filter_key != #{vst_filter_key_ne}
+			</if>
+			<if test="vst_filter_value_eq != null and vst_filter_value_eq != ''">
+				AND vst_filter_value = #{vst_filter_value_eq}
+			</if>
+			<if test="vst_filter_value_ne != null and vst_filter_value_ne != ''">
+				AND vst_filter_value != #{vst_filter_value_ne}
+			</if>
+			<if test="vst_filter_action_key_eq != null and vst_filter_action_key_eq != ''">
+				AND vst_filter_action_key = #{vst_filter_action_key_eq}
+			</if>
+			<if test="vst_filter_action_key_ne != null and vst_filter_action_key_ne != ''">
+				AND vst_filter_action_key != #{vst_filter_action_key_ne}
+			</if>
+			<if test="vst_filter_action_value_eq != null and vst_filter_action_value_eq != ''">
+				AND vst_filter_action_value = #{vst_filter_action_value_eq}
+			</if>
+			<if test="vst_filter_action_value_ne != null and vst_filter_action_value_ne != ''">
+				AND vst_filter_action_value != #{vst_filter_action_value_ne}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryById" parameterType="String" resultType="map">
+		SELECT * FROM vst_sql_filter
+		WHERE vst_filter_id = #{vst_filter_id}
+	</select>
+	
+	<insert id="insert" parameterType="VstSqlFilter" >
+		INSERT INTO vst_sql_filter
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="vst_filter_id != null">
+				vst_filter_id,
+		  	</if>
+			<if test="vst_sql_id != null">
+				vst_sql_id,
+		  	</if>
+			<if test="vst_filter_key != null">
+				vst_filter_key,
+		  	</if>
+			<if test="vst_filter_value != null">
+				vst_filter_value,
+		  	</if>
+			<if test="vst_filter_pkg != null">
+				vst_filter_pkg,
+		  	</if>
+			<if test="vst_filter_pkg_block != null">
+				vst_filter_pkg_block,
+		  	</if>
+			<if test="vst_filter_match_type != null">
+				vst_filter_match_type,
+		  	</if>
+			<if test="vst_filter_yes_type != null">
+				vst_filter_yes_type,
+		  	</if>
+			<if test="vst_filter_no_type != null">
+				vst_filter_no_type,
+		  	</if>
+			<if test="vst_filter_action_type != null">
+				vst_filter_action_type,
+		  	</if>
+			<if test="vst_filter_action_key != null">
+				vst_filter_action_key,
+		  	</if>
+			<if test="vst_filter_action_value != null">
+				vst_filter_action_value,
+		  	</if>
+			<if test="vst_filter_index != null">
+				vst_filter_index,
+		  	</if>
+			<if test="vst_filter_state != null">
+				vst_filter_state,
+		  	</if>
+			<if test="vst_filter_addtime != null">
+				vst_filter_addtime,
+		  	</if>
+		  	<if test="vst_filter_creator != null">
+				vst_filter_creator,
+		  	</if>
+		  	<if test="vst_filter_summary != null">
+				vst_filter_summary,
+		  	</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="vst_filter_id != null">
+				#{vst_filter_id},
+		  	</if>
+			<if test="vst_sql_id != null">
+				#{vst_sql_id},
+		  	</if>
+			<if test="vst_filter_key != null">
+				#{vst_filter_key},
+		  	</if>
+		  	<if test="vst_filter_value != null">
+				#{vst_filter_value},
+		  	</if>
+		  	<if test="vst_filter_pkg != null">
+				#{vst_filter_pkg},
+		  	</if>
+		  	<if test="vst_filter_pkg_block != null">
+				#{vst_filter_pkg_block},
+		  	</if>
+		  	<if test="vst_filter_match_type != null">
+				#{vst_filter_match_type},
+		  	</if>
+		  	<if test="vst_filter_yes_type != null">
+				#{vst_filter_yes_type},
+		  	</if>
+		  	<if test="vst_filter_no_type != null">
+				#{vst_filter_no_type},
+		  	</if>
+		  	<if test="vst_filter_action_type != null">
+				#{vst_filter_action_type},
+		  	</if>
+		  	<if test="vst_filter_action_key != null">
+				#{vst_filter_action_key},
+		  	</if>
+		  	<if test="vst_filter_action_value != null">
+				#{vst_filter_action_value},
+		  	</if>
+		  	<if test="vst_filter_index != null">
+				#{vst_filter_index},
+		  	</if>
+		  	<if test="vst_filter_state != null">
+				#{vst_filter_state},
+		  	</if>
+		  	<if test="vst_filter_addtime != null">
+				#{vst_filter_addtime},
+		  	</if>
+		  	<if test="vst_filter_creator != null">
+				#{vst_filter_creator},
+		  	</if>
+			<if test="vst_filter_summary != null">
+				#{vst_filter_summary},
+		  	</if>
+		</trim>
+	</insert>
+	
+	<update id="update" parameterType="VstSqlFilter">
+		UPDATE vst_sql_filter
+		<set>
+			<if test="vst_sql_id != null">
+				vst_sql_id = #{vst_sql_id},
+		  	</if>
+			<if test="vst_filter_key != null">
+				vst_filter_key = #{vst_filter_key},
+		  	</if>
+		  	<if test="vst_filter_value != null">
+				vst_filter_value = #{vst_filter_value},
+		  	</if>
+		  	<if test="vst_filter_pkg != null">
+				vst_filter_pkg = #{vst_filter_pkg},
+		  	</if>
+		  	<if test="vst_filter_pkg_block != null">
+				vst_filter_pkg_block = #{vst_filter_pkg_block},
+		  	</if>
+		  	<if test="vst_filter_match_type != null">
+				vst_filter_match_type = #{vst_filter_match_type},
+		  	</if>
+		  	<if test="vst_filter_yes_type != null">
+				vst_filter_yes_type = #{vst_filter_yes_type},
+		  	</if>
+		  	<if test="vst_filter_no_type != null">
+				vst_filter_no_type = #{vst_filter_no_type},
+		  	</if>
+		  	<if test="vst_filter_action_type != null">
+				vst_filter_action_type = #{vst_filter_action_type},
+		  	</if>
+		  	<if test="vst_filter_action_key != null">
+				vst_filter_action_key = #{vst_filter_action_key},
+		  	</if>
+		  	<if test="vst_filter_action_value != null">
+				vst_filter_action_value = #{vst_filter_action_value},
+		  	</if>
+		  	<if test="vst_filter_index != null">
+				vst_filter_index = #{vst_filter_index},
+		  	</if>
+		  	<if test="vst_filter_state != null">
+				vst_filter_state = #{vst_filter_state},
+		  	</if>
+		  	<if test="vst_filter_uptime != null">
+				vst_filter_uptime = #{vst_filter_uptime},
+		  	</if>
+		  	<if test="vst_filter_updator != null">
+				vst_filter_updator = #{vst_filter_updator},
+		  	</if>
+			<if test="vst_filter_summary != null">
+				vst_filter_summary = #{vst_filter_summary},
+		  	</if>
+		</set>
+		WHERE vst_filter_id = #{vst_filter_id}
+	</update>
+	
+	<update id="modifyState" parameterType="map">
+		UPDATE vst_sql_filter
+		<set>
+		  	<if test="vst_filter_state != null">
+				vst_filter_state = #{vst_filter_state},
+		  	</if>
+		  	<if test="vst_filter_uptime != null">
+				vst_filter_uptime = #{vst_filter_uptime},
+		  	</if>
+		  	<if test="vst_filter_updator != null">
+				vst_filter_updator = #{vst_filter_updator},
+		  	</if>
+		</set>
+		WHERE vst_filter_id IN
+		<foreach collection="list_ids" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</update>
+	
+	<delete id="delete" parameterType="map">
+		DELETE FROM vst_sql_filter
+		WHERE vst_filter_id IN
+		<foreach collection="list_ids" item="id" open="(" separator="," close=")">
+			#{id}
+	    </foreach>
+	</delete>
+	
+	<!-- 批量添加 -->
+	<insert id="batchInsert" parameterType="java.util.List">
+		INSERT INTO vst_sql_filter
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			vst_filter_id,
+			vst_sql_id,
+			vst_filter_key,
+			vst_filter_value,
+			vst_filter_pkg,
+			vst_filter_pkg_block,
+			vst_filter_match_type,
+			vst_filter_yes_type,
+			vst_filter_no_type,
+			vst_filter_action_type,
+			vst_filter_action_key,
+			vst_filter_action_value,
+			vst_filter_index,
+			vst_filter_state,
+			vst_filter_addtime,
+			vst_filter_creator,
+			vst_filter_summary,
+		</trim>
+		VALUES
+		<foreach collection="list" item="i" index="index" separator=",">
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				#{i.vst_filter_id},
+				#{i.vst_sql_id},
+				#{i.vst_filter_key},
+				#{i.vst_filter_value},
+				#{i.vst_filter_pkg},
+				#{i.vst_filter_pkg_block},
+				#{i.vst_filter_match_type},
+				#{i.vst_filter_yes_type},
+				#{i.vst_filter_no_type},
+				#{i.vst_filter_action_type},
+				#{i.vst_filter_action_key},
+				#{i.vst_filter_action_value},
+				#{i.vst_filter_index},
+				#{i.vst_filter_state},
+				#{i.vst_filter_addtime},
+				#{i.vst_filter_creator},
+				#{i.vst_filter_summary},
+			</trim>
+		</foreach>
+	</insert>
+	
+	<!-- 批量修改 -->
+	<update id="batchUpdate" parameterType="list">
+    	UPDATE vst_sql_filter 
+        <trim prefix="set" suffixOverrides=",">
+			<trim prefix="vst_filter_index =case" suffix="end,">
+				<foreach collection="list" item="i" index="index">
+			    	<if test="i.vst_filter_index != null">
+			        	when vst_filter_id=#{i.vst_filter_id} then #{i.vst_filter_index}
+			    	</if>
+				</foreach>
+			</trim>
+			<trim prefix="vst_filter_state =case" suffix="end,">
+				<foreach collection="list" item="i" index="index">
+			    	<if test="i.vst_filter_state != null">
+			        	when vst_filter_id=#{i.vst_filter_id} then #{i.vst_filter_state}
+			    	</if>
+				</foreach>
+			</trim>
+			<trim prefix="vst_filter_uptime =case" suffix="end,">
+				<foreach collection="list" item="i" index="index">
+			    	<if test="i.vst_filter_uptime != null">
+			        	when vst_filter_id=#{i.vst_filter_id} then #{i.vst_filter_uptime}
+			    	</if>
+				</foreach>
+			</trim>
+			<trim prefix="vst_filter_updator =case" suffix="end,">
+				<foreach collection="list" item="i" index="index">
+			    	<if test="i.vst_filter_updator != null">
+			        	when vst_filter_id=#{i.vst_filter_id} then #{i.vst_filter_updator}
+			    	</if>
+				</foreach>
+			</trim>
+		</trim>
+        <where>
+			<foreach collection="list" separator="or" item="i" index="index" >
+	        	vst_filter_id = #{i.vst_filter_id}
+			</foreach>
+		</where>
+	</update>
+	
+</mapper>

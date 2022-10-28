@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 新增用户(渠道、版本)统计 -->
+<mapper namespace="com.vst.defend.dao2.user.VstUserAddChannelVersionDao">
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_uacv_date '日期', vst_uacv_pkg '包名', vst_uacv_channel '渠道', vst_uacv_version '版本',
+				vst_uacv_amount '新增用户数', vst_uacv_dod '天环比', vst_uacv_wow '周环比', vst_uacv_mom '月环比'
+			</otherwise>
+		</choose>
+		FROM vst_user_add_channel_version
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_uacv_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_uacv_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_uacv_pkg = #{pkgName}
+			</if>
+			<if test="vst_uacv_channel != null and vst_uacv_channel != ''">
+				AND vst_uacv_channel like '%${vst_uacv_channel}%'
+			</if>
+			<if test="vst_uacv_version != null and vst_uacv_version != ''">
+				AND vst_uacv_version like '%${vst_uacv_version}%'
+			</if>
+			<if test="vst_uacv_channel_eq != null and vst_uacv_channel_eq != ''">
+				AND BINARY vst_uacv_channel = #{vst_uacv_channel_eq}
+			</if>
+			<if test="vst_uacv_channel_ne != null and vst_uacv_channel_ne != ''">
+				AND vst_uacv_channel != #{vst_uacv_channel_ne}
+			</if>
+			<if test="vst_uacv_version_eq != null and vst_uacv_version_eq != ''">
+				AND vst_uacv_version = #{vst_uacv_version_eq}
+			</if>
+			<if test="vst_uacv_version_ne != null and vst_uacv_version_ne != ''">
+				AND vst_uacv_version != #{vst_uacv_version_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_uacv_date DESC, vst_uacv_amount DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按版本统计 -->
+	<select id="queryReportByVersion" parameterType="map" resultType="map">
+		SELECT vst_uacv_date, vst_uacv_version, sum(vst_uacv_amount) vst_uacv_amount
+		FROM vst_user_add_channel_version
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_uacv_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_uacv_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_uacv_pkg = #{pkgName}
+			</if>
+			<if test="vst_uacv_channel != null and vst_uacv_channel != ''">
+				AND vst_uacv_channel like '%${vst_uacv_channel}%'
+			</if>
+			<if test="vst_uacv_version != null and vst_uacv_version != ''">
+				AND vst_uacv_version like '%${vst_uacv_version}%'
+			</if>
+			<if test="vst_uacv_channel_eq != null and vst_uacv_channel_eq != ''">
+				AND BINARY vst_uacv_channel = #{vst_uacv_channel_eq}
+			</if>
+			<if test="vst_uacv_channel_ne != null and vst_uacv_channel_ne != ''">
+				AND vst_uacv_channel != #{vst_uacv_channel_ne}
+			</if>
+			<if test="vst_uacv_version_eq != null and vst_uacv_version_eq != ''">
+				AND vst_uacv_version = #{vst_uacv_version_eq}
+			</if>
+			<if test="vst_uacv_version_ne != null and vst_uacv_version_ne != ''">
+				AND vst_uacv_version != #{vst_uacv_version_ne}
+			</if>
+		</where>
+		GROUP BY vst_uacv_date, vst_uacv_version
+		ORDER BY vst_uacv_date ASC, vst_uacv_amount DESC
+	</select>
+	
+</mapper>

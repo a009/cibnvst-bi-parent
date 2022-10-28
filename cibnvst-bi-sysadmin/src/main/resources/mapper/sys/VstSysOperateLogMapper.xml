@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 系统操作日志 -->
+<mapper namespace="com.vst.defend.dao.sys.VstSysOperateLogDao">
+	
+	<select id="queryForList" parameterType="map" resultType="java.util.HashMap">
+		SELECT * FROM vst_sys_operate_log
+		<where>
+			<if test="vst_log_id != null and vst_log_id != ''">
+				vst_log_id = #{vst_log_id}
+			</if>
+			<if test="vst_sys_id != null and vst_sys_id != ''">
+				AND vst_sys_id = #{vst_sys_id}
+			</if>
+			<if test="vst_sys_username != null and vst_sys_username != ''">
+				AND vst_sys_username like '%${vst_sys_username}%'
+			</if>
+			<if test="vst_module_id != null and vst_module_id != ''">
+				AND vst_module_id = #{vst_module_id}
+			</if>
+			<if test="vst_module_name != null and vst_module_name != ''">
+				AND vst_module_name like '%${vst_module_name}%'
+			</if>
+			<if test="vst_log_type != null and vst_log_type != ''">
+				AND vst_log_type = #{vst_log_type}
+			</if>
+			<if test="vst_log_ip != null and vst_log_ip != ''">
+				AND vst_log_ip = #{vst_log_ip}
+			</if>
+			<if test="vst_log_content != null and vst_log_content != ''">
+				AND vst_log_content like '%${vst_log_content}%'
+			</if>
+			<if test="operate_starttime != null and operate_starttime != ''">
+				AND vst_log_addtime >= #{operate_starttime}
+			</if>
+			<if test="operate_endtime != null and operate_endtime != ''">
+				AND vst_log_addtime &lt;= #{operate_endtime}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_log_addtime DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+	<select id="queryCount" parameterType="map" resultType="int">
+		SELECT count(1) FROM vst_sys_operate_log
+		<where>
+			<if test="vst_log_id != null and vst_log_id != ''">
+				vst_log_id = #{vst_log_id}
+			</if>
+			<if test="vst_sys_id != null and vst_sys_id != ''">
+				AND vst_sys_id = #{vst_sys_id}
+			</if>
+			<if test="vst_sys_username != null and vst_sys_username != ''">
+				AND vst_sys_username like '%${vst_sys_username}%'
+			</if>
+			<if test="vst_module_id != null and vst_module_id != ''">
+				AND vst_module_id = #{vst_module_id}
+			</if>
+			<if test="vst_module_name != null and vst_module_name != ''">
+				AND vst_module_name like '%${vst_module_name}%'
+			</if>
+			<if test="vst_log_type != null and vst_log_type != ''">
+				AND vst_log_type = #{vst_log_type}
+			</if>
+			<if test="vst_log_ip != null and vst_log_ip != ''">
+				AND vst_log_ip = #{vst_log_ip}
+			</if>
+			<if test="vst_log_content != null and vst_log_content != ''">
+				AND vst_log_content like '%${vst_log_content}%'
+			</if>
+			<if test="operate_starttime != null and operate_starttime != ''">
+				AND vst_log_addtime >= #{operate_starttime}
+			</if>
+			<if test="operate_endtime != null and operate_endtime != ''">
+				AND vst_log_addtime &lt;= #{operate_endtime}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="insert" parameterType="VstSysOperateLog">
+		INSERT INTO vst_sys_operate_log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="vst_log_id != null">
+				vst_log_id,
+		  	</if>
+			<if test="vst_sys_id != null">
+				vst_sys_id,
+		  	</if>
+			<if test="vst_sys_username != null">
+				vst_sys_username,
+		  	</if>
+			<if test="vst_module_id != null">
+				vst_module_id,
+		  	</if>
+			<if test="vst_module_name != null">
+				vst_module_name,
+		  	</if>
+		  	<if test="vst_log_type != null">
+				vst_log_type,
+		  	</if>
+		  	<if test="vst_log_ip != null">
+				vst_log_ip,
+		  	</if>
+		  	<if test="vst_log_addtime != null">
+				vst_log_addtime,
+		  	</if>
+		  	<if test="vst_log_content != null">
+				vst_log_content,
+		  	</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="vst_log_id != null">
+				#{vst_log_id},
+		  	</if>
+			<if test="vst_sys_id != null">
+				#{vst_sys_id},
+		  	</if>
+		  	<if test="vst_sys_username != null">
+				#{vst_sys_username},
+		  	</if>
+		  	<if test="vst_module_id != null">
+				#{vst_module_id},
+		  	</if>
+		  	<if test="vst_module_name != null">
+				#{vst_module_name},
+		  	</if>
+		  	<if test="vst_log_type != null">
+				#{vst_log_type},
+		  	</if>
+		  	<if test="vst_log_ip != null">
+				#{vst_log_ip},
+		  	</if>
+		  	<if test="vst_log_addtime != null">
+				#{vst_log_addtime},
+		  	</if>
+		  	<if test="vst_log_content != null">
+				#{vst_log_content},
+		  	</if>
+		</trim>
+	</insert>
+	
+	<delete id="delete" parameterType="map">
+		DELETE FROM vst_sys_operate_log
+		<where>
+			<if test="operate_starttime != null and operate_starttime != ''">
+				vst_log_addtime >= #{operate_starttime}
+			</if>
+			<if test="operate_endtime != null and operate_endtime != ''">
+				AND vst_log_addtime &lt;= #{operate_endtime}
+			</if>
+		</where>
+	</delete>
+
+</mapper>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC  "-//mybatis.org//DTD Config 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+        <setting name="cacheEnabled" value="true" />  <!-- 开启二级缓存 -->
+        <setting name="lazyLoadingEnabled" value="true" />  
+        <setting name="multipleResultSetsEnabled" value="true" />  
+        <setting name="useColumnLabel" value="true" />  
+        <setting name="useGeneratedKeys" value="false" />  
+        <setting name="autoMappingBehavior" value="PARTIAL" />  
+        <setting name="defaultExecutorType" value="SIMPLE" />  
+        <setting name="defaultStatementTimeout" value="300" />  
+        <setting name="safeRowBoundsEnabled" value="false" />  
+        <setting name="mapUnderscoreToCamelCase" value="false" />  
+        <setting name="localCacheScope" value="SESSION" />  
+        <setting name="jdbcTypeForNull" value="OTHER" />  
+        <setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString" />
+    </settings>
+    
+    <typeAliases>
+		<!-- 日志管理 -->
+		<typeAlias alias="VstSysLoginLog" type="com.vst.common.pojo.VstSysLoginLog" />
+		<typeAlias alias="VstSysOperateLog" type="com.vst.common.pojo.VstSysOperateLog" />
+		
+		<!-- 系统管理 -->
+		<typeAlias alias="VstSysButton" type="com.vst.common.pojo.VstSysButton" />
+		<typeAlias alias="VstSysModule" type="com.vst.common.pojo.VstSysModule" />
+		<typeAlias alias="VstSysRole" type="com.vst.common.pojo.VstSysRole" />
+		<typeAlias alias="VstSysUser" type="com.vst.common.pojo.VstSysUser" />
+		<typeAlias alias="VstSysPermission" type="com.vst.common.pojo.VstSysPermission" />
+		<typeAlias alias="VstDictionary" type="com.vst.common.pojo.VstDictionary" />
+		<typeAlias alias="VstOptions" type="com.vst.common.pojo.VstOptions" />
+		
+		<!-- 配置管理 -->
+		<typeAlias alias="VstSysTopic" type="com.vst.common.pojo.VstSysTopic" />
+		<typeAlias alias="VstSysTopicProp" type="com.vst.common.pojo.VstSysTopicProp" />
+		<typeAlias alias="VstSql" type="com.vst.common.pojo.VstSql" />
+		<typeAlias alias="VstSqlColumn" type="com.vst.common.pojo.VstSqlColumn" />
+		<typeAlias alias="VstSqlGroup" type="com.vst.common.pojo.VstSqlGroup" />
+		<typeAlias alias="VstSqlOrder" type="com.vst.common.pojo.VstSqlOrder" />
+		<typeAlias alias="VstSqlFilter" type="com.vst.common.pojo.VstSqlFilter" />
+		<typeAlias alias="VstSqlSave" type="com.vst.common.pojo.VstSqlSave" />
+		<typeAlias alias="VstTableDesc" type="com.vst.common.pojo.VstTableDesc" />
+		<typeAlias alias="VstFeaturesConfig" type="com.vst.common.pojo.VstFeaturesConfig" />
+		
+		<!-- 任务管理 -->
+		<typeAlias alias="VstExportTask" type="com.vst.common.pojo.VstExportTask" />
+		
+		<!-- 自动化报表 -->
+		<typeAlias alias="VstAutoMain" type="com.vst.common.pojo.VstAutoMain" />
+		<typeAlias alias="VstAutoCondition" type="com.vst.common.pojo.VstAutoCondition" />
+		<typeAlias alias="VstAutoOverlay" type="com.vst.common.pojo.VstAutoOverlay" />
+		<typeAlias alias="VstAutoPageChart" type="com.vst.common.pojo.VstAutoPageChart" />
+		
+		<!-- 全球购管理 -->
+		<typeAlias alias="VstShoppingPlayOrder" type="com.vst.common.pojo.VstShoppingPlayOrder" />
+		<typeAlias alias="VstShoppingLiveOrder" type="com.vst.common.pojo.VstShoppingLiveOrder" />
+		
+		<!-- 对外统计 -->
+		<typeAlias alias="OuterVstUserAddChannel" type="com.vst.common.pojo.OuterVstUserAddChannel" />
+		<typeAlias alias="OuterVstUserLevelChannel" type="com.vst.common.pojo.OuterVstUserLevelChannel" />
+		<typeAlias alias="OuterVstUserSecondaryActiveChannel" type="com.vst.common.pojo.OuterVstUserSecondaryActiveChannel" />
+		<typeAlias alias="VstUserSecondaryActiveChannelDiff" type="com.vst.common.pojo.VstUserSecondaryActiveChannelDiff" />
+
+		<!-- 友盟统计 -->
+		<typeAlias alias="VstUmengEvent" type="com.vst.common.pojo.VstUmengEvent" />
+		<typeAlias alias="VstUmengEventMessage" type="com.vst.common.pojo.VstUmengEventMessage" />
+		
+	</typeAliases>
+	
+</configuration>
+

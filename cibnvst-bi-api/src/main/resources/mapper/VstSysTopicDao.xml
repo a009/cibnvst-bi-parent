@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vst.api.dao.VstSysTopicDao">
+	<select id="query" parameterType="map" resultType="map">
+		select a.vst_topic_id,a.vst_topic_value,
+			b.vst_prop_name,b.vst_prop_value_default, b.vst_prop_value_type,b.vst_prop_value_required,b.vst_prop_value_range
+			from vst_sys_topic a left join vst_sys_topic_prop b on a.vst_topic_id=b.vst_topic_id 
+			where a.vst_topic_state=1 and b.vst_prop_state=1 order by a.vst_topic_index desc, b.vst_prop_index desc
+	</select>
+</mapper>  

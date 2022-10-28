@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 二次活跃用户 -->
+<mapper namespace="com.vst.defend.dao2.user.VstUserSecondaryActiveDao">
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_usa_date '日期', vst_usa_pkg '包名',
+				vst_usa_amount '二次活跃用户数', vst_usa_dod '天环比', vst_usa_wow '周环比', vst_usa_mom '月环比'
+			</otherwise>
+		</choose>
+		FROM vst_user_secondary_active
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_usa_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_usa_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_usa_pkg = #{pkgName}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_usa_date DESC, vst_usa_amount DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+</mapper>

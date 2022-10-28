@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 新增用户(设备)统计 -->
+<mapper namespace="com.vst.defend.dao2.user.VstUserAddBdmodelDao">
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_uab_date '日期', vst_uab_pkg '包名', vst_uab_bdmodel '设备名称',
+				vst_uab_amount '用户数量', vst_uab_rate '用户占比',
+				vst_uab_dod '天环比', vst_uab_wow '周环比', vst_uab_mom '月环比'
+			</otherwise>
+		</choose>
+		FROM vst_user_add_bdmodel
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_uab_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_uab_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_uab_pkg = #{pkgName}
+			</if>
+			<if test="vst_uab_bdmodel != null and vst_uab_bdmodel != ''">
+				AND vst_uab_bdmodel like '%${vst_uab_bdmodel}%'
+			</if>
+			<if test="vst_uab_bdmodel_eq != null and vst_uab_bdmodel_eq != ''">
+				AND vst_uab_bdmodel = #{vst_uab_bdmodel_eq}
+			</if>
+			<if test="vst_uab_bdmodel_ne != null and vst_uab_bdmodel_ne != ''">
+				AND vst_uab_bdmodel != #{vst_uab_bdmodel_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_uab_date DESC, vst_uab_amount DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+</mapper>

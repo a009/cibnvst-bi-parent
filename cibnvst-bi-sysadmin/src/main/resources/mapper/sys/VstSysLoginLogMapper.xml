@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 系统登录日志 -->
+<mapper namespace="com.vst.defend.dao.sys.VstSysLoginLogDao">
+	
+	<select id="queryForList" parameterType="map" resultType="java.util.HashMap">
+		SELECT * FROM vst_sys_login_log
+		<where>
+			<if test="vst_log_id != null and vst_log_id != ''">
+				vst_log_id = #{vst_log_id}
+			</if>
+			<if test="vst_sys_id != null and vst_sys_id != ''">
+				AND vst_sys_id = #{vst_sys_id}
+			</if>
+			<if test="vst_sys_username != null and vst_sys_username != ''">
+				AND vst_sys_username like '%${vst_sys_username}%'
+			</if>
+			<if test="vst_log_ip != null and vst_log_ip != ''">
+				AND vst_log_ip = #{vst_log_ip}
+			</if>
+			<if test="login_starttime != null and login_starttime != ''">
+				AND vst_log_login_time >= #{login_starttime}
+			</if>
+			<if test="login_endtime != null and login_endtime != ''">
+				AND vst_log_login_time &lt;= #{login_endtime}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_log_login_time DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+	<select id="queryCount" parameterType="map" resultType="int">
+		SELECT count(1) FROM vst_sys_login_log
+		<where>
+			<if test="vst_log_id != null and vst_log_id != ''">
+				vst_log_id = #{vst_log_id}
+			</if>
+			<if test="vst_sys_id != null and vst_sys_id != ''">
+				AND vst_sys_id = #{vst_sys_id}
+			</if>
+			<if test="vst_sys_username != null and vst_sys_username != ''">
+				AND vst_sys_username like '%${vst_sys_username}%'
+			</if>
+			<if test="vst_log_ip != null and vst_log_ip != ''">
+				AND vst_log_ip = #{vst_log_ip}
+			</if>
+			<if test="login_starttime != null and login_starttime != ''">
+				AND vst_log_login_time >= #{login_starttime}
+			</if>
+			<if test="login_endtime != null and login_endtime != ''">
+				AND vst_log_login_time &lt;= #{login_endtime}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="insert" parameterType="VstSysLoginLog">
+		INSERT INTO vst_sys_login_log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="vst_log_id != null">
+				vst_log_id,
+		  	</if>
+			<if test="vst_sys_id != null">
+				vst_sys_id,
+		  	</if>
+			<if test="vst_sys_username != null">
+				vst_sys_username,
+		  	</if>
+			<if test="vst_log_ip != null">
+				vst_log_ip,
+		  	</if>
+			<if test="vst_log_login_time != null">
+				vst_log_login_time,
+		  	</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="vst_log_id != null">
+				#{vst_log_id},
+		  	</if>
+			<if test="vst_sys_id != null">
+				#{vst_sys_id},
+		  	</if>
+		  	<if test="vst_sys_username != null">
+				#{vst_sys_username},
+		  	</if>
+		  	<if test="vst_log_ip != null">
+				#{vst_log_ip},
+		  	</if>
+		  	<if test="vst_log_login_time != null">
+				#{vst_log_login_time},
+		  	</if>
+		</trim>
+	</insert>
+	
+	<delete id="delete" parameterType="map">
+		DELETE FROM vst_sys_login_log
+		<where>
+			<if test="login_starttime != null and login_starttime != ''">
+				vst_log_login_time >= #{login_starttime}
+			</if>
+			<if test="login_endtime != null and login_endtime != ''">
+				AND vst_log_login_time &lt;= #{login_endtime}
+			</if>
+		</where>
+	</delete>
+
+</mapper>

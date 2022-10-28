@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 季质量用户 -->
+<mapper namespace="com.vst.defend.dao2.user.VstUserLevelDao">
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_ul_date '日期', vst_ul_pkg '包名',
+				vst_ul_add_amount '季新增用户数', vst_ul_season_amount '季质量用户数',
+				vst_ul_season_dod '天环比', vst_ul_season_wow '周环比', vst_ul_season_radio '占比'
+			</otherwise>
+		</choose>
+		FROM vst_user_level
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_ul_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_ul_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_ul_pkg = #{pkgName}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_ul_date DESC, vst_ul_season_amount DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+</mapper>

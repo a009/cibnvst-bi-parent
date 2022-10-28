@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 累计用户(城市)统计 -->
+<mapper namespace="com.vst.defend.dao2.user.VstUserSumCityDao">
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_usci_date '日期', vst_usci_pkg '包名', vst_usci_city '城市',
+				vst_usci_amount '累计用户数', vst_usci_dod '天环比', vst_usci_wow '周环比', vst_usci_mom '月环比'
+			</otherwise>
+		</choose>
+		FROM vst_user_sum_city
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_usci_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_usci_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_usci_pkg = #{pkgName}
+			</if>
+			<if test="vst_usci_city != null and vst_usci_city != ''">
+				AND vst_usci_city like '%${vst_usci_city}%'
+			</if>
+			<if test="vst_usci_city_eq != null and vst_usci_city_eq != ''">
+				AND vst_usci_city = #{vst_usci_city_eq}
+			</if>
+			<if test="vst_usci_city_ne != null and vst_usci_city_ne != ''">
+				AND vst_usci_city != #{vst_usci_city_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_usci_date DESC, vst_usci_amount DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按维度统计 -->
+	<select id="queryReportByDim" parameterType="map" resultType="map">
+		SELECT vst_usci_city, sum(vst_usci_amount) vst_usci_amount
+		FROM vst_user_sum_city
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_usci_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_usci_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_usci_pkg = #{pkgName}
+			</if>
+			<if test="vst_usci_city != null and vst_usci_city != ''">
+				AND vst_usci_city like '%${vst_usci_city}%'
+			</if>
+			<if test="vst_usci_city_eq != null and vst_usci_city_eq != ''">
+				AND vst_usci_city = #{vst_usci_city_eq}
+			</if>
+			<if test="vst_usci_city_ne != null and vst_usci_city_ne != ''">
+				AND vst_usci_city != #{vst_usci_city_ne}
+			</if>
+		</where>
+		GROUP BY vst_usci_city
+		ORDER BY vst_usci_amount DESC
+	</select>
+	
+</mapper>

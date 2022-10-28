@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vst.quartz.dao.push.VstChannelLevelMapper">
+
+	<sql id="Base_Column_List">
+		vst_cl_id,vst_cl_date,vst_cl_pkg,vst_cl_channel,vst_cl_user_sum,vst_cl_user_active,vst_cl_user_add
+		,vst_cl_user_add_season,vst_cl_user_level_season,vst_cl_user_radio,vst_cl_user_retain_day,vst_cl_user_retain_week
+		,vst_cl_user_retain_month,vst_cl_user_retain_season,vst_cl_vv,vst_cl_uv,vst_cl_avg,vst_cl_playtime,vst_cl_playtime_avg
+		,vst_cl_orders,vst_cl_orders_amount,vst_cl_orders_price,vst_cl_orders_price_avg,vst_cl_addtime,vst_cl_creator
+		,vst_cl_uptime,vst_cl_updator,vst_cl_summary
+	</sql>
+
+	<!--查询各表的数据-->
+	<!--DATE_FORMAT(date_sub(curdate(),interval 1 day),'%Y%m%d')-->
+	<select id="queryChannelLevel" resultType="java.util.Map" parameterType="java.util.Map">
+		SELECT ${columns} FROM  ${table} WHERE ${wheres}
+	</select>
+
+    <select id="queryMaxColumn" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT ${columns} FROM ${table}
+    </select>
+
+	<!--根据传入的统计日期删除数据-->
+	<delete id="deleteChannelLevel" parameterType="java.util.Map">
+        <if test="date == 0">
+			DELETE FROM vst_channel_level WHERE vst_cl_date >= #{levelMax}
+		</if>
+		<if test="date > 0">
+			DELETE FROM vst_channel_level WHERE vst_cl_date >= #{levelMax} and <![CDATA[vst_cl_date <= #{sumMax}]]>
+		</if>
+	</delete>
+
+
+	<insert id="batchVstChannelLevel" parameterType="java.util.List">
+		replace INTO vst_channel_level (
+		   <include refid="Base_Column_List"/>
+		) VALUES
+		<foreach collection="list" index="index" item="item" separator=",">
+			(
+			 #{item.vst_cl_id,jdbcType=VARCHAR},#{item.vst_cl_date,jdbcType=INTEGER},#{item.vst_cl_pkg,jdbcType=VARCHAR}
+			,#{item.vst_cl_channel,jdbcType=VARCHAR},#{item.vst_cl_user_sum,jdbcType=BIGINT},#{item.vst_cl_user_active,jdbcType=BIGINT}
+			,#{item.vst_cl_user_add,jdbcType=BIGINT},#{item.vst_cl_user_add_season,jdbcType=BIGINT}
+			,#{item.vst_cl_user_level_season,jdbcType=BIGINT},#{item.vst_cl_user_radio,jdbcType=VARCHAR}
+			,#{item.vst_cl_user_retain_day,jdbcType=BIGINT},#{item.vst_cl_user_retain_week,jdbcType=BIGINT}
+			,#{item.vst_cl_user_retain_month,jdbcType=BIGINT},#{item.vst_cl_user_retain_season,jdbcType=BIGINT}
+			,#{item.vst_cl_vv,jdbcType=BIGINT},#{item.vst_cl_uv,jdbcType=BIGINT},#{item.vst_cl_avg,jdbcType=VARCHAR}
+			,#{item.vst_cl_playtime,jdbcType=BIGINT},#{item.vst_cl_playtime_avg,jdbcType=BIGINT}
+			,#{item.vst_cl_orders,jdbcType=BIGINT},#{item.vst_cl_orders_amount,jdbcType=BIGINT}
+			,#{item.vst_cl_orders_price,jdbcType=VARCHAR},#{item.vst_cl_orders_price_avg,jdbcType=VARCHAR}
+			,#{item.vst_cl_addtime,jdbcType=BIGINT},#{item.vst_cl_creator,jdbcType=VARCHAR},#{item.vst_cl_uptime,jdbcType=BIGINT}
+			,#{item.vst_cl_updator,jdbcType=VARCHAR},#{item.vst_cl_summary,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</insert>
+</mapper>

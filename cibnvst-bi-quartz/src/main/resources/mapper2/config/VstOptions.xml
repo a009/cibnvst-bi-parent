@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vst.quartz.daoconfig.config.VstOptionsMapper">
+	<resultMap id="BaseResultMap" type="com.vst.common.pojo.VstOptions">
+		<id property="vst_option_key" column="vst_option_key" jdbcType="VARCHAR"/>
+		<result property="vst_option_value" column="vst_option_value" jdbcType="VARCHAR"/>
+		<result property="vst_option_desc" column="vst_option_desc" jdbcType="VARCHAR"/>
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		vst_option_key,vst_option_value,vst_option_desc
+	</sql>
+
+	<!--根据key查询相关的配置-->
+	<select id="queryOptionsKey" resultType="com.vst.common.pojo.VstOptions" parameterType="java.lang.String">
+		select * from vst_options WHERE  vst_option_key= #{VALUE};
+	</select>
+
+</mapper>

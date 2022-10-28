@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
+	<!-- appender 部分是可用的日志输出方式定义,可以定义多个 -->
+
+	<!-- 所有的debug信息输出到该appender -->
+	<appender name="FILE-DEBUG" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="/vst/cibnvst-bi-api/logs/debug.log" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
+		<param name="Append" value="true" />
+		<param name="Encoding" value="UTF-8" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH\:mm\:ss}[%p][%t][%c{1}\:%M]%m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="DEBUG" />
+			<param name="LevelMax" value="DEBUG" />
+			<param name="acceptOnMatch" value="TRUE" />
+		</filter>
+	</appender>
+
+	<!-- 所有的info信息输出到该appender -->
+	<appender name="FILE-INFO" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="/vst/cibnvst-bi-api/logs/info.log" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
+		<param name="Append" value="true" />
+		<param name="Encoding" value="UTF-8" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH\:mm\:ss}[%p][%t][%c{1}\:%M]%m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="INFO" />
+			<param name="LevelMax" value="INFO" />
+			<param name="acceptOnMatch" value="TRUE" />
+		</filter>
+	</appender>
+
+	<!-- 所有的error信息输出到该appender -->
+	<appender name="FILE-ERROR" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="/vst/cibnvst-bi-api/logs/error.log" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
+		<param name="Append" value="true" />
+		<param name="Encoding" value="UTF-8" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH\:mm\:ss}[%p][%t][%c{1}\:%M]%m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="ERROR" />
+			<param name="LevelMax" value="ERROR" />
+			<param name="acceptOnMatch" value="TRUE" />
+		</filter>
+	</appender>
+
+	<!-- 所有的打印定时任务线程的信息输出到该appender -->
+	<appender name="FILE-THREAD" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="/vst/cibnvst-bi-api/logs/thread.log" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
+		<param name="Append" value="true" />
+		<param name="Encoding" value="UTF-8" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH\:mm\:ss}[%p][%t][%c{1}\:%M]%m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="DEBUG" />
+			<param name="LevelMax" value="ERROR" />
+			<param name="acceptOnMatch" value="TRUE" />
+		</filter>
+	</appender>
+
+	<!-- 控制台接受所有级别的日志信息 -->
+	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH\:mm\:ss}[%p][%t][%c{1}\:%M]%m%n" />
+		</layout>
+	</appender>
+
+	<!-- 关闭以下这些文件流输出 -->
+	<category name="com.mchange.v2">
+		<priority value="OFF" />
+		<!--
+			如果指定一个appender,这些log将被输出到指定的appender 如：<appender-ref ref="myFile"/>
+			否则将作用于所有的appender
+		-->
+	</category>
+	<category name="com.vst.api.dao">
+		<priority value="OFF" />
+	</category>
+	<category name="com.opensymphony.xwork2">
+		<priority value="OFF" />
+	</category>
+	<category name="org.springframework">
+		<priority value="OFF" />
+	</category>
+	<category name="org.mybatis">
+		<priority value="OFF" />
+	</category>
+	<category name="java.sql">
+		<priority value="OFF" />
+	</category>
+	<category name="java.sql.Connection">
+		<priority value="OFF" />
+		<appender-ref ref="FILE-DEBUG" />
+	</category>
+	<category name="java.sql.PreparedStatement">
+		<priority value="OFF" />
+		<appender-ref ref="FILE-DEBUG" />
+	</category>
+
+	<!-- 任务处理程序，设置输出的方式 -->
+	<logger name="com.vst.api.timer" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="FILE-THREAD" />
+		<appender-ref ref="CONSOLE" />
+	</logger>
+
+	<!--  root部分定义了log4j的默认输出级别和方式 -->
+	<root>
+		<!--
+			level:是日记记录的优先级，优先级由高到低分为 OFF ,FATAL ,ERROR ,WARN ,INFO ,DEBUG ,ALL。
+			Log4j建议只使用FATAL ,ERROR ,WARN ,INFO ,DEBUG这四个级别。
+		-->
+		<level value="INFO" /><!-- 所有logger的缺省级别 -->
+		<appender-ref ref="FILE-DEBUG" />
+		<appender-ref ref="FILE-INFO" />
+		<appender-ref ref="FILE-ERROR" />
+		<appender-ref ref="CONSOLE" />
+	</root>
+
+</log4j:configuration>

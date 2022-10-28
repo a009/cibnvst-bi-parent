@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd  
+                        http://www.springframework.org/schema/context  
+                        http://www.springframework.org/schema/context/spring-context-3.1.xsd  
+                        http://www.springframework.org/schema/mvc  
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+	<!-- 自动扫描 -->
+	<context:annotation-config/>
+	<context:component-scan base-package="com.vst.defend" />
+	
+	<!-- 引入配置文件 -->
+	<!-- 
+		<bean id="propertyConfigurer"
+			class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+			<property name="location" value="classpath:db.properties" />
+		</bean>
+	 -->
+	<context:property-placeholder location="classpath:db.properties" ignore-unresolvable="true" />
+	
+	<!-- 数据源1 -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+		<!-- 基本属性 url、user、password -->
+        <property name="url" value="${config.url}" />
+        <property name="username" value="${config.username}" />
+        <property name="password" value="${config.password}" />
+        
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="${config.initialSize}" />		<!-- 连接池初始值 -->
+        <property name="maxActive" value="${config.maxActive}" />			<!-- 连接池最大值 -->
+        <property name="maxIdle" value="${config.maxIdle}" />				<!-- 连接池最大空闲值 -->
+        <property name="minIdle" value="${config.minIdle}" />				<!-- 连接池最小空闲值 -->
+        
+        <!-- 配置获取连接等待超时的时间，单位是毫秒 -->
+        <property name="maxWait" value="${config.maxWait}" />
+        
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒（Destroy线程检测连接的间隔时间） -->
+		<property name="timeBetweenEvictionRunsMillis" value="3600000" />
+        
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒（Destory线程中如果检测到当前连接的最后活跃时间和当前时间的差值大于minEvictableIdleTimeMillis，则关闭当前连接） -->
+		<property name="minEvictableIdleTimeMillis" value="3600000" />
+        
+        <property name="validationQuery" value="SELECT 1" />			<!-- 用来检测连接是否有效的sql，必须是一个查询语句。如果validationQuery为null，testOnBorrow、testOnReturn、testWhileIdle都不会起作用 -->
+        <property name="testOnBorrow" value="true" />					<!-- 申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能 -->
+        <property name="testOnReturn" value="false" />					<!-- 归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能 -->
+        <property name="testWhileIdle" value="true" />					<!-- 申请连接的时候，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。建议配置为true，不影响性能，并且保证安全性 -->
+        
+        <!-- 配置监控统计拦截的filters -->
+        <property name="filters" value="stat,config" />					<!-- 监控统计用的filter:stat、日志用的filter:log4j、 防御sql注入的filter:wall -->
+        
+		<!-- 打开PSCache，并且指定每个连接上PSCache的大小（mysql可以配置为false。分库分表较多的数据库，建议配置为false） -->
+		<property name="poolPreparedStatements" value="false" />
+		<property name="maxPoolPreparedStatementPerConnectionSize" value="0" />
+		
+		<!-- druid.stat.mergeSql=true：SQL统计合并 -->
+		<!--  
+			select * from t where id = 1
+			select * from t where id = 2
+			select * from t where id = 3
+			合并为
+			select * from t where id = ?
+		-->
+		<!-- druid.stat.slowSqlMillis=1000：慢SQL记录，缺省值为3000毫秒 -->
+		<!-- config.decrypt=true：需要对数据库密码进行解密 -->
+		<property name="connectionProperties" value="druid.stat.mergeSql=true;druid.stat.slowSqlMillis=1000;druid.stat.logSlowSql=true;" />
+    </bean>
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:mybatis-config.xml"></property>
+		<property name="mapperLocations">
+			<array>
+				<value>classpath:mapper/**/*.xml</value>
+			</array>
+		</property>
+	</bean>
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.vst.defend.dao" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+	</bean>
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- 数据源2 -->
+	<bean id="dataSource2" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+		<!-- 基本属性 url、user、password -->
+        <property name="url" value="${bi_read.url}" />
+        <property name="username" value="${bi_read.username}" />
+        <property name="password" value="${bi_read.password}" />
+        
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="${bi_read.initialSize}" />		<!-- 连接池初始值 -->
+        <property name="maxActive" value="${bi_read.maxActive}" />			<!-- 连接池最大值 -->
+        <property name="maxIdle" value="${bi_read.maxIdle}" />				<!-- 连接池最大空闲值 -->
+        <property name="minIdle" value="${bi_read.minIdle}" />				<!-- 连接池最小空闲值 -->
+        
+        <!-- 配置获取连接等待超时的时间，单位是毫秒 -->
+        <property name="maxWait" value="${bi_read.maxWait}" />
+        
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒（Destroy线程检测连接的间隔时间） -->
+		<property name="timeBetweenEvictionRunsMillis" value="3600000" />
+        
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒（Destory线程中如果检测到当前连接的最后活跃时间和当前时间的差值大于minEvictableIdleTimeMillis，则关闭当前连接） -->
+		<property name="minEvictableIdleTimeMillis" value="3600000" />
+        
+        <property name="validationQuery" value="SELECT 1" />			<!-- 用来检测连接是否有效的sql，必须是一个查询语句。如果validationQuery为null，testOnBorrow、testOnReturn、testWhileIdle都不会起作用 -->
+        <property name="testOnBorrow" value="true" />					<!-- 申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能 -->
+        <property name="testOnReturn" value="false" />					<!-- 归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能 -->
+        <property name="testWhileIdle" value="true" />					<!-- 申请连接的时候，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。建议配置为true，不影响性能，并且保证安全性 -->
+        
+        <!-- 配置监控统计拦截的filters -->
+        <property name="filters" value="stat,config" />					<!-- 监控统计用的filter:stat、日志用的filter:log4j、 防御sql注入的filter:wall -->
+        
+		<!-- 打开PSCache，并且指定每个连接上PSCache的大小（mysql可以配置为false。分库分表较多的数据库，建议配置为false） -->
+		<property name="poolPreparedStatements" value="false" />
+		<property name="maxPoolPreparedStatementPerConnectionSize" value="0" />
+		
+		<!-- druid.stat.mergeSql=true：SQL统计合并 -->
+		<!--  
+			select * from t where id = 1
+			select * from t where id = 2
+			select * from t where id = 3
+			合并为
+			select * from t where id = ?
+		-->
+		<!-- druid.stat.slowSqlMillis=1000：慢SQL记录，缺省值为3000毫秒 -->
+		<!-- config.decrypt=true：需要对数据库密码进行解密 -->
+		<property name="connectionProperties" value="druid.stat.mergeSql=true;druid.stat.slowSqlMillis=1000;druid.stat.logSlowSql=true;" />
+    </bean>
+	<bean id="sqlSessionFactory2" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource2" />
+		<property name="configLocation" value="classpath:mybatis-config.xml"></property>
+		<property name="mapperLocations">
+			<array>
+				<value>classpath:mapper2/**/*.xml</value>
+			</array>
+		</property>
+	</bean>
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.vst.defend.dao2"/>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory2"></property>
+	</bean>
+	<bean id="transactionManager2"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource2" />
+	</bean>
+	
+	<!-- 数据源3 -->
+	<bean id="dataSource3" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+		<!-- 基本属性 url、user、password -->
+        <property name="url" value="${bi_write.url}" />
+        <property name="username" value="${bi_write.username}" />
+        <property name="password" value="${bi_write.password}" />
+        
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="${bi_write.initialSize}" />		<!-- 连接池初始值 -->
+        <property name="maxActive" value="${bi_write.maxActive}" />			<!-- 连接池最大值 -->
+        <property name="maxIdle" value="${bi_write.maxIdle}" />				<!-- 连接池最大空闲值 -->
+        <property name="minIdle" value="${bi_write.minIdle}" />				<!-- 连接池最小空闲值 -->
+        
+        <!-- 配置获取连接等待超时的时间，单位是毫秒 -->
+        <property name="maxWait" value="${bi_write.maxWait}" />
+        
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒（Destroy线程检测连接的间隔时间） -->
+		<property name="timeBetweenEvictionRunsMillis" value="3600000" />
+        
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒（Destory线程中如果检测到当前连接的最后活跃时间和当前时间的差值大于minEvictableIdleTimeMillis，则关闭当前连接） -->
+		<property name="minEvictableIdleTimeMillis" value="3600000" />
+        
+        <property name="validationQuery" value="SELECT 1" />			<!-- 用来检测连接是否有效的sql，必须是一个查询语句。如果validationQuery为null，testOnBorrow、testOnReturn、testWhileIdle都不会起作用 -->
+        <property name="testOnBorrow" value="true" />					<!-- 申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能 -->
+        <property name="testOnReturn" value="false" />					<!-- 归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能 -->
+        <property name="testWhileIdle" value="true" />					<!-- 申请连接的时候，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。建议配置为true，不影响性能，并且保证安全性 -->
+        
+        <!-- 配置监控统计拦截的filters -->
+        <property name="filters" value="stat,config" />					<!-- 监控统计用的filter:stat、日志用的filter:log4j、 防御sql注入的filter:wall -->
+        
+		<!-- 打开PSCache，并且指定每个连接上PSCache的大小（mysql可以配置为false。分库分表较多的数据库，建议配置为false） -->
+		<property name="poolPreparedStatements" value="false" />
+		<property name="maxPoolPreparedStatementPerConnectionSize" value="0" />
+		
+		<!-- druid.stat.mergeSql=true：SQL统计合并 -->
+		<!--  
+			select * from t where id = 1
+			select * from t where id = 2
+			select * from t where id = 3
+			合并为
+			select * from t where id = ?
+		-->
+		<!-- druid.stat.slowSqlMillis=1000：慢SQL记录，缺省值为3000毫秒 -->
+		<!-- config.decrypt=true：需要对数据库密码进行解密 -->
+		<property name="connectionProperties" value="druid.stat.mergeSql=true;druid.stat.slowSqlMillis=1000;druid.stat.logSlowSql=true;" />
+    </bean>
+	<bean id="sqlSessionFactory3" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource3" />
+		<property name="configLocation" value="classpath:mybatis-config.xml"></property>
+		<property name="mapperLocations">
+			<array>
+				<value>classpath:mapper3/**/*.xml</value>
+			</array>
+		</property>
+	</bean>
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.vst.defend.dao3"/>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory3"></property>
+	</bean>
+	<bean id="transactionManager3"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource3" />
+	</bean>
+	
+</beans>

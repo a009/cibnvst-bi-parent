@@ -1,0 +1,945 @@
+*{padding: 0px; margin: 0px;}
+html,
+body{
+    width: 100% !important;
+    height: 100% !important;
+}
+body {
+    color: #333;
+    overflow: hidden;
+}
+
+input, select, textarea {
+    color: #333;
+}
+li{
+    list-style: none;
+}
+.bg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background: url(../images/bg.jpg);
+    background-size: cover;/*图片按比例缩放*/
+}
+/****清除浮动****/
+.clearfix{
+    zoom:1;
+}
+.clearfix:after{
+    clear:both;
+    display:block;
+    content:"";
+    height:0px;
+    overflow:hidden;
+}
+/*侧边栏限制高度*/
+.sidebar{
+	height:100%;
+	overflow-x:hidden;
+	overflow-y:scroll;
+}
+
+.panel {
+    background: #fff;
+    padding: 0 20px;
+}
+
+form .form-group:last-child {
+    padding-bottom: 0;
+}
+
+.passcode {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    height: 32px;
+    margin: 1px;
+    border-left: solid 1px #ddd;
+    text-align: center;
+    line-height: 32px;
+    border-radius: 0 4px 4px 0;
+}
+
+ul, li {
+    list-style-type: none;
+}
+
+.lefter {
+    position: relative;
+    float: left;
+    width: 180px;
+    margin-right: -180px;
+    background: #e6f2fb;
+    text-align: center;
+}
+
+.righter {
+    float: right;
+    width: 100%;
+    padding-top: 15px;
+    background: #e6f2fb;
+}
+
+.mainer {
+    margin-left: 180px;
+}
+
+.field-icon-right .icon {
+    bottom: 0px;
+    top: auto
+}
+
+.logo {
+    float: left;
+    color: #FFF;
+    line-height: 45px;
+}
+
+.logo img {
+    float: left;
+    margin-right: 10px;
+}
+
+.loginbox {
+    background: url(../images/tmbg-white.png);
+    border: 0px;
+}
+
+/********头部******/
+/*.header {*/
+    /*height: 50px;*/
+    /*overflow: hidden;*/
+    /*background: url(../images/bg.jpg) no-repeat 0 -1000px;*/
+/*}*/
+
+.head-l {
+    float: left;
+    margin-top: 17px;
+    margin-left: 15px;
+}
+
+.head-l .button {
+    padding: 8px 15px;
+}
+
+.head-l .bg-blue:hover {
+    background-color: #03b6fd;
+}
+
+.leftnav {
+    width: 180px;
+    height: 100%;
+    position: fixed;
+    top: 70px;
+    left: 0px;
+}
+
+.leftnav-title {
+    height: 50px;
+    background: url(../images/bg.jpg) no-repeat 0 -1000px;
+    color: #FFF;
+    padding-left: 22px;
+    font-size: 14px;
+    line-height: 50px;
+}
+
+.leftnav-title span {
+    margin-right: 10px;
+}
+
+.leftnav h2 {
+    padding: 10px 0 10px 22px;
+    transition: all .1s ease-in-out;
+    display: block;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    border-top: 1px solid #b5cfd9;
+}
+
+.leftnav h2.on {
+    color: #09c;
+}
+
+.leftnav .border-bottom {
+    border-bottom: 1px solid #b5cfd9;
+}
+
+.leftnav h2 span {
+    margin-right: 10px;
+}
+
+.leftnav h2:hover {
+    color: #09c;
+}
+
+.leftnav ul {
+    display: none;
+    border-top: 1px solid #b5cfd9;
+    padding: 5px 0;
+    opacity: 1;
+}
+
+.leftnav ul li {
+    list-style-type: none;
+}
+
+.leftnav ul li a {
+    display: block;
+    padding-left: 30px;
+    line-height: 30px;
+}
+
+.leftnav ul li span {
+    margin-right: 8px;
+}
+
+.leftnav ul li a:hover, .leftnav ul li a.on {
+    color: #09c;
+}
+
+/***主要内容***/
+.admin {
+    width: 100%;
+    height: 100% !important;
+    background: #fff;
+    padding: 0;
+}
+
+.content {
+    width: 100%;
+}
+
+.body-content {
+    overflow: hidden;
+}
+
+.content .title {
+    border-bottom: 1px solid #dfdfdf;
+    line-height: 35px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #09c
+}
+
+.form-x .form-group .label {
+    /*width: 10%;*/
+}
+
+.form-x .form-button {
+    margin-left: 10%;
+}
+
+.w50 {
+    width: 25%;
+    float: left;
+}
+
+.form-x .tipss {
+    float: left;
+    padding-left: 10px;
+    color: #888;
+    line-height: 42px;
+}
+
+.input-help {
+    float: left;
+    line-height: 30px;
+}
+
+.input-help li {
+    float: left;
+    margin-left: 10px;
+}
+
+.bread {
+    margin-left: 190px;
+    margin-top: 4px;
+}
+
+.bread li {
+    float: left;
+}
+
+.label label {
+    font-weight: normal;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 12px;
+}
+
+.button {
+    padding: 10px 15px;
+}
+
+.form-group .field .file {
+    background: #FFF;
+    border: 0px;
+}
+
+.form-group .field input[type=radio] {
+    vertical-align: middle;
+    line-height: 35px;
+    margin-right: 5px;
+}
+
+.form-group .radio {
+    line-height: 35px;
+}
+
+.table th {
+	font-size:14px;
+    text-align: center;
+}
+
+.table td {
+	font-size:14px;
+    vertical-align: middle;
+}
+
+.tip img {
+    width: 100px;
+    height: 100px;
+}
+
+.clear {
+    clear: both;
+    overflow: hidden;
+}
+
+.pagelist {
+    padding: 10px 0;
+    text-align: center;
+}
+
+.pagelist span, .pagelist a {
+    border-radius: 3px;
+    border: 1px solid #dfdfdf;
+    display: inline-block;
+    padding: 5px 12px;
+}
+
+.pagelist a {
+    margin: 0 3px;
+}
+
+.pagelist span.current {
+    background: #09F;
+    color: #FFF;
+    border-color: #09F;
+    margin: 0 2px;
+}
+
+.pagelist a:hover {
+    background: #09F;
+    color: #FFF;
+    border-color: #09F;
+}
+
+.pagelist label {
+    padding-left: 15px;
+    color: #999;
+}
+
+.pagelist label b {
+    color: red;
+    font-weight: normal;
+    margin: 0 3px;
+}
+
+.search {
+    overflow: hidden;
+}
+
+.search li {
+    float: left;
+    margin-right: 15px;
+    line-height: 35px;
+}
+
+.button.bg-main.icon-check-square-o {
+    padding: 10px 30px;
+}
+
+.button.bg-main.icon-check-square-o:hover {
+    background: #08bbe1;
+}
+
+input[type="checkbox"], input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    vertical-align: -3px;
+    margin-right: 5px;
+}
+
+textarea[name=content] {
+    width: 100%;
+    height: 500px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+
+/*搜索*/
+.box-search{
+	border:2px solid #ddd;
+	border-radius:5px;
+	box-sizing: content-box;
+    padding: 10px 0;
+}
+.searchBar{
+	display:none;
+	padding:10px 0;
+	margin-bottom:0;
+}
+.searchBar>li{
+	float:left;
+	margin-bottom:5px;
+	position:relative;
+}
+.search-up{
+}
+.search-up-button{
+	width:16px;
+	height:16px;
+	margin:0 auto;
+	padding: 0 20px;
+    box-sizing: content-box;
+}
+.search-up-button img{
+	width:100%;
+	height:100%;
+}
+
+/*loading等待图*/
+div.loding_img{
+    width: 32px;
+    height:32px;
+    margin:0 auto;
+    box-sizing: content-box;
+    padding-bottom: 20px;
+}
+
+/*起止时间*/
+.daterangepicker {
+    font-size: 13px;
+    padding: 12px 10px 10px 10px
+}
+
+.daterangepicker .hour {
+    background-color: white
+}
+
+.daterangepicker .month {
+    color: #212121;
+    font-weight: normal
+}
+
+.daterangepicker .title {
+    color: #757575;
+    padding-bottom: 3px;
+    font-size: 13px
+}
+
+.daterangepicker .title div {
+    display: inline-block;
+    text-align: center
+}
+
+.daterangepicker .title div:nth-child(1) {
+    width: 23%
+}
+
+.daterangepicker .title div:nth-child(2) {
+    width: 40%
+}
+
+.daterangepicker .title div:nth-child(3) {
+    width: 35%
+}
+
+.daterangepicker .ranges {
+    width: 140px;
+    margin-left: 0 !important
+}
+
+.daterangepicker .calendar-wrap {
+    overflow: hidden;
+    border: 1px solid white;
+    border-radius: 4px;
+    width: 632px
+}
+
+/*.daterangepicker .calendar-wrap .calendar td,.daterangepicker .calendar-wrap .calendar td {*/
+    /*min-width: 30px*/
+/*}*/
+
+.daterangepicker .calendar-wrap .calendar.left,.daterangepicker .calendar-wrap .calendar.right {
+    width: 234px
+}
+
+.daterangepicker .toolbar {
+    clear: both;
+    margin: 6px 0 0 0
+}
+
+.daterangepicker .toolbar .applyBtn {
+    width: 54px
+}
+
+.daterangepicker .toolbar label {
+    color: #212121;
+    font-weight: normal
+}
+
+.daterangepicker .toolbar .sa-checkbox>label {
+    margin-right: 5px
+}
+
+.daterangepicker .toolbar .caret {
+    margin-left: 5px
+}
+
+.daterangepicker .toolbar .item {
+    display: inline-block;
+    height: 30px
+}
+
+.daterangepicker .toolbar .item:last-child {
+    float: right
+}
+
+.daterangepicker .toolbar .item.relative-date>span {
+    margin-left: 20px
+}
+
+.daterangepicker .toolbar .item:first-child {
+    margin-left: 6px
+}
+
+.daterangepicker .toolbar .item:last-child {
+    margin-right: 5px
+}
+
+.daterangepicker .toolbar .item.compare>span {
+    display: inline-block
+}
+
+.daterangepicker .toolbar .item.compare .sa-checkbox {
+    margin-right: 10px;
+    vertical-align: text-top
+}
+
+.daterangepicker .toolbar .item.compare .sa-checkbox label {
+    border-color: #559ff0 !important
+}
+
+.daterangepicker .toolbar .item.compare .sa-checkbox label:before {
+    color: #559ff0 !important
+}
+
+.daterangepicker .toolbar .item.compare .dropdown {
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align: baseline
+}
+
+.daterangepicker .toolbar .item.compare input[type="text"] {
+    width: 95px;
+    vertical-align: bottom
+}
+
+.daterangepicker .ranges ul li {
+    display: inline-block;
+    margin: 4px 3px;
+    padding: 4px 7px;
+    text-align: center;
+    color: #559ff0;
+    border-radius: 2px;
+    -webkit-transition: background .2s;
+    transition: background .2s;
+    width: 64px
+}
+
+.daterangepicker .ranges ul li:nth-child(1),.daterangepicker .ranges ul li:nth-child(2) {
+    margin-top: 0
+}
+
+.daterangepicker .ranges ul li:nth-last-child(1),.daterangepicker .ranges ul li:nth-last-child(2),.daterangepicker .ranges ul li:nth-last-child(3) {
+    width: 134px
+}
+
+.daterangepicker .ranges ul li:hover,.daterangepicker .ranges ul li.active {
+    background: #559ff0;
+    color: #fff;
+    border: 1px solid transparent
+}
+
+.daterangepicker .ranges ul li.disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: .65;
+    -webkit-box-shadow: none;
+    box-shadow: none
+}
+
+.daterangepicker table {
+    border-collapse: separate
+}
+
+.daterangepicker td {
+    border-right: 1px solid white;
+    border-bottom: 1px solid white;
+    border-collapse: separate
+}
+
+.daterangepicker td:empty {
+    height: 31px
+}
+
+.daterangepicker td.active {
+    background-color: #559ff0;
+    border-bottom: 1px solid white;
+    border-right: 1px solid white
+}
+
+.daterangepicker td.available:hover,.daterangepicker td.active:hover {
+    background-color: #559ff0 !important;
+    border-color: white
+}
+
+.daterangepicker td.available:not(.active):hover:not {
+    border-radius: 4px
+}
+
+.daterangepicker td.in-range:hover:not(.start-date):not(.end-date) {
+    border-radius: 0
+}
+
+.daterangepicker td.disabled {
+    opacity: .3;
+    cursor: default
+}
+
+.daterangepicker td.in-range {
+    background-color: rgba(74,144,226,0.6);
+    border-bottom: 1px solid white;
+    color: white
+}
+
+.daterangepicker td.compare.active,.daterangepicker td.compare.available:hover,.daterangepicker td.compare.active:hover {
+    background-color: #2dca93 !important;
+    border-color: white
+}
+
+.daterangepicker td.compare.in-range {
+    background-color: rgba(0,178,121,0.6);
+    border-bottom: 1px solid white;
+    border-color: white;
+    color: white
+}
+
+.daterangepicker td.both.active,.daterangepicker td.both.available:hover,.daterangepicker td.both.active:hover {
+    background-color: #28a8b1 !important;
+    border-color: white
+}
+
+.daterangepicker td.both.in-range {
+    background-color: rgba(40,168,177,0.7);
+    border-bottom: 1px solid white;
+    border-color: white;
+    color: white
+}
+.daterangepicker .calendar td, .daterangepicker .calendar th{
+    min-width: 0;
+}
+.daterangepicker.compare .calendar-wrap {
+    border-color: #4a90e2
+}
+
+.daterangepicker.compare .toolbar input[type="text"] {
+    border-color: #4a90e2
+}
+
+.daterangepicker.compare td.available:hover,.daterangepicker.compare td.active:hover {
+    background-color: #2dca93 !important
+}
+
+.daterangepicker.no-custom-range {
+    padding: 0
+}
+
+.daterangepicker.no-custom-range .title,.daterangepicker.no-custom-range .calendar.first.right,.daterangepicker.no-custom-range .calendar.second.left,.daterangepicker.no-custom-range .toolbar {
+    display: none
+}
+
+.daterangepicker.no-custom-range .ranges ul li:nth-last-child(4),.daterangepicker.no-custom-range .ranges ul li:nth-last-child(5) {
+    width: 97%
+}
+
+.daterangepicker.no-ranges {
+    width: 510px
+}
+
+.daterangepicker.no-ranges .calendar-wrap {
+    width: 490px
+}
+
+.daterangepicker.no-ranges .title div:first-child {
+    display: none
+}
+
+.daterangepicker.no-ranges .ranges {
+    display: none
+}
+
+.daterangepicker.no-ranges .toolbar .item:first-child {
+    width: 375px
+}
+
+.daterangepicker.no-ranges .toolbar .item:last-child {
+    width: 100%;
+    text-align: right
+}
+.daterangepicker .table-condensed{
+    color: #777c7c;
+}
+.btn.btn-link {
+    min-width: 60px;
+    padding: 8px 10px 8px 10px
+}
+
+.btn.btn-small {
+    min-width: 60px;
+    height: 30px;
+    padding: 5px 10px 5px 10px;
+    font-size: 13px
+}
+.btn-link {
+    color: #559ff0;
+    -webkit-transition: color .2s ease-in-out;
+    transition: color .2s ease-in-out;
+    padding-bottom: 2px;
+    border: 0;
+    outline: 0;
+    min-width: 40px;
+    background: transparent
+}
+
+.btn-link span[class^="icon-"] {
+    vertical-align: sub
+}
+
+.btn-link:focus,.btn-link:hover {
+    color: #84b9f4;
+    text-decoration: none
+}
+
+.btn-link:hover,.btn-link:active,.btn-link:focus,.btn-link:active:focus {
+    border: 0;
+    background: transparent;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    outline: 0
+}
+
+.btn-link[disabled] {
+    background: transparent;
+    color: #d4d5d7 !important
+}
+
+.btn-link.btn-icon {
+    height: 24px;
+    width: 24px;
+    min-width: 24px;
+    padding: 2px
+}
+
+.btn-link:not(.btn-icon) span[class^="icon-"] {
+    margin-right: 4px
+}
+.btn-primary {
+    background: #f6f8fa;
+    border: 1px solid #a8b7c8;
+    padding: 6px 10px 6px 10px;
+    display: inline-block;
+    outline: 0;
+    height: 36px;
+    line-height: 20px;
+    min-width: 60px;
+    font-size: 14px;
+    -webkit-transition: background .2s ease-in-out,-webkit-box-shadow .2s ease-in-out;
+    transition: background .2s ease-in-out,-webkit-box-shadow .2s ease-in-out;
+    transition: background .2s ease-in-out,box-shadow .2s ease-in-out;
+    transition: background .2s ease-in-out,box-shadow .2s ease-in-out,-webkit-box-shadow .2s ease-in-out;
+    background: #2dca93;
+    border: 0;
+    color: #f6f8fa;
+    padding: 8px 10px 8px 10px
+}
+
+.btn-primary:hover,.btn-primary:active,.btn-primary:focus,.btn-primary:active:focus {
+    border: 1px solid #a8b7c8;
+    background: #f6f8fa;
+    -webkit-box-shadow: 0 0 5px rgba(137,157,180,0.8);
+    box-shadow: 0 0 5px rgba(137,157,180,0.8);
+    outline: 0
+}
+
+.btn-primary[disabled],.btn-primary[disabled]:hover {
+    color: white;
+    background: #b8bbbb
+}
+
+.btn-primary:hover {
+    border: 0;
+    background: #2dca93;
+    -webkit-box-shadow: 0 0 4px rgba(45,202,147,0.8);
+    box-shadow: 0 0 4px rgba(45,202,147,0.8);
+    outline: 0
+}
+
+.btn-primary:active,.btn-primary:focus,.btn-primary:active:focus {
+    border: 0;
+    background: #2abd8a;
+    outline: 0
+}
+
+.btn-primary.disabled,.btn-primary[disabled] {
+    background: #b8bbbb
+}
+
+.btn-primary.disabled:hover,.btn-primary.disabled:active,.btn-primary.disabled:focus,.btn-primary[disabled]:hover,.btn-primary[disabled]:active,.btn-primary[disabled]:focus {
+    background: #b8bbbb
+}
+
+.btn-primary:not(.btn-icon) span[class^="icon-"] {
+    vertical-align: sub;
+    margin-right: 4px
+}
+
+/*header下拉菜单,选择包名*/
+.pkgName{
+    position: relative;
+    float: left;
+    height: 50px;
+}
+.pkgName-icon{
+    position: relative;
+    /*width: 150px;*/
+    height: 50px;
+    padding: 0 30px 0 10px;
+    text-align: left;
+    font-size: 16px;
+    color: #999999;
+}
+.pkgName:hover .pkgName-icon{
+    background: rgba(0,0,0,0.2);
+    color: #00a7d0;
+}
+.pkgName-icon i{
+    position: absolute;
+    top:0;
+    right:10px;
+    height: 50px;
+    line-height: 50px;
+}
+.pkgName-icon .pkgName-text{
+    line-height: 50px;
+    vertical-align: middle;
+}
+.pkgName-menu{
+    position: absolute;
+    top:50px;
+    left:0;
+    display: none;
+    width: 150px;
+    padding: 10px 20px;
+    background-color: #373d41;
+    border: 1px solid #000000;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    -webkit-box-shadow: 3px 6px 12px rgba(0,0,0,0.2);
+    box-shadow: 3px 6px 12px rgba(0,0,0,0.2);
+    color: #999999;
+    cursor: pointer;
+}
+.pkgName:hover .pkgName-menu{
+    display: block;
+}
+.pkgName-menu li{
+    height: 30px;
+    line-height: 30px;
+}
+.pkgName-menu li:hover,
+.pkgName-menu li.active{
+    color: #00a7d0;
+}
+
+/*header下拉菜单,切换项目*/
+.header-dropDown{
+    position: relative;
+    float: left;
+    height: 50px;
+    margin-right: 10px;
+}
+.header-dropDown-icon{
+    position: relative;
+    height: 50px;
+    padding: 0 30px 0 10px;
+    text-align: left;
+    font-size: 16px;
+    color: #999999;
+}
+.header-dropDown-text{
+    line-height: 50px;
+    vertical-align: middle;
+}
+.header-dropDown:hover .header-dropDown-icon{
+    background: rgba(0,0,0,0.2);
+    color: #00a7d0;
+}
+.header-dropDown-text i{
+    position: absolute;
+    top: 0;
+    right: 10px;
+    height: 50px;
+    line-height: 50px;
+}
+.header-dropDown-menu{
+    position: absolute;
+    top: 50px;
+    left: 0;
+    display: none;
+    width: 150px;
+    padding: 10px 20px;
+    background-color: #373d41;
+    border: 1px solid #000000;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    -webkit-box-shadow: 3px 6px 12px rgba(0,0,0,0.2);
+    box-shadow: 3px 6px 12px rgba(0,0,0,0.2);
+    color: #999999;
+    cursor: pointer;
+}
+.header-dropDown:hover .header-dropDown-menu {
+    display: block;
+}
+.header-dropDown-menu li{
+    height: 30px;
+    line-height: 30px;
+}
+.header-dropDown-menu li:hover,
+.header-dropDown-menu li.active {
+    color: #00a7d0;
+}
+/*日历图标*/
+.ic-calendar{
+    background-image: url("../images/ic_calendar.png");
+    background-repeat: no-repeat;
+    background-position: right 5px center;
+    background-size: 20px 20px;
+}

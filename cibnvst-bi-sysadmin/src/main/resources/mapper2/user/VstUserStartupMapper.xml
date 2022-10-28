@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 启动次数 -->
+<mapper namespace="com.vst.defend.dao2.user.VstUserStartupDao">
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_us_date '日期', vst_us_pkg '包名',
+				vst_us_amount '启动次数', vst_us_dod '天环比', vst_us_wow '周环比', vst_us_mom '月环比',
+				vst_us_uv '启动人数', vst_us_uv_dod '人数天环比', vst_us_uv_wow '人数周环比', vst_us_uv_mom '人数月环比',
+				vst_us_avg '人均启动次数'
+			</otherwise>
+		</choose>
+		FROM vst_user_startup
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_us_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_us_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_us_pkg = #{pkgName}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_us_date DESC, vst_us_amount DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+</mapper>

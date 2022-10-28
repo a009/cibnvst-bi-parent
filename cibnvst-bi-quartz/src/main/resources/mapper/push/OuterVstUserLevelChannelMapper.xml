@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vst.quartz.dao.push.OuterVstUserLevelChannelMapper">
+	<resultMap id="BaseResultMap" type="com.vst.common.pojo.OuterVstUserLevelChannel">
+		<id property="vst_ulc_id" column="vst_ulc_id" jdbcType="VARCHAR"/>
+		<result property="vst_ulc_date" column="vst_ulc_date" jdbcType="INTEGER"/>
+		<result property="vst_ulc_pkg" column="vst_ulc_pkg" jdbcType="VARCHAR"/>
+		<result property="vst_ulc_channel" column="vst_ulc_channel" jdbcType="VARCHAR"/>
+		<result property="vst_ulc_add_amount" column="vst_ulc_add_amount" jdbcType="BIGINT"/>
+		<result property="vst_ulc_season_amount" column="vst_ulc_season_amount" jdbcType="BIGINT"/>
+		<result property="vst_ulc_season_dod" column="vst_ulc_season_dod" jdbcType="VARCHAR"/>
+		<result property="vst_ulc_season_wow" column="vst_ulc_season_wow" jdbcType="VARCHAR"/>
+		<result property="vst_ulc_season_radio" column="vst_ulc_season_radio" jdbcType="VARCHAR"/>
+		<result property="vst_ulc_modulus" column="vst_ulc_modulus" jdbcType="VARCHAR"/>
+		<result property="vst_ulc_state" column="vst_ulc_state" jdbcType="INTEGER"/>
+		<result property="vst_ulc_synctime" column="vst_ulc_synctime" jdbcType="BIGINT"/>
+		<result property="vst_ulc_addtime" column="vst_ulc_addtime" jdbcType="BIGINT"/>
+		<result property="vst_ulc_creator" column="vst_ulc_creator" jdbcType="VARCHAR"/>
+		<result property="vst_ulc_uptime" column="vst_ulc_uptime" jdbcType="BIGINT"/>
+		<result property="vst_ulc_updator" column="vst_ulc_updator" jdbcType="VARCHAR"/>
+		<result property="vst_ulc_summary" column="vst_ulc_summary" jdbcType="VARCHAR"/>
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		vst_ulc_id,vst_ulc_date,vst_ulc_pkg,vst_ulc_channel,vst_ulc_add_amount,vst_ulc_season_amount,vst_ulc_season_dod
+		,vst_ulc_season_wow,vst_ulc_season_radio,vst_ulc_modulus,vst_ulc_state,vst_ulc_synctime,vst_ulc_addtime
+		,vst_ulc_creator,vst_ulc_uptime,vst_ulc_updator,vst_ulc_summary
+	</sql>
+
+	<!--保存数据-->
+	<insert id="batchVstUserLevelChannel" parameterType="java.util.List">
+		replace INTO outer_vst_user_level_channel(
+		<include refid="Base_Column_List" />
+		)
+		VALUES
+		<foreach collection="list" item="item" index="index"
+				 separator=",">
+			(#{item.vst_ulc_id,jdbcType=VARCHAR},#{item.vst_ulc_date,jdbcType=INTEGER},#{item.vst_ulc_pkg,jdbcType=VARCHAR},
+			#{item.vst_ulc_channel,jdbcType=VARCHAR},#{item.vst_ulc_add_amount,jdbcType=BIGINT},#{item.vst_ulc_season_amount,jdbcType=VARCHAR},
+			#{item.vst_ulc_season_dod,jdbcType=VARCHAR},#{item.vst_ulc_season_wow,jdbcType=VARCHAR},#{item.vst_ulc_season_radio,jdbcType=VARCHAR},
+			#{item.vst_ulc_modulus,jdbcType=VARCHAR},#{item.vst_ulc_state,jdbcType=INTEGER},#{item.vst_ulc_synctime,jdbcType=BIGINT},
+			#{item.vst_ulc_addtime,jdbcType=BIGINT},#{item.vst_ulc_creator,jdbcType=VARCHAR},#{item.vst_ulc_uptime,jdbcType=BIGINT},
+			#{item.vst_ulc_updator,jdbcType=VARCHAR},#{item.vst_ulc_summary,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</insert>
+
+	<!--删除今天数据-->
+	<delete id="deleteVstUserLevelChannel">
+		DELETE FROM outer_vst_user_level_channel WHERE vst_ulc_date = date_format(now(),'%Y%m%d')
+	</delete>
+
+	<!--根据传入的统计日期删除数据-->
+	<delete id="deleteVstUserDateLevelChannel" parameterType="java.util.Map">
+        <if test="date == 0">
+			DELETE FROM outer_vst_user_level_channel WHERE vst_ulc_date >= #{maxOuter}
+		</if>
+		<if test="date > 0">
+			DELETE FROM outer_vst_user_level_channel WHERE vst_ulc_date >= #{maxOuter} and <![CDATA[vst_ulc_date <= #{maxUser}]]>
+		</if>
+	</delete>
+
+	<!--查询全部信息-->
+	<select id="queryOuterLevelChannel" resultMap="BaseResultMap">
+		SELECT * FROM outer_vst_user_level_channel limit 0,10
+	</select>
+
+	<!--查询最大的统计日期-->
+	<select id="queryMaxLevel" resultType="java.lang.Integer">
+		SELECT MAX(vst_ulc_date) FROM outer_vst_user_level_channel
+	</select>
+
+
+	<!--查询超过六小时未通过审核的数据-->
+	<select id="queryVstUserStateList" resultMap="BaseResultMap">
+		SELECT vst_ulc_id,vst_ulc_uptime,vst_ulc_updator FROM outer_vst_user_level_channel WHERE (unix_timestamp(now()) - (vst_ulc_synctime/1000)) > (60*60*6)
+		AND vst_ulc_state=1
+	</select>
+
+	<!--修改为审核并且时间同步时间超过六个小时的数据，将为审核修改成一审核-->
+	<update id="updateStateLevel" parameterType="java.util.List">
+		<!--UPDATE outer_vst_user_level_channel-->
+		<!--SET vst_ulc_state = 2-->
+		<!--WHERE  vst_ulc_id in-->
+		<!--<foreach separator="," index="index" item="item" collection="list" close=")" open="(">-->
+			<!--#{item}-->
+		<!--</foreach>-->
+
+		<foreach separator=";" index="index" item="item" collection="list">
+			UPDATE outer_vst_user_level_channel
+			SET vst_ulc_state = 2,vst_ulc_updator = 'sync_audit',vst_ulc_uptime = #{item.vst_ulc_uptime,jdbcType=BIGINT}
+			WHERE vst_ulc_id = #{item.vst_ulc_id,jdbcType=VARCHAR}
+		</foreach>
+	</update>
+</mapper>
+

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 留存用户 -->
+<mapper namespace="com.vst.defend.dao2.user.VstUserRetainDao">
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_ur_date '日期', vst_ur_pkg '包名',
+				vst_ur_amount '次日留存用户数', vst_ur_dod '天环比', vst_ur_wow '周环比', vst_ur_rate '留存率',
+				vst_ur_week_amount '周留存用户数', vst_ur_week_dod '周留存天环比', vst_ur_week_wow '周留存周环比', vst_ur_week_rate '周留存率',
+				vst_ur_month_amount '月留存用户数', vst_ur_month_dod '月留存天环比', vst_ur_month_wow '月留存周环比', vst_ur_month_rate '月留存率',
+				vst_ur_season_amount '季留存用户数', vst_ur_season_dod '季留存天环比', vst_ur_season_wow '季留存周环比', vst_ur_season_rate '季留存率'
+			</otherwise>
+		</choose>
+		FROM vst_user_retain
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_ur_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_ur_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_ur_pkg = #{pkgName}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_ur_date DESC, vst_ur_amount DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+</mapper>

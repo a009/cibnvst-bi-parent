@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 首页入口点击 -->
+<mapper namespace="com.vst.defend.dao2.home.VstHomeEntryClickDao">
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_hec_date '日期', vst_hec_pkg '包名', vst_hec_type '类型', vst_hec_name '名称',
+				vst_hec_vv '点击量', vst_hec_vv_dod '天环比', vst_hec_vv_wow '周环比',
+				vst_hec_uv '独立用户', vst_hec_uv_dod '独立用户天环比', vst_hec_uv_wow '独立用户周环比',
+				vst_hec_avg '人均点击量'
+			</otherwise>
+		</choose>
+		FROM vst_home_entry_click
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_hec_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_hec_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_hec_pkg = #{pkgName}
+			</if>
+			<if test="vst_hec_type != null and vst_hec_type != ''">
+				AND vst_hec_type = #{vst_hec_type}
+			</if>
+			<if test="vst_hec_name != null and vst_hec_name != ''">
+				AND vst_hec_name like '%${vst_hec_name}%'
+			</if>
+			<if test="vst_hec_name_eq != null and vst_hec_name_eq != ''">
+				AND vst_hec_name = #{vst_hec_name_eq}
+			</if>
+			<if test="vst_hec_name_ne != null and vst_hec_name_ne != ''">
+				AND vst_hec_name != #{vst_hec_name_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_hec_date DESC, vst_hec_vv DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+</mapper>

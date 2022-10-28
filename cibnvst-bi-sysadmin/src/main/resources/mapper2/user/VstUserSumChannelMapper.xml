@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 累计用户(渠道)统计 -->
+<mapper namespace="com.vst.defend.dao2.user.VstUserSumChannelDao">
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_usc_date '日期', vst_usc_pkg '包名', vst_usc_channel '渠道',
+				vst_usc_amount '累计用户数', vst_usc_dod '天环比', vst_usc_wow '周环比', vst_usc_mom '月环比'
+			</otherwise>
+		</choose>
+		FROM vst_user_sum_channel
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_usc_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_usc_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_usc_pkg = #{pkgName}
+			</if>
+			<if test="vst_usc_channel != null and vst_usc_channel != ''">
+				AND vst_usc_channel like '%${vst_usc_channel}%'
+			</if>
+			<if test="vst_usc_channel_eq != null and vst_usc_channel_eq != ''">
+				AND BINARY vst_usc_channel = #{vst_usc_channel_eq}
+			</if>
+			<if test="vst_usc_channel_ne != null and vst_usc_channel_ne != ''">
+				AND vst_usc_channel != #{vst_usc_channel_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_usc_date DESC, vst_usc_amount DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按渠道统计 -->
+	<select id="queryReportByChannel" parameterType="map" resultType="map">
+		SELECT vst_usc_date, vst_usc_channel, sum(vst_usc_amount) vst_usc_amount
+		FROM vst_user_sum_channel
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_usc_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_usc_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_usc_pkg = #{pkgName}
+			</if>
+			<if test="vst_usc_channel != null and vst_usc_channel != ''">
+				AND vst_usc_channel like '%${vst_usc_channel}%'
+			</if>
+			<if test="vst_usc_channel_eq != null and vst_usc_channel_eq != ''">
+				AND BINARY vst_usc_channel = #{vst_usc_channel_eq}
+			</if>
+			<if test="vst_usc_channel_ne != null and vst_usc_channel_ne != ''">
+				AND vst_usc_channel != #{vst_usc_channel_ne}
+			</if>
+		</where>
+		GROUP BY vst_usc_date, vst_usc_channel
+		ORDER BY vst_usc_date ASC, vst_usc_amount DESC
+	</select>
+	
+</mapper>

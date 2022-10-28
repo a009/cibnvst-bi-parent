@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vst.quartz.dao.clean.BackUpMapper">
+
+	<sql id="vst_quartz_config_list">
+		vst_quartz_id,vst_type,vst_job_type,vst_job_cron,afterDealWith,beforeDealWith,vst_table,vst_status,vst_jobName
+		,vst_triggerName,vst_condition,vst_addTime,vst_updateTime,vst_operator,vst_backUp_type,vst_backUp_condition
+	</sql>
+
+	<!--查询需要备份的表的数据-->
+	<select id="queryList" parameterType="java.lang.String" resultType="java.util.HashMap">
+		${value}
+	</select>
+
+	<insert id="batchTablesBackUp" parameterType="java.lang.String">
+		${value}
+	</insert>
+
+</mapper>

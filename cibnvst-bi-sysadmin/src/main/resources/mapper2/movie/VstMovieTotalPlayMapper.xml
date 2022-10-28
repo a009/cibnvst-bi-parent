@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 汇总播放 -->
+<mapper namespace="com.vst.defend.dao2.movie.VstMovieTotalPlayDao">
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_mtp_date '日期', vst_mtp_pkg '包名',
+				vst_mtp_vv '播放量', vst_mtp_dod '播放量天环比', vst_mtp_wow '播放量周环比',
+				vst_mtp_uv '独立用户', vst_mtp_uv_dod '独立用户天环比', vst_mtp_uv_wow '独立用户周环比',
+				vst_mtp_avg '人均播放量', vst_mtp_playtime '播放时长(H)', vst_mtp_playtime_avg '人均播放时长(m)',
+				vst_mtp_rate '播放活跃比'
+			</otherwise>
+		</choose>
+		FROM vst_movie_total_play
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_mtp_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_mtp_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_mtp_pkg = #{pkgName}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_mtp_date DESC, vst_mtp_vv DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 导出总量 -->
+	<select id="queryExportSum" parameterType="map" resultType="HashMap" useCache="false">
+		SELECT
+			vst_mtp_date,
+			sum(vst_mtp_vv) vst_mtp_vv,
+			sum(vst_mtp_uv) vst_mtp_uv,
+			sum(vst_mtp_playtime) vst_mtp_playtime
+		FROM vst_movie_total_play
+		<where>
+			vst_mtp_pkg IN ('net.myvst.v2','com.vst.itv52.v1')
+			<if test="startDay != null and startDay != ''">
+				AND vst_mtp_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_mtp_date &lt;= #{endDay}
+			</if>
+		</where>
+		GROUP BY vst_mtp_date
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_mtp_date ASC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 获取列表数据 -->
+	<select id="queryForList" parameterType="map" resultType="java.util.HashMap" useCache="false">
+		SELECT * FROM vst_movie_total_play
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_mtp_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_mtp_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_mtp_pkg = #{pkgName}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_mtp_vv DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+</mapper>

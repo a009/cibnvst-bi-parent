@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 影片曝光汇总 -->
+<mapper namespace="com.vst.defend.dao2.movie.VstMovieExposureSumDao">
+
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_mes_date '日期', vst_mes_pkg '包名', vst_mes_special_type '专区类型',
+				vst_mes_cid '影片分类',
+				vst_mes_amount '曝光量', vst_mes_amount_dod '曝光量天环比', vst_mes_amount_wow '曝光量周环比',
+				vst_mes_uv '独立用户', vst_mes_uv_dod '独立用户天环比', vst_mes_uv_wow '独立用户周环比',
+				vst_mes_avg '人均曝光量'
+			</otherwise>
+		</choose>
+		FROM vst_movie_exposure_sum
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_mes_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_mes_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_mes_pkg = #{pkgName}
+			</if>
+			<if test="vst_mes_special_type != null and vst_mes_special_type != ''">
+				AND vst_mes_special_type = #{vst_mes_special_type}
+			</if>
+			<if test="vst_mes_cid != null and vst_mes_cid != ''">
+				AND vst_mes_cid = #{vst_mes_cid}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_mes_date DESC, vst_mes_amount DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+</mapper>

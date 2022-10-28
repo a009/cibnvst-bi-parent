@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 页面跳转 -->
+<mapper namespace="com.vst.defend.dao2.page.VstPageJumpDao">
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_pj_date '日期', vst_pj_pkg '包名', vst_pj_curr_page '当前页面', vst_pj_jump_page '跳转页面',
+				vst_pj_curr_amount '当前页面数', vst_pj_jump_amount '页面跳转数', vst_pj_jump_radio '页面跳转占比'
+			</otherwise>
+		</choose>
+		FROM vst_page_jump
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_pj_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_pj_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_pj_pkg = #{pkgName}
+			</if>
+			<if test="vst_pj_curr_page != null and vst_pj_curr_page != ''">
+				AND vst_pj_curr_page like '%${vst_pj_curr_page}%'
+			</if>
+			<if test="vst_pj_curr_page_eq != null and vst_pj_curr_page_eq != ''">
+				AND vst_pj_curr_page = #{vst_pj_curr_page_eq}
+			</if>
+			<if test="vst_pj_curr_page_ne != null and vst_pj_curr_page_ne != ''">
+				AND vst_pj_curr_page != #{vst_pj_curr_page_ne}
+			</if>
+			<if test="vst_pj_jump_page != null and vst_pj_jump_page != ''">
+				AND vst_pj_jump_page like '%${vst_pj_jump_page}%'
+			</if>
+			<if test="vst_pj_jump_page_eq != null and vst_pj_jump_page_eq != ''">
+				AND vst_pj_jump_page = #{vst_pj_jump_page_eq}
+			</if>
+			<if test="vst_pj_jump_page_ne != null and vst_pj_jump_page_ne != ''">
+				AND vst_pj_jump_page != #{vst_pj_jump_page_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_pj_date DESC, vst_pj_jump_amount DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按当前页面导出 -->
+	<select id="queryExportByCurrPage" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT distinct
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_pj_date '日期', vst_pj_pkg '包名', vst_pj_curr_page '当前页面', vst_pj_curr_amount '页面点击'
+			</otherwise>
+		</choose>
+		FROM vst_page_jump
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_pj_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_pj_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_pj_pkg = #{pkgName}
+			</if>
+			<if test="vst_pj_curr_page != null and vst_pj_curr_page != ''">
+				AND vst_pj_curr_page like '%${vst_pj_curr_page}%'
+			</if>
+			<if test="vst_pj_curr_page_eq != null and vst_pj_curr_page_eq != ''">
+				AND vst_pj_curr_page = #{vst_pj_curr_page_eq}
+			</if>
+			<if test="vst_pj_curr_page_ne != null and vst_pj_curr_page_ne != ''">
+				AND vst_pj_curr_page != #{vst_pj_curr_page_ne}
+			</if>
+			<if test="vst_pj_jump_page != null and vst_pj_jump_page != ''">
+				AND vst_pj_jump_page like '%${vst_pj_jump_page}%'
+			</if>
+			<if test="vst_pj_jump_page_eq != null and vst_pj_jump_page_eq != ''">
+				AND vst_pj_jump_page = #{vst_pj_jump_page_eq}
+			</if>
+			<if test="vst_pj_jump_page_ne != null and vst_pj_jump_page_ne != ''">
+				AND vst_pj_jump_page != #{vst_pj_jump_page_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_pj_date DESC, vst_pj_curr_amount DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 按跳转页面统计 -->
+	<select id="queryReportByJumpPage" parameterType="map" resultType="java.util.HashMap">
+		SELECT
+			vst_pj_date, vst_pj_jump_page,
+			sum(vst_pj_jump_amount) vst_pj_jump_amount
+		FROM vst_page_jump
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_pj_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_pj_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_pj_pkg = #{pkgName}
+			</if>
+			<if test="vst_pj_curr_page != null and vst_pj_curr_page != ''">
+				AND vst_pj_curr_page like '%${vst_pj_curr_page}%'
+			</if>
+			<if test="vst_pj_curr_page_eq != null and vst_pj_curr_page_eq != ''">
+				AND vst_pj_curr_page = #{vst_pj_curr_page_eq}
+			</if>
+			<if test="vst_pj_curr_page_ne != null and vst_pj_curr_page_ne != ''">
+				AND vst_pj_curr_page != #{vst_pj_curr_page_ne}
+			</if>
+			<if test="vst_pj_jump_page != null and vst_pj_jump_page != ''">
+				AND vst_pj_jump_page like '%${vst_pj_jump_page}%'
+			</if>
+			<if test="vst_pj_jump_page_eq != null and vst_pj_jump_page_eq != ''">
+				AND vst_pj_jump_page = #{vst_pj_jump_page_eq}
+			</if>
+			<if test="vst_pj_jump_page_ne != null and vst_pj_jump_page_ne != ''">
+				AND vst_pj_jump_page != #{vst_pj_jump_page_ne}
+			</if>
+		</where>
+		GROUP BY vst_pj_date, vst_pj_jump_page
+		ORDER BY vst_pj_date ASC, vst_pj_jump_amount DESC
+	</select>
+	
+</mapper>

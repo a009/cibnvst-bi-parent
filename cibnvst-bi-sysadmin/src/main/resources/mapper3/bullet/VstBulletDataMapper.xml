@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 弹窗统计 -->
+<mapper namespace="com.vst.defend.dao3.bullet.VstBulletDataDao">
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_bd_date '日期', vst_bd_pkg '包名', vst_bd_type '类型', vst_bd_total '点击用户数',
+				vst_bd_one '1日用户数', vst_bd_one_ratio '1日留存率', vst_bd_two '2日用户数', vst_bd_two_ratio '2日留存率',
+				vst_bd_three '3日用户数', vst_bd_three_ratio '3日留存率', vst_bd_four '4日用户数', vst_bd_four_ratio '4日留存率',
+				vst_bd_five '5日用户数', vst_bd_five_ratio '5日留存率', vst_bd_six '6日用户数', vst_bd_six_ratio '6日留存率',
+				vst_bd_seven '7日用户数', vst_bd_seven_ratio '7日留存率',
+				vst_bd_con_one '1日连续用户数', vst_bd_con_one_ratio '1日连续留存率', vst_bd_con_two '2日连续用户数', vst_bd_con_two_ratio '2日连续留存率',
+				vst_bd_con_three '3日连续用户数', vst_bd_con_three_ratio '3日连续留存率', vst_bd_con_four '4日连续用户数', vst_bd_con_four_ratio '4日连续留存率',
+				vst_bd_con_five '5日连续用户数', vst_bd_con_five_ratio '5日连续留存率', vst_bd_con_six '6日连续用户数', vst_bd_con_six_ratio '6日连续留存率',
+				vst_bd_con_seven '7日连续用户数', vst_bd_con_seven_ratio '7日连续留存率'
+			</otherwise>
+		</choose>
+		FROM vst_bullet_data
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_bd_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_bd_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_bd_pkg = #{pkgName}
+			</if>
+			<if test="vst_bd_type != null and vst_bd_type != ''">
+				AND vst_bd_type = #{vst_bd_type}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_bd_date DESC, vst_bd_total DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 批量添加 -->
+	<insert id="batchInsert" parameterType="java.util.List">
+		INSERT INTO vst_bullet_data
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			vst_bd_id,
+			vst_bd_date,
+			vst_bd_pkg,
+			vst_bd_type,
+			vst_bd_total,
+			vst_bd_one,
+			vst_bd_one_ratio,
+			vst_bd_two,
+			vst_bd_two_ratio,
+			vst_bd_three,
+			vst_bd_three_ratio,
+			vst_bd_four,
+			vst_bd_four_ratio,
+			vst_bd_five,
+			vst_bd_five_ratio,
+			vst_bd_six,
+			vst_bd_six_ratio,
+			vst_bd_seven,
+			vst_bd_seven_ratio,
+			vst_bd_con_one,
+			vst_bd_con_one_ratio,
+			vst_bd_con_two,
+			vst_bd_con_two_ratio,
+			vst_bd_con_three,
+			vst_bd_con_three_ratio,
+			vst_bd_con_four,
+			vst_bd_con_four_ratio,
+			vst_bd_con_five,
+			vst_bd_con_five_ratio,
+			vst_bd_con_six,
+			vst_bd_con_six_ratio,
+			vst_bd_con_seven,
+			vst_bd_con_seven_ratio,
+			vst_bd_addtime,
+			vst_bd_creator,
+			vst_bd_summary,
+		</trim>
+		VALUES
+		<foreach collection="list" item="i" index="index" separator=",">
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				#{i.vst_bd_id},
+				#{i.vst_bd_date},
+				#{i.vst_bd_pkg},
+				#{i.vst_bd_type},
+				#{i.vst_bd_total},
+				#{i.vst_bd_one},
+				#{i.vst_bd_one_ratio},
+				#{i.vst_bd_two},
+				#{i.vst_bd_two_ratio},
+				#{i.vst_bd_three},
+				#{i.vst_bd_three_ratio},
+				#{i.vst_bd_four},
+				#{i.vst_bd_four_ratio},
+				#{i.vst_bd_five},
+				#{i.vst_bd_five_ratio},
+				#{i.vst_bd_six},
+				#{i.vst_bd_six_ratio},
+				#{i.vst_bd_seven},
+				#{i.vst_bd_seven_ratio},
+				#{i.vst_bd_con_one},
+				#{i.vst_bd_con_one_ratio},
+				#{i.vst_bd_con_two},
+				#{i.vst_bd_con_two_ratio},
+				#{i.vst_bd_con_three},
+				#{i.vst_bd_con_three_ratio},
+				#{i.vst_bd_con_four},
+				#{i.vst_bd_con_four_ratio},
+				#{i.vst_bd_con_five},
+				#{i.vst_bd_con_five_ratio},
+				#{i.vst_bd_con_six},
+				#{i.vst_bd_con_six_ratio},
+				#{i.vst_bd_con_seven},
+				#{i.vst_bd_con_seven_ratio},
+				#{i.vst_bd_addtime},
+				#{i.vst_bd_creator},
+				#{i.vst_bd_summary},
+			</trim>
+		</foreach>
+	</insert>
+	
+	<!-- 删除 -->
+	<delete id="delete" parameterType="map">
+		DELETE FROM vst_bullet_data
+	    <where>
+	    	<if test="list_ids != null and list_ids != ''">
+	    		vst_bd_id IN
+	    		<foreach collection="list_ids" item="id" open="(" separator="," close=")">
+					#{id}
+			    </foreach>
+	    	</if>
+	    	<if test="list_date != null and list_date != ''">
+	    		AND vst_bd_date IN
+	    		<foreach collection="list_date" item="date" open="(" separator="," close=")">
+					#{date}
+			    </foreach>
+	    	</if>
+	    	<if test="startDay != null and startDay != ''">
+				AND vst_bd_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_bd_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_bd_pkg = #{pkgName}
+			</if>
+			<if test="vst_bd_type != null and vst_bd_type != ''">
+				AND vst_bd_type = #{vst_bd_type}
+			</if>
+	    </where>
+	</delete>
+	
+</mapper>

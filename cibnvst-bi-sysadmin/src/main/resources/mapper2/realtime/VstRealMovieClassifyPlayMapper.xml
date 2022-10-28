@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 实时分类播放 -->
+<mapper namespace="com.vst.defend.dao2.realtime.VstRealMovieClassifyPlayDao">
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_rmcp_date '日期', vst_rmcp_hour '小时', vst_rmcp_minute '分', vst_rmcp_seconds '秒',
+				vst_rmcp_pkg '包名', vst_rmcp_special_type '专区类型', vst_rmcp_cid '影片分类',
+				vst_rmcp_vv '播放量', vst_rmcp_uv '独立用户', vst_rmcp_avg '人均播放量',
+				vst_rmcp_playtime '播放时长(H)', vst_rmcp_playtime_avg '人均播放时长(m)'
+			</otherwise>
+		</choose>
+		FROM vst_real_movie_classify_play
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_rmcp_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_rmcp_date &lt;= #{endDay}
+			</if>
+			<if test="startTime != null and startTime != ''">
+				AND unix_timestamp(concat(substring(vst_rmcp_date,1,4),'-',substring(vst_rmcp_date,5,2),'-',substring(vst_rmcp_date,7,2),' ',vst_rmcp_hour,':',vst_rmcp_minute,':',vst_rmcp_seconds)) >= #{startTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND unix_timestamp(concat(substring(vst_rmcp_date,1,4),'-',substring(vst_rmcp_date,5,2),'-',substring(vst_rmcp_date,7,2),' ',vst_rmcp_hour,':',vst_rmcp_minute,':',vst_rmcp_seconds)) &lt;= #{endTime}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_rmcp_pkg = #{pkgName}
+			</if>
+			<if test="vst_rmcp_special_type != null and vst_rmcp_special_type != ''">
+				AND vst_rmcp_special_type = #{vst_rmcp_special_type}
+			</if>
+			<if test="vst_rmcp_cid != null and vst_rmcp_cid != ''">
+				AND vst_rmcp_cid = #{vst_rmcp_cid}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_rmcp_date DESC, vst_rmcp_hour DESC, vst_rmcp_minute DESC, vst_rmcp_seconds DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 实时统计 -->
+	<select id="queryReportLine" parameterType="map" resultType="java.util.HashMap" useCache="false">
+		SELECT
+			vst_rmcp_date, vst_rmcp_hour, vst_rmcp_minute, vst_rmcp_seconds,
+			vst_rmcp_vv, vst_rmcp_uv
+		FROM vst_real_movie_classify_play
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_rmcp_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_rmcp_date &lt;= #{endDay}
+			</if>
+			<if test="startTime != null and startTime != ''">
+				AND unix_timestamp(concat(substring(vst_rmcp_date,1,4),'-',substring(vst_rmcp_date,5,2),'-',substring(vst_rmcp_date,7,2),' ',vst_rmcp_hour,':',vst_rmcp_minute,':',vst_rmcp_seconds)) >= #{startTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND unix_timestamp(concat(substring(vst_rmcp_date,1,4),'-',substring(vst_rmcp_date,5,2),'-',substring(vst_rmcp_date,7,2),' ',vst_rmcp_hour,':',vst_rmcp_minute,':',vst_rmcp_seconds)) &lt;= #{endTime}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_rmcp_pkg = #{pkgName}
+			</if>
+			<if test="vst_rmcp_special_type != null and vst_rmcp_special_type != ''">
+				AND vst_rmcp_special_type = #{vst_rmcp_special_type}
+			</if>
+			<if test="vst_rmcp_cid != null and vst_rmcp_cid != ''">
+				AND vst_rmcp_cid = #{vst_rmcp_cid}
+			</if>
+		</where>
+		ORDER BY vst_rmcp_date ASC, vst_rmcp_hour ASC, vst_rmcp_minute ASC, vst_rmcp_seconds ASC
+	</select>
+	
+</mapper>

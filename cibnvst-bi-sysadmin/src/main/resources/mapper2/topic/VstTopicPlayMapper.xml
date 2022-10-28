@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 专题播放 -->
+<mapper namespace="com.vst.defend.dao2.topic.VstTopicPlayDao">
+	
+	<!-- 开启本mapper的namespace下的二级缓存 -->
+	<cache flushInterval="3600000" readOnly="true" />
+	
+	<!-- 导出数据 -->
+	<select id="queryExport" parameterType="map" resultType="java.util.LinkedHashMap" useCache="false">
+		SELECT
+		<choose>
+			<when test="export_column != null and export_column != ''">
+				${export_column}
+			</when>
+			<otherwise>
+				vst_tp_date '日期', vst_tp_pkg '包名', vst_tp_template '模版类型',
+				vst_tp_special_type '专区类型', vst_tp_cid '分类',
+				vst_tp_topicId '专题ID', vst_tp_name '专题名称',
+				vst_tp_vv '播放量', vst_tp_vv_dod '播放量天环比', vst_tp_vv_wow '播放量周环比',
+				vst_tp_uv '独立用户', vst_tp_uv_dod '独立用户天环比', vst_tp_uv_wow '独立用户周环比',
+				vst_tp_avg '人均播放量', vst_tp_playtime '播放时长(H)', vst_tp_playtime_avg '人均播放时长(m)'
+			</otherwise>
+		</choose>
+		FROM vst_topic_play
+		<where>
+			<if test="startDay != null and startDay != ''">
+				vst_tp_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_tp_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_tp_pkg = #{pkgName}
+			</if>
+			<if test="vst_tp_special_type != null and vst_tp_special_type != ''">
+				AND vst_tp_special_type = #{vst_tp_special_type}
+			</if>
+			<if test="vst_tp_cid != null and vst_tp_cid != ''">
+				AND vst_tp_cid = #{vst_tp_cid}
+			</if>
+			<if test="vst_tp_template != null and vst_tp_template != ''">
+				AND vst_tp_template = #{vst_tp_template}
+			</if>
+			<if test="vst_tp_topicId != null and vst_tp_topicId != ''">
+				AND vst_tp_topicId = #{vst_tp_topicId}
+			</if>
+			<if test="vst_tp_name != null and vst_tp_name != ''">
+				AND vst_tp_name like '%${vst_tp_name}%'
+			</if>
+			<if test="vst_tp_name_eq != null and vst_tp_name_eq != ''">
+				AND vst_tp_name = #{vst_tp_name_eq}
+			</if>
+			<if test="vst_tp_name_ne != null and vst_tp_name_ne != ''">
+				AND vst_tp_name != #{vst_tp_name_ne}
+			</if>
+		</where>
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_tp_date DESC, vst_tp_vv DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 查询专题播放汇总排行 -->
+	<select id="queryTopList" parameterType="map" resultType="java.util.HashMap">
+		SELECT
+			max(vst_tp_special_type) vst_tp_special_type,
+			max(vst_tp_cid) vst_tp_cid,
+			max(vst_tp_template) vst_tp_template,
+			vst_tp_topicId,
+			max(vst_tp_name) vst_tp_name,
+			sum(vst_tp_vv) vst_tp_vv,
+			sum(vst_tp_playtime) vst_tp_playtime
+		FROM vst_topic_play
+		<where>
+			<if test="date != null and date != ''">
+				vst_tp_date = #{date}
+			</if>
+			<if test="startDay != null and startDay != ''">
+				AND vst_tp_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_tp_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_tp_pkg = #{pkgName}
+			</if>
+			<if test="vst_tp_special_type != null and vst_tp_special_type != ''">
+				AND vst_tp_special_type = #{vst_tp_special_type}
+			</if>
+			<if test="vst_tp_cid != null and vst_tp_cid != ''">
+				AND vst_tp_cid = #{vst_tp_cid}
+			</if>
+			<if test="vst_tp_template != null and vst_tp_template != ''">
+				AND vst_tp_template = #{vst_tp_template}
+			</if>
+			<if test="vst_tp_topicId != null and vst_tp_topicId != ''">
+				AND vst_tp_topicId = #{vst_tp_topicId}
+			</if>
+			<if test="vst_tp_name != null and vst_tp_name != ''">
+				AND vst_tp_name like '%${vst_tp_name}%'
+			</if>
+			<if test="vst_tp_name_eq != null and vst_tp_name_eq != ''">
+				AND vst_tp_name = #{vst_tp_name_eq}
+			</if>
+			<if test="vst_tp_name_ne != null and vst_tp_name_ne != ''">
+				AND vst_tp_name != #{vst_tp_name_ne}
+			</if>
+		</where>
+		GROUP BY vst_tp_topicId
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				vst_tp_vv DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+	<!-- 查询专题播放汇总记录数 -->
+	<select id="queryTopCount" parameterType="map" resultType="int">
+		SELECT count(1) FROM (
+			SELECT vst_tp_topicId FROM vst_topic_play
+			<where>
+				<if test="date != null and date != ''">
+					vst_tp_date = #{date}
+				</if>
+				<if test="startDay != null and startDay != ''">
+					AND vst_tp_date >= #{startDay}
+				</if>
+				<if test="endDay != null and endDay != ''">
+					AND vst_tp_date &lt;= #{endDay}
+				</if>
+				<if test="pkgName != null and pkgName != ''">
+					AND vst_tp_pkg = #{pkgName}
+				</if>
+				<if test="vst_tp_special_type != null and vst_tp_special_type != ''">
+					AND vst_tp_special_type = #{vst_tp_special_type}
+				</if>
+				<if test="vst_tp_cid != null and vst_tp_cid != ''">
+					AND vst_tp_cid = #{vst_tp_cid}
+				</if>
+				<if test="vst_tp_template != null and vst_tp_template != ''">
+					AND vst_tp_template = #{vst_tp_template}
+				</if>
+				<if test="vst_tp_topicId != null and vst_tp_topicId != ''">
+					AND vst_tp_topicId = #{vst_tp_topicId}
+				</if>
+				<if test="vst_tp_name != null and vst_tp_name != ''">
+					AND vst_tp_name like '%${vst_tp_name}%'
+				</if>
+				<if test="vst_tp_name_eq != null and vst_tp_name_eq != ''">
+					AND vst_tp_name = #{vst_tp_name_eq}
+				</if>
+				<if test="vst_tp_name_ne != null and vst_tp_name_ne != ''">
+					AND vst_tp_name != #{vst_tp_name_ne}
+				</if>
+			</where>
+			GROUP BY vst_tp_topicId
+		) a
+	</select>
+	
+	<!-- 导出专题播放汇总数据 -->
+	<select id="queryTopExport" parameterType="map" resultType="java.util.LinkedHashMap">
+		SELECT
+			max(vst_tp_special_type) '专区类型',
+			max(vst_tp_cid) '分类',
+			max(vst_tp_template) '模版类型',
+			vst_tp_topicId '专题ID',
+			max(vst_tp_name) '专题名称',
+			sum(vst_tp_vv) '总播放量',
+			sum(vst_tp_playtime) '总播放时长(H)'
+		FROM vst_topic_play
+		<where>
+			<if test="date != null and date != ''">
+				vst_tp_date = #{date}
+			</if>
+			<if test="startDay != null and startDay != ''">
+				AND vst_tp_date >= #{startDay}
+			</if>
+			<if test="endDay != null and endDay != ''">
+				AND vst_tp_date &lt;= #{endDay}
+			</if>
+			<if test="pkgName != null and pkgName != ''">
+				AND vst_tp_pkg = #{pkgName}
+			</if>
+			<if test="vst_tp_special_type != null and vst_tp_special_type != ''">
+				AND vst_tp_special_type = #{vst_tp_special_type}
+			</if>
+			<if test="vst_tp_cid != null and vst_tp_cid != ''">
+				AND vst_tp_cid = #{vst_tp_cid}
+			</if>
+			<if test="vst_tp_template != null and vst_tp_template != ''">
+				AND vst_tp_template = #{vst_tp_template}
+			</if>
+			<if test="vst_tp_topicId != null and vst_tp_topicId != ''">
+				AND vst_tp_topicId = #{vst_tp_topicId}
+			</if>
+			<if test="vst_tp_name != null and vst_tp_name != ''">
+				AND vst_tp_name like '%${vst_tp_name}%'
+			</if>
+			<if test="vst_tp_name_eq != null and vst_tp_name_eq != ''">
+				AND vst_tp_name = #{vst_tp_name_eq}
+			</if>
+			<if test="vst_tp_name_ne != null and vst_tp_name_ne != ''">
+				AND vst_tp_name != #{vst_tp_name_ne}
+			</if>
+		</where>
+		GROUP BY vst_tp_topicId
+		ORDER BY
+		<choose>
+			<when test="orderBy == null or orderBy == ''">
+				sum(vst_tp_vv) DESC
+			</when>
+			<otherwise>
+				${orderBy} ${order}
+			</otherwise>
+		</choose>
+		<if test="limit != null and limit != ''">
+			LIMIT #{limit}
+		</if>
+		<if test="offset != null and offset != ''">
+			OFFSET #{offset}
+		</if>
+	</select>
+	
+</mapper>
